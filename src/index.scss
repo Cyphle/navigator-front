@@ -1,0 +1,60 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+// Variables
+$primary-color: #3b82f6;
+$text-color: #1f2937;
+
+// Mixins
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin hover-transition {
+  transition: all 0.2s ease-in-out;
+}
+
+// Custom styles
+.btn {
+  @include hover-transition;
+  
+  &-primary {
+    background-color: $primary-color;
+    color: white;
+    
+    &:hover {
+      filter: brightness(110%);
+    }
+  }
+  
+  &-outline {
+    border: 1px solid $primary-color;
+    color: $primary-color;
+    
+    &:hover {
+      background-color: rgba($primary-color, 0.1);
+    }
+  }
+}
+
+.nav-link {
+  @include hover-transition;
+  
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+.card {
+  @include hover-transition;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
+} 
