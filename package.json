@@ -1,5 +1,5 @@
 {
-  "name": "banana-front",
+  "name": "navigator-front",
   "version": "1.0.0",
   "scripts": {
     "dev": "farm start",
