@@ -1,0 +1,26 @@
+@import '../../variables.scss';
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 60px;
+  background-color: $main-color;
+  @include default-shadow;
+  padding: 0 10px;
+  color: $second-text-color;
+
+  .banana-title {
+    a {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      color: $second-text-color;
+      text-decoration: none;
+
+      img {
+        height: 30px;
+      }
+    }
+  }
+}
