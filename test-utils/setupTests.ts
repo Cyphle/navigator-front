@@ -3,8 +3,6 @@
 // expect(element).toHaveTextContent(/react/i)
 // learn more: https://github.com/testing-library/jest-dom
 import '@testing-library/jest-dom';
-import { styleSheetSerializer } from 'jest-styled-components';
-import { addSerializer } from 'jest-specific-snapshot';
 
 const { getComputedStyle } = window;
 window.getComputedStyle = (elt) => getComputedStyle(elt);
@@ -44,10 +42,3 @@ jest.mock('react-i18next', () => ({
 beforeAll(() => {
   global.Math.random = () => 0.5;
 });
-
-const styleSerializer = styleSheetSerializer.setStyleSheetSerializerOptions({
-  addStyles: false,
-  classNameFormatter: (index) => `styled-components-test-class-${index}`,
-});
-
-addSerializer(styleSerializer);

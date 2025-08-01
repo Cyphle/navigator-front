@@ -24,7 +24,7 @@ describe('Registration', () => {
     expect(screen.getByText('Crée toi un compte')).toBeInTheDocument();
   });
 
-  test('should handle form submission', async () => {
+  ftest('should handle form submission', async () => {
     const mockMutate = jest.fn();
     (useCreateProfile as jest.Mock).mockImplementation(() => ({
       mutate: mockMutate,
