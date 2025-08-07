@@ -1,4 +1,4 @@
-@import 'variables';
+@use "variables.scss" as *;
 
 html {
   color: $main-text-color;

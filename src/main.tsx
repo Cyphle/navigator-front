@@ -27,7 +27,7 @@ const SiteContent = ({ userInfo }: { userInfo: Option<UserInfo> }) => {
   )
 }
 
-function Main() {
+const Main = () => {
   // const { isPending, isError, data, error } = useUserInfo();
   const data = some({
     username: '',
@@ -51,4 +51,4 @@ function Main() {
   )
 }
 
-export default Main
+export default Main;
