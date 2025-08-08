@@ -4,7 +4,7 @@
   "scripts": {
     "dev": "vite",
     "start": "vite",
-    "test": "jest --watch",
+    "test": "jest",
     "build": "vite build",
     "preview": "vite preview"
   },
