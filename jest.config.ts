@@ -1,7 +1,7 @@
 import type { Config } from 'jest';
 
 const config: Config = {
-  prettierPath: require.resolve('prettier-2'),
+  prettierPath: 'prettier-2',
   preset: "ts-jest/presets/js-with-ts",
   testEnvironment: "jest-environment-jsdom",
   moduleNameMapper: {
