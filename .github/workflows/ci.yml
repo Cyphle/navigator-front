@@ -1,4 +1,4 @@
-name: Deploy Banana Front
+name: Build and push to ECR
 
 on:
   workflow_dispatch:
