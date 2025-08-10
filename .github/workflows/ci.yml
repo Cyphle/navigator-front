@@ -35,5 +35,11 @@ jobs:
       - name: Build the Docker image
         run: docker build . -t ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/${{ env.ECR_NAMESPACE }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
 
-      - name: Push the Docker Image
+      - name: Tag image as latest
+        run: docker tag ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/${{ env.ECR_NAMESPACE }}/${{ env.IMAGE_NAME }}:${{ github.sha }} ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/${{ env.ECR_NAMESPACE }}/${{ env.IMAGE_NAME }}:latest
+
+      - name: Push the Docker Image with SHA tag
         run: docker push ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/${{ env.ECR_NAMESPACE }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+
+      - name: Push the Docker Image with latest tag
+        run: docker push ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/${{ env.ECR_NAMESPACE }}/${{ env.IMAGE_NAME }}:latest
