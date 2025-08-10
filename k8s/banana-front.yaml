@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: banana-front
-          image: rg.fr-par.scw.cloud/banana-front/banana-front:9175923d6c116cef13b5dd7819d0322bc837eee4
+          image: rg.fr-par.scw.cloud/banana-front/ca3e757cf0e318ca7c7aa49b14ad9d9f6b02204e:latest
           ports:
             - containerPort: 80
           readinessProbe:

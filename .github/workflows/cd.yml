@@ -13,25 +13,20 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      IMAGE_PATH: ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/banana-front/banana-front
+      IMAGE_PATH: ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/banana-front
 
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Setup kubectl
-        uses: actions/setup-kubectl@v4
+      - name: Set up Kubectl
+        uses: azure/k8s-set-context@v1
         with:
-          version: 'latest'
-
-      - name: Configure Kubeconfig
-        run: |
-          echo "${{ secrets.KUBECONFIG_BASE64 }}" | base64 -d > ~/.kube/config
-          chmod 600 ~/.kube/config
+          kubeconfig: ${{ secrets.KUBECONFIG }}
 
       - name: Patch image tag in manifest
         run: |
-          sed -i "s|${{ env.IMAGE_PATH }}:.*|${{ env.IMAGE_PATH }}:${{ github.event.inputs.version }}|" k8s/banana-front.yaml
+          sed -i "s|${{ env.IMAGE_PATH }}:.*|${{ env.IMAGE_PATH }}/${{ github.event.inputs.version }}:latest|" k8s/banana-front.yaml
         working-directory: .
 
       - name: Apply Kubernetes manifest
