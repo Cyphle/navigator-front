@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      IMAGE_PATH: ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/banana-front
+      IMAGE_PATH: ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/banana/banana-front
 
     steps:
       - name: Checkout repo
@@ -26,7 +26,7 @@ jobs:
 
       - name: Patch image tag in manifest
         run: |
-          sed -i "s|${{ env.IMAGE_PATH }}:.*|${{ env.IMAGE_PATH }}/${{ github.event.inputs.version }}:latest|" k8s/banana-front.yaml
+          sed -i "s|${{ env.IMAGE_PATH }}:.*|${{ env.IMAGE_PATH }}:${{ github.event.inputs.version }}|" k8s/banana-front.yaml
         working-directory: .
 
       - name: Apply Kubernetes manifest
