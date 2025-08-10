@@ -33,7 +33,7 @@ jobs:
           registry: ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}
 
       - name: Build the Docker image
-        run: docker build . -t ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/${{ env.ECR_NAMESPACE }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+        run: docker build . -t ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/${{ env.ECR_NAMESPACE }}/${{ github.sha }}:latest
 
       - name: Push the Docker Image
-        run: docker push ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/${{ env.ECR_NAMESPACE }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+        run: docker push ${{ secrets.CONTAINER_REGISTRY_ENDPOINT }}/${{ env.ECR_NAMESPACE }}/${{ github.sha }}:latest
