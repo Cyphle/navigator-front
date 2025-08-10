@@ -36,5 +36,5 @@ jobs:
 
       - name: Apply Kubernetes manifest
         run: |
-          kubectl apply -f k8s/banana-front.yaml
+          kubectl apply -n banana -f k8s/banana-front.yaml
           kubectl rollout status deployment/banana-front --timeout=120s
