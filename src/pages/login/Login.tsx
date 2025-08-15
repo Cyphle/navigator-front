@@ -91,7 +91,7 @@ export const Login = () => {
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    window.location.href = "http://localhost:3000/login";
+    window.location.href = "http://localhost:8080/login";
     // window.location.href = "http://localhost:8080/api/login";
   //   fetch(`${BASE_PATH}/api/login`, {
   //   })
@@ -141,6 +141,17 @@ export const Login = () => {
           });
   }
 
+  const testDb = () => {
+      fetch(`${BASE_PATH}/test`, {
+      })
+          .then((response: Response) => {
+            return response.json();
+          })
+          .then(data => {
+            console.log(data);
+          });
+  }
+
 
   return (
     <div>
@@ -151,6 +162,8 @@ export const Login = () => {
       <Button onClick={checkMe} type="primary" htmlType="submit">USERS ME</Button>
 
       <Button onClick={logout} type="primary" htmlType="submit">LOGOUT</Button>
+
+      <Button onClick={testDb} type="primary" htmlType="submit">TEST database</Button>
     </div>
   );
 }
