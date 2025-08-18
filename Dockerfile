@@ -8,31 +8,20 @@ RUN npm install
 COPY . .
 RUN npm run build
 
-# ---- Production Stage ----
-#FROM nginx:alpine
-#
-#COPY nginx.conf /etc/nginx/conf.d/default.conf
-#COPY --from=builder /app/build /usr/share/nginx/html
-#
-#RUN chown -R nginx:nginx /var/cache/nginx /var/log/nginx /usr/share/nginx/html && \
-#    mkdir -p /tmp/nginx && \
-#    chown -R nginx:nginx /tmp/nginx
-#
-#USER nginx
-#
-#EXPOSE 80
-#CMD ["nginx", "-g", "daemon off;"]
 FROM nginx:latest AS prod
 
 COPY --from=builder /app/build /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/nginx.conf
 
-# NON ROOT
-#RUN touch /var/run/nginx.pid
-#RUN chown -R nginx:nginx /var/run/nginx.pid /usr/share/nginx/html /var/cache/nginx /var/log/nginx /etc/nginx/conf.d
-#USER nginx
-# END NON ROOT
+# Configuration non-root
+RUN chown -R nginx:nginx /usr/share/nginx/html && \
+    mkdir -p /tmp/client_temp /tmp/proxy_temp_path /tmp/fastcgi_temp /tmp/uwsgi_temp /tmp/scgi_temp && \
+    chown -R nginx:nginx /tmp/client_temp /tmp/proxy_temp_path /tmp/fastcgi_temp /tmp/uwsgi_temp /tmp/scgi_temp && \
+    touch /tmp/nginx.pid /tmp/access.log /tmp/error.log && \
+    chown nginx:nginx /tmp/nginx.pid /tmp/access.log /tmp/error.log
 
-EXPOSE 80/tcp
+USER nginx
+
+EXPOSE 8080/tcp
 
 CMD ["/usr/sbin/nginx", "-g", "daemon off;"]
