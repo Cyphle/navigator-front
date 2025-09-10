@@ -92,7 +92,6 @@ export const Login = () => {
 
   const handleLogin = () => {
     window.location.href = "http://localhost:8080/login";
-    // window.location.href = "http://localhost:8080/api/login";
   //   fetch(`${BASE_PATH}/api/login`, {
   //   })
   //       .then((response: Response) => {
@@ -142,7 +141,7 @@ export const Login = () => {
   }
 
   const testDb = () => {
-      fetch(`${BASE_PATH}/test`, {
+      fetch(`${BASE_PATH}/helloworld/users`, {
       })
           .then((response: Response) => {
             return response.json();
