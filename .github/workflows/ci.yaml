@@ -23,37 +23,41 @@ jobs:
       ENVIRONMENT: 'prod'
 
     steps:
-      - name: Checkout repo
-        uses: actions/checkout@v4
-
-      - name: Use Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 22.18.0
-
-      - name: Install dependencies
-        run: |
-          yarn install
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: arn:aws:iam::${{ vars.AWS_ACCOUNT_ID }}:role/github_access
-          aws-region: ${{ vars.AWS_REGION }}
-
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2
-
-      - name: Build, tag, and push image to Amazon ECR
-        id: build-image
-        working-directory: .
-        env:
-          ECR_REGISTRY: ${{ vars.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com
-          ECR_REPOSITORY: ${{ vars.PROJECT }}-${{ vars.APPLICATION }}
-          IMAGE_TAG: ${{ vars.github-sha }}
-        run: |
-          docker build -f Dockerfile -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG . --build-arg COMMIT_HASH=${{ vars.github-sha }}
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+      - name: Print vars.github-sha
+        run: echo "vars.github-sha=${{ vars.github-sha }}, ${{ github.sha }}"
         shell: bash
+      
+#      - name: Checkout repo
+#        uses: actions/checkout@v4
+#
+#      - name: Use Node.js
+#        uses: actions/setup-node@v3
+#        with:
+#          node-version: 22.18.0
+#
+#      - name: Install dependencies
+#        run: |
+#          yarn install
+#
+#      - name: Configure AWS credentials
+#        uses: aws-actions/configure-aws-credentials@v4
+#        with:
+#          role-to-assume: arn:aws:iam::${{ vars.AWS_ACCOUNT_ID }}:role/github_access
+#          aws-region: ${{ vars.AWS_REGION }}
+#
+#      - name: Login to Amazon ECR
+#        id: login-ecr
+#        uses: aws-actions/amazon-ecr-login@v2
+#
+#      - name: Build, tag, and push image to Amazon ECR
+#        id: build-image
+#        working-directory: .
+#        env:
+#          ECR_REGISTRY: ${{ vars.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com
+#          ECR_REPOSITORY: ${{ vars.PROJECT }}-${{ vars.APPLICATION }}
+#          IMAGE_TAG: ${{ vars.github-sha }}
+#        run: |
+#          docker build -f Dockerfile -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG . --build-arg COMMIT_HASH=${{ vars.github-sha }}
+#          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+#          echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+#        shell: bash
