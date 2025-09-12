@@ -1,4 +1,4 @@
-name: Build and push Navigator front to AWS ECR
+name: Deploy Navigator front to AWS ECR
 
 on:
   workflow_dispatch:
