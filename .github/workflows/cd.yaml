@@ -41,8 +41,8 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::${{ var.AWS_ACCOUNT_ID }}:role/github_access
-          aws-region: ${{ var.AWS_REGION }}
+          role-to-assume: arn:aws:iam::${{ vars.AWS_ACCOUNT_ID }}:role/github_access
+          aws-region: ${{ vars.AWS_REGION }}
 
       - name: Login to Amazon ECR
         id: login-ecr
@@ -52,14 +52,14 @@ jobs:
         id: task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: infra/ecs/task-definition-${{ var.APPLICATION }}.json
-          container-name: ${{ var.APPLICATION }}
-          image: ${{ var.AWS_ACCOUNT_ID }}.dkr.ecr.${{ var.AWS_REGION }}.amazonaws.com/${{ var.PROJECT }}-${{ var.APPLICATION }}:${{ var.github-sha }}
+          task-definition: infra/ecs/task-definition-${{ vars.APPLICATION }}.json
+          container-name: ${{ vars.APPLICATION }}
+          image: ${{ vars.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com/${{ vars.PROJECT }}-${{ vars.APPLICATION }}:${{ github-sha }}
 
       - name: Deploy Amazon ECS task definition
         uses: aws-actions/amazon-ecs-deploy-task-definition@v2
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
-          service: ${{ var.APPLICATION }}
-          cluster: ${{ var.PROJECT }}-${{ var.ENVIRONMENT }}-${{ var.APPLICATION }}
+          service: ${{ vars.APPLICATION }}
+          cluster: ${{ vars.PROJECT }}-${{ vars.ENVIRONMENT }}-${{ vars.APPLICATION }}
           wait-for-service-stability: true
