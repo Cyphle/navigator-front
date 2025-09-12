@@ -33,7 +33,6 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd front
           yarn install
 
       - name: Configure AWS credentials
