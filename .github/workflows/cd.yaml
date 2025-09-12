@@ -1,0 +1,65 @@
+name: Build and push Navigator front to AWS ECR
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: navigator-front-${{ github.ref }}-cd-1
+  cancel-in-progress: true
+
+permissions:
+  id-token: write
+  contents: read
+  packages: read
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+    env:
+      APPLICATION: 'frontend'
+      PROJECT: navigator
+      AWS_ACCOUNT_ID: ${{ vars.AWS_ACCOUNT_ID }}
+      AWS_REGION: ${{ vars.AWS_REGION }}
+      ENVIRONMENT: 'prod'
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22.18.0
+
+      - name: Upgrade deployment files with environment information
+        uses: cschleiden/replace-tokens@v1
+        with:
+          tokenPrefix: '${'
+          tokenSuffix: '}'
+          files: '["infra/ecs/*.json"]'
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{ var.AWS_ACCOUNT_ID }}:role/github_access
+          aws-region: ${{ var.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: infra/ecs/task-definition-${{ var.APPLICATION }}.json
+          container-name: ${{ var.APPLICATION }}
+          image: ${{ var.AWS_ACCOUNT_ID }}.dkr.ecr.${{ var.AWS_REGION }}.amazonaws.com/${{ var.PROJECT }}-${{ var.APPLICATION }}:${{ var.github-sha }}
+
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v2
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: ${{ var.APPLICATION }}
+          cluster: ${{ var.PROJECT }}-${{ var.ENVIRONMENT }}-${{ var.APPLICATION }}
+          wait-for-service-stability: true
