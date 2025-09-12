@@ -39,8 +39,8 @@ jobs:
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::${{ var.AWS_ACCOUNT_ID }}:role/github_access
-          aws-region: ${{ var.AWS_REGION }}
+          role-to-assume: arn:aws:iam::${{ vars.AWS_ACCOUNT_ID }}:role/github_access
+          aws-region: ${{ vars.AWS_REGION }}
 
       - name: Login to Amazon ECR
         id: login-ecr
@@ -50,11 +50,11 @@ jobs:
         id: build-image
         working-directory: .
         env:
-          ECR_REGISTRY: ${{ var.AWS_ACCOUNT_ID }}.dkr.ecr.${{ var.AWS_REGION }}.amazonaws.com
-          ECR_REPOSITORY: ${{ var.PROJECT }}-${{ var.APPLICATION }}
-          IMAGE_TAG: ${{ var.github-sha }}
+          ECR_REGISTRY: ${{ vars.AWS_ACCOUNT_ID }}.dkr.ecr.${{ vars.AWS_REGION }}.amazonaws.com
+          ECR_REPOSITORY: ${{ vars.PROJECT }}-${{ vars.APPLICATION }}
+          IMAGE_TAG: ${{ vars.github-sha }}
         run: |
-          docker build -f Dockerfile -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG . --build-arg COMMIT_HASH=${{ var.github-sha }}
+          docker build -f Dockerfile -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG . --build-arg COMMIT_HASH=${{ vars.github-sha }}
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
           echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
         shell: bash
