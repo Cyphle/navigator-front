@@ -2,7 +2,7 @@ import { CreateProfileRequest, Profile } from '../stores/profile/profile.types.t
 import { post } from '../helpers/http.ts';
 
 export const createProfile = (request: CreateProfileRequest): Promise<Profile> => {
-  return post<CreateProfileRequest, Profile>('profiles', request, responseToProfile);
+  return post<CreateProfileRequest, Profile>('register', request, responseToProfile);
 }
 
 export const responseToProfile = (data: any): Profile => {

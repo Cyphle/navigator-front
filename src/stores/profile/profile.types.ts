@@ -8,6 +8,6 @@ export interface Profile {
 export interface CreateProfileRequest {
   username: string;
   email: string;
-  firstName: string;
-  lastName: string;
+  first_name: string;
+  last_name: string;
 }

@@ -91,7 +91,7 @@ export const Login = () => {
   const navigate = useNavigate();
 
   const handleLogin = () => {
-    window.location.href = "http://localhost:8080/login";
+    window.location.href = "http://localhost:9000/login";
   //   fetch(`${BASE_PATH}/api/login`, {
   //   })
   //       .then((response: Response) => {
@@ -119,7 +119,7 @@ export const Login = () => {
   // }, [queryParams]);
 
   const checkMe = () => {
-      fetch(`${BASE_PATH}/api/users/me`, {
+      fetch(`${BASE_PATH}/users/me`, {
       })
           .then((response: Response) => {
             return response.json();

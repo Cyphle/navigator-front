@@ -28,8 +28,8 @@ export const Registration = () => {
     defaultValues: {
       username: '',
       email: '',
-      firstName: '',
-      lastName: '',
+      first_name: '',
+      last_name: '',
     },
   });
 
@@ -39,8 +39,8 @@ export const Registration = () => {
       createProfileMutation({
         username: value.username,
         email: value.email,
-        firstName: value.firstName,
-        lastName: value.lastName,
+        first_name: value.firstName,
+        last_name: value.lastName,
       });
     },
   });
@@ -89,12 +89,12 @@ export const Registration = () => {
 //     }, []);
 
 // TODO clean
-    useEffect(() => {
-        fetch(`${BASE_PATH}/register`, {})
-            .then((response: Response) => {
-                console.log('delete session res', response);
-            });
-    }, []);
+//     useEffect(() => {
+//         fetch(`${BASE_PATH}/register`, {})
+//             .then((response: Response) => {
+//                 console.log('delete session res', response);
+//             });
+//     }, []);
 
   return (
     <div className="registration-page">
