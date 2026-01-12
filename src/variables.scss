@@ -1,7 +1,16 @@
-$main-color: #0f2999;
-$second-color: #4553d1;
-$main-text-color: #232323;
-$second-text-color: #FFFFFF;
+$primary-color: '#027AC1';
+$dark-background-color: '#1F2A33';
+$dark-background-alt-color: '#232C34';
+$white-color: '#FFFFFF';
+$text-main-color: '#1F2A33';
+$text-muted-color: '#6B7280';
+
+
+$main-color: #027ac1;
+$background-color: #272727;
+$main-text-color: #292929;
+$secondary-text-color: #FFFFFF;
+$hover-text-color: #004a75;
 
 @mixin default-shadow {
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);

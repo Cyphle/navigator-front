@@ -5,17 +5,21 @@ header {
   justify-content: space-between;
   align-items: center;
   height: 60px;
-  background-color: $main-color;
+  background-color: $background-color;
   @include default-shadow;
   padding: 0 10px;
-  color: $second-text-color;
+  color: $main-text-color;
+
+  .logo {
+    height: 30px;
+  }
 
   .banana-title {
     a {
       display: flex;
       align-items: center;
       gap: 5px;
-      color: $second-text-color;
+      color: $main-text-color;
       text-decoration: none;
 
       img {

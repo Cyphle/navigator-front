@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
-import bananaLogo from '../../assets/banana.png';
+import navigatorLogo from '../../assets/navigator.png';
 import { useUser } from '../../contexts/user/user.context.tsx';
 import { Option } from '../../helpers/option.ts';
 import { ROUTES_WITHOUT_COMPONENT } from '../../Routes.tsx';
@@ -21,7 +21,7 @@ export const Header = ({ userInfo }: { userInfo: Option<UserInfo> }) => {
     <header>
       <div className="banana-title">
         <NavLink to="/">
-          <img src={bananaLogo} className="logo" alt="Banana logo" />
+          <img src={navigatorLogo} className="logo" alt="Banana logo" />
           <span>Banana</span>
         </NavLink>
       </div>

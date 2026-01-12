@@ -8,6 +8,12 @@ describe('In memory database', () => {
     expect(Object.keys(database.dump())).toEqual(['accounts', 'profiles']);
   });
 
+  test('toto', () => {
+      const a = 375.09+200.00+200.00+200.00+200.00+200.00+200.00+200.00+200.00+200.00+200.00;
+
+      console.log(a);
+  })
+
   test('should get elements from given table', () => {
     const profiles = new Database().read<Profile>('profiles');
 

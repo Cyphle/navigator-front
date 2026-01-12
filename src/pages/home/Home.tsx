@@ -2,18 +2,6 @@ import { GoToRegistrationButton } from '../../components/go-to-registration-butt
 import './Home.scss';
 
 export const Home = () => {
-
-  // TODO clean
-  // useEffect(() => {
-  //   fetch(`${BASE_PATH}/set`, {})
-  //   .then((data) => {
-  //     console.log('data', data);
-  //   })
-  //   .catch((err) => {
-  //     console.log('err', err);
-  //   });
-  // }, []);
-
   return (
     <div className="homepage">
       <div className="main-title">
