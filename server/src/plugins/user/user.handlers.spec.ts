@@ -16,15 +16,20 @@ describe('userInfoByUsernameHandler', () => {
       id: 1,
       username: 'testuser',
       email: 'test@example.com',
-      firstName: 'Test',
-      lastName: 'User',
+      first_name: 'Test',
+      last_name: 'User',
     };
 
     mockDatabase.readOneByField.mockReturnValue(mockProfile);
 
     const result = userInfoByUsernameHandler(mockDatabase)('testuser');
 
-    expect(result).toEqual(mockProfile);
+    expect(result).toEqual({
+      username: 'testuser',
+      email: 'test@example.com',
+      firstName: 'Test',
+      lastName: 'User',
+    });
     expect(mockDatabase.readOneByField).toHaveBeenCalledWith('profiles', 'username', 'testuser');
   });
 

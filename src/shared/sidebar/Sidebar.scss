@@ -1,0 +1,131 @@
+@use "../../variables.scss" as *;
+
+.app-sidebar {
+  background: linear-gradient(180deg, #2f3c4a 0%, #222a36 100%);
+  color: #e9edf4;
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  min-height: 100vh;
+  box-shadow: 6px 0 20px rgba(22, 27, 36, 0.15);
+}
+
+.app-sidebar__logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #f4f6fb;
+  text-decoration: none;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+
+  img {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.08);
+    padding: 4px;
+  }
+}
+
+.app-sidebar__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.app-sidebar__section {
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 8px;
+  }
+}
+
+.app-sidebar__title {
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: rgba(233, 237, 244, 0.6);
+  margin: 0 0 10px 6px;
+}
+
+.app-sidebar__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  color: inherit;
+  text-decoration: none;
+  border: none;
+  background: transparent;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease;
+
+  &:hover {
+    background: rgba(86, 127, 195, 0.22);
+    color: #ffffff;
+  }
+
+  &.is-active {
+    background: linear-gradient(120deg, #3e6cab, #3b7fd4);
+    color: #ffffff;
+    box-shadow: 0 6px 14px rgba(30, 60, 105, 0.4);
+  }
+
+  &.is-disabled {
+    cursor: default;
+    opacity: 0.55;
+
+    &:hover {
+      background: transparent;
+      color: inherit;
+    }
+  }
+}
+
+.app-sidebar__icon {
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+
+  svg {
+    width: 18px;
+    height: 18px;
+    fill: currentColor;
+  }
+}
+
+@media (max-width: 980px) {
+  .app-sidebar {
+    min-height: auto;
+    width: 100%;
+    flex-direction: row;
+    align-items: center;
+    gap: 18px;
+    padding: 16px 18px;
+  }
+
+  .app-sidebar__nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .app-sidebar__section {
+    ul {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+  }
+
+  .app-sidebar__title {
+    display: none;
+  }
+}

@@ -18,16 +18,6 @@ jest.mock('../../contexts/user/user.context.tsx', () => ({
   setUserState: jest.fn(),
 }));
 
-jest.mock('../menu/Menu', () => ({
-  Menu: () => <div data-testid="menu-component">Menu Component</div>,
-}));
-
-jest.mock('../../assets/banana.png', () => 'mocked-banana-image');
-
-jest.mock('../../Routes.tsx', () => ({
-  ROUTES_WITHOUT_COMPONENT: [],
-}));
-
 describe('Header Component', () => {
   const someUserInfo = some({ firstName: 'John', lastName: 'Doe', username: 'johndoe', email: 'john.doe@example.com' });
 
@@ -41,21 +31,17 @@ describe('Header Component', () => {
   test('renders the header with correct elements', () => {
     renderWithRouter(<Header userInfo={someUserInfo}/>);
 
-    // Check if the logo and title are rendered
-    const logoLink = screen.getByRole('link', { name: /banana/i });
-    expect(logoLink).toBeInTheDocument();
-    expect(logoLink).toHaveAttribute('href', '/');
+    // Check if the title is rendered
+    const title = screen.getByText('Dashboard');
+    expect(title).toBeInTheDocument();
 
-    // Check if user info is rendered
-    const userInfo = screen.getByText('John Doe');
-    expect(userInfo).toBeInTheDocument();
-
-    // Check if Menu component is rendered
-    const menuComponent = screen.getByTestId('menu-component');
-    expect(menuComponent).toBeInTheDocument();
+    // Check if profile link is rendered
+    const profileLink = screen.getByRole('link', { name: /john doe/i });
+    expect(profileLink).toBeInTheDocument();
+    expect(profileLink).toHaveAttribute('href', '/profile');
   });
 
-  test('uses NavLink for the logo', () => {
+  test('uses NavLink for the profile', () => {
     (useUser as jest.Mock).mockReturnValue({
       userState: { firstName: 'Jane', lastName: 'Smith' },
       setUserState: jest.fn(),
@@ -64,7 +50,7 @@ describe('Header Component', () => {
     renderWithRouter(<Header userInfo={someUserInfo}/>);
 
     expect(NavLink).toHaveBeenCalledWith(
-      expect.objectContaining({ to: '/' }),
+      expect.objectContaining({ to: '/profile' }),
       expect.anything()
     );
   });
@@ -112,4 +98,3 @@ describe('Header Component', () => {
     expect(mockSetUserState).not.toHaveBeenCalled();
   });
 });
-

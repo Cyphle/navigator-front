@@ -6,6 +6,7 @@ import { profilePlugin } from './plugins/profile/profile.plugin';
 import { loginPlugin } from './plugins/login/login.plugin';
 import { userPlugin } from './plugins/user/user.plugin';
 import { securityPlugin } from './plugins/security/security.plugin';
+import { dashboardPlugin } from './plugins/dashboard/dashboard.plugin';
 
 const fastify = initFastify(
   [decorateWithUser, decorateWithDatabase],
@@ -14,7 +15,8 @@ const fastify = initFastify(
     { plugin: accountPlugin, routesPrefix: '/accounts' },
     { plugin: loginPlugin, routesPrefix: '/login' },
     { plugin: userPlugin, routesPrefix: '/user' },
-    { plugin: securityPlugin, routesPrefix: '' }
+    { plugin: securityPlugin, routesPrefix: '' },
+    { plugin: dashboardPlugin, routesPrefix: '/dashboard' }
   ]
 );
 

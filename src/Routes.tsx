@@ -25,7 +25,7 @@ export const ROUTES_PATHS: RouteDefinitionWithComponent[] = [
   { 
     index: true, 
     element: <Home />,
-    isAuth: false
+    isAuth: true
   },
   {
     id: 1,

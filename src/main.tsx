@@ -1,12 +1,14 @@
 import { ConfigProvider } from 'antd';
 import { Outlet } from 'react-router-dom';
 import { UserContextProvider } from './contexts/user/user.context.tsx';
-import { Option, some } from './helpers/option.ts';
+import { none, Option } from './helpers/option.ts';
 import './main.scss';
 import { Footer } from './shared/footer/Footer.tsx';
 import { Header } from './shared/header/Header.tsx';
+import { Sidebar } from './shared/sidebar/Sidebar.tsx';
 import { UserInfo } from './stores/user/user.types.ts';
 import { PRIMARY_COLOR } from './theme-variables.ts';
+import { useUserInfo } from './stores/user/user.queries.ts';
 
 // TODO c'est pour load des data avant le chargement de la page
 export async function appLoader() {
@@ -17,38 +19,33 @@ const SiteContent = ({ userInfo }: { userInfo: Option<UserInfo> }) => {
   return (
     <UserContextProvider>
       <ConfigProvider theme={ { token: { colorPrimary: PRIMARY_COLOR } } }>
-          <Header userInfo={userInfo}/>
-
-          <Outlet/>
-
-          <Footer/>
-        </ConfigProvider>
+        <div className="app-shell">
+          <Sidebar />
+          <div className="app-shell__main">
+            <Header userInfo={userInfo}/>
+            <main className="app-shell__content">
+              <Outlet/>
+            </main>
+            <Footer/>
+          </div>
+        </div>
+      </ConfigProvider>
     </UserContextProvider>
   )
 }
 
 const Main = () => {
-  // const { isPending, isError, data, error } = useUserInfo();
-  const data = some({
-    username: '',
-    firstName: '',
-    lastName: '',
-    email: ''
-  });
+  const { isPending, isError, data, error } = useUserInfo();
 
-  // TODO faut remettre comme avant
-  return (
-    <>
-      {/* {isPending ? (
-        <span>Loading...</span>
-      ) : isError ? (
-        <span>Error: { error.message }</span>
-      ) : (
-        <SiteContent userInfo={data as Option<UserInfo>}/>
-      )} */}
-      <SiteContent userInfo={data as Option<UserInfo>}/>
-    </>
-  )
+  if (isPending) {
+    return <span>Loading...</span>;
+  }
+
+  if (isError) {
+    return <span>Error: { error.message }</span>;
+  }
+
+  return <SiteContent userInfo={(data ?? none) as Option<UserInfo>} />
 }
 
 export default Main;

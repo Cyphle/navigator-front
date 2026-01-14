@@ -1,0 +1,160 @@
+[
+  {
+    "agenda": [
+      {
+        "id": 1,
+        "title": "Anniversaire lycee",
+        "time": "19:30",
+        "person": "Emma",
+        "accentColor": "#f3a6a6",
+        "visibility": "FAMILY",
+        "attendees": ["Noemie", "Emma"]
+      },
+      {
+        "id": 2,
+        "title": "Avis podocteur",
+        "time": "09:00",
+        "person": "Emma",
+        "accentColor": "#8ec5e8",
+        "visibility": "PERSONAL",
+        "attendees": ["Emma"]
+      },
+      {
+        "id": 3,
+        "title": "Activite de ferrage",
+        "time": "19:00",
+        "person": "Louis",
+        "accentColor": "#f6c56c",
+        "visibility": "FAMILY",
+        "attendees": ["Louis", "Leo"]
+      }
+    ],
+    "todos": [
+      {
+        "id": 1,
+        "label": "Sortir les poubelles",
+        "assignee": "Leo",
+        "completed": true,
+        "visibility": "FAMILY"
+      },
+      {
+        "id": 2,
+        "label": "Prendre rendez-vous chez le dentiste",
+        "assignee": "Noemie",
+        "completed": false,
+        "visibility": "FAMILY"
+      },
+      {
+        "id": 3,
+        "label": "Preparer une tarte aux pommes",
+        "assignee": "Emma",
+        "completed": false,
+        "visibility": "PERSONAL"
+      },
+      {
+        "id": 4,
+        "label": "Ranger le garage",
+        "assignee": "Leo",
+        "completed": false,
+        "visibility": "FAMILY"
+      },
+      {
+        "id": 5,
+        "label": "Arroser les plantes",
+        "assignee": "Noemie",
+        "completed": false,
+        "visibility": "FAMILY"
+      }
+    ],
+    "weeklyMenu": {
+      "weekLabel": "Jul 9",
+      "days": [
+        {
+          "id": 1,
+          "label": "Mar. 1",
+          "entries": [
+            {
+              "id": 1,
+              "name": "Salade de pates",
+              "time": "10:00",
+              "person": "Emma",
+              "favorite": true,
+              "thumbnailColor": "#d5e7d9",
+              "visibility": "FAMILY"
+            }
+          ]
+        },
+        {
+          "id": 2,
+          "label": "Mer. 2",
+          "entries": [
+            {
+              "id": 2,
+              "name": "Curry vegetarien",
+              "time": "11:00",
+              "person": "Sara",
+              "favorite": false,
+              "thumbnailColor": "#f3e7c8",
+              "visibility": "FAMILY"
+            }
+          ]
+        },
+        {
+          "id": 3,
+          "label": "Jeu. 3",
+          "entries": [
+            {
+              "id": 3,
+              "name": "Poulet sauce moutarde",
+              "time": "19:00",
+              "person": "Louis",
+              "favorite": false,
+              "thumbnailColor": "#e7d4b5",
+              "visibility": "FAMILY"
+            }
+          ]
+        }
+      ]
+    },
+    "recipes": [
+      {
+        "id": 1,
+        "name": "Lasagnes maison",
+        "favorite": true,
+        "selectedForWeek": true,
+        "visibility": "FAMILY"
+      },
+      {
+        "id": 2,
+        "name": "Bowl printemps",
+        "favorite": true,
+        "selectedForWeek": false,
+        "visibility": "PERSONAL"
+      },
+      {
+        "id": 3,
+        "name": "Riz saute legumes",
+        "favorite": false,
+        "selectedForWeek": false,
+        "visibility": "FAMILY"
+      },
+      {
+        "id": 4,
+        "name": "Soupe de carottes",
+        "favorite": true,
+        "selectedForWeek": true,
+        "visibility": "FAMILY"
+      },
+      {
+        "id": 5,
+        "name": "Tarte aux pommes",
+        "favorite": false,
+        "selectedForWeek": true,
+        "visibility": "PERSONAL"
+      }
+    ],
+    "shopping": {
+      "items": 8
+    }
+  }
+]
