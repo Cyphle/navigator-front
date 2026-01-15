@@ -1,5 +1,6 @@
 import { ConfigProvider } from 'antd';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 import { UserContextProvider } from './contexts/user/user.context.tsx';
 import { none, Option } from './helpers/option.ts';
 import './main.scss';
@@ -36,6 +37,16 @@ const SiteContent = ({ userInfo }: { userInfo: Option<UserInfo> }) => {
 
 const Main = () => {
   const { isPending, isError, data, error } = useUserInfo();
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const isAuthenticated = data?.isSome?.() ?? false;
+
+  useEffect(() => {
+    if (!isPending && !isAuthenticated && location.pathname === '/') {
+      navigate('/registration', { replace: true });
+    }
+  }, [isPending, isAuthenticated, location.pathname, navigate]);
 
   if (isPending) {
     return <span>Loading...</span>;
