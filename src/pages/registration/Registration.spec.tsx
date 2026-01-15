@@ -35,11 +35,13 @@ describe('Registration', () => {
     const emailInput = screen.getByTestId('email-input');
     const firstNameInput = screen.getByTestId('firstname-input');
     const lastNameInput = screen.getByTestId('lastname-input');
+    const passwordInput = screen.getByTestId('password-input');
 
     fireEvent.change(usernameInput, { target: { value: 'johndoe', }, });
     fireEvent.change(emailInput, { target: { value: 'johndoe@banana.fr', }, });
     fireEvent.change(firstNameInput, { target: { value: 'John', }, });
     fireEvent.change(lastNameInput, { target: { value: 'Doe', }, });
+    fireEvent.change(passwordInput, { target: { value: 'passpass', }, });
 
     const submit = screen.getByRole('button', { name: 'S\'inscrire' });
     fireEvent.click(submit);
@@ -48,12 +50,14 @@ describe('Registration', () => {
     await waitFor(() => {expect(emailInput).toHaveValue('johndoe@banana.fr');});
     await waitFor(() => {expect(firstNameInput).toHaveValue('John');});
     await waitFor(() => {expect(lastNameInput).toHaveValue('Doe');});
+    await waitFor(() => {expect(passwordInput).toHaveValue('passpass');});
     await waitFor(() => {
       expect(mockMutate).toHaveBeenCalledWith({
         username: 'johndoe',
         email: 'johndoe@banana.fr',
-        firstName: 'John',
-        lastName: 'Doe',
+        first_name: 'John',
+        last_name: 'Doe',
+        password: 'passpass',
       });
     });
   });

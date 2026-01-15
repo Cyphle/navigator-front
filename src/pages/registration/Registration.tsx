@@ -1,11 +1,18 @@
 import './Registration.scss';
-import {formOptions, useForm} from '@tanstack/react-form';
-import {CreateProfileRequest} from '../../stores/profile/profile.types.ts';
-import {Button, Form, Input} from 'antd';
-import {useCreateProfile} from '../../stores/profile/profile.commands.ts';
-import {useNavigate} from 'react-router';
-import {useEffect} from 'react';
-import {BASE_PATH} from '../../helpers/http.ts';
+import { formOptions, useForm } from '@tanstack/react-form';
+import { CreateProfileRequest } from '../../stores/profile/profile.types.ts';
+import { Button, Form, Input } from 'antd';
+import { useCreateProfile } from '../../stores/profile/profile.commands.ts';
+import { useNavigate } from 'react-router';
+import { Link } from 'react-router-dom';
+
+interface RegistrationFormValues {
+  username: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+  password: string;
+}
 
 export const Registration = () => {
   const navigate = useNavigate();
@@ -24,24 +31,28 @@ export const Registration = () => {
     isPending: createProfileIsPending,
   } = useCreateProfile(onCreateProfileError, onCreateProfileSuccess);
 
-  const options = formOptions<CreateProfileRequest>({
+  const options = formOptions<RegistrationFormValues>({
     defaultValues: {
       username: '',
       email: '',
-      first_name: '',
-      last_name: '',
+      firstName: '',
+      lastName: '',
+      password: '',
     },
   });
 
   const form = useForm({
     ...options,
     onSubmit: async ({ value }) => {
-      createProfileMutation({
+      const payload: CreateProfileRequest = {
         username: value.username,
         email: value.email,
         first_name: value.firstName,
         last_name: value.lastName,
-      });
+        password: value.password,
+      };
+
+      createProfileMutation(payload);
     },
   });
 
@@ -98,83 +109,176 @@ export const Registration = () => {
 
   return (
     <div className="registration-page">
-      <h1>Crée toi un compte</h1>
+      <section className="registration-card registration-hero">
+        <span className="registration-hero__badge">Navigator</span>
+        <h1>Crée toi un compte</h1>
+        <p className="registration-hero__subtitle">
+          Centralise tes comptes, visualise les tendances et garde une vue claire sur
+          tes projets personnels.
+        </p>
 
-      <Form
-        labelCol={ { span: 8 } }
-        wrapperCol={ { span: 16 } }
-        style={ { maxWidth: 600 } }
-        onFinish={ () => {
-          form.handleSubmit();
-        } }
-      >
-        <form.Field
-          name="username"
-          children={ (field) => (
-            <>
-              <label htmlFor={ field.name }>Nom d'utilisateur :</label>
-              <Input
-                data-testid="username-input"
-                value={ field.state.value }
-                onBlur={ field.handleBlur }
-                onChange={ (e: any) => field.handleChange(e.target.value) }
-                disabled={createProfileIsPending}
-                placeholder="Nom d'utilisateur"/>
-            </>
-          ) }
-        />
+        <ul className="registration-hero__list">
+          <li className="registration-hero__item">
+            <span className="registration-hero__dot registration-hero__dot--primary" />
+            <div>
+              <p className="registration-hero__item-title">Pilotage clair</p>
+              <p className="registration-hero__item-text">
+                Regroupe tes mouvements importants sur un seul tableau.
+              </p>
+            </div>
+          </li>
+          <li className="registration-hero__item">
+            <span className="registration-hero__dot registration-hero__dot--secondary" />
+            <div>
+              <p className="registration-hero__item-title">Vue hebdomadaire</p>
+              <p className="registration-hero__item-text">
+                Planifie les prochaines semaines sans perdre le rythme.
+              </p>
+            </div>
+          </li>
+          <li className="registration-hero__item">
+            <span className="registration-hero__dot registration-hero__dot--accent" />
+            <div>
+              <p className="registration-hero__item-title">Alertes utiles</p>
+              <p className="registration-hero__item-text">
+                Recois des rappels quand tes objectifs bougent.
+              </p>
+            </div>
+          </li>
+        </ul>
 
-        <form.Field
-          name="email"
-          children={ (field) => (
-            <>
-              <label htmlFor={ field.name }>Email :</label>
-              <Input
-                data-testid="email-input"
-                value={ field.state.value }
-                onBlur={ field.handleBlur }
-                onChange={ (e: any) => field.handleChange(e.target.value) }
-                placeholder="Email"/>
-            </>
-          ) }
-        />
+        <div className="registration-hero__stats">
+          <div className="registration-hero__stat">
+            <p className="registration-hero__stat-value">1 tableau</p>
+            <p className="registration-hero__stat-label">Budget, comptes, objectifs</p>
+          </div>
+          <div className="registration-hero__stat">
+            <p className="registration-hero__stat-value">3 vues</p>
+            <p className="registration-hero__stat-label">Jour, semaine, mois</p>
+          </div>
+        </div>
+      </section>
 
-        <form.Field
-          name="firstName"
-          children={ (field) => (
-            <>
-              <label htmlFor={ field.name }>Prénom :</label>
-              <Input
-                data-testid="firstname-input"
-                value={ field.state.value }
-                onBlur={ field.handleBlur }
-                onChange={ (e: any) => field.handleChange(e.target.value) }
-                placeholder="Prénom"/>
-            </>
-          ) }
-        />
+      <section className="registration-card registration-form">
+        <div className="registration-form__header">
+          <h2>Informations du compte</h2>
+          <p>Entre les informations principales pour lancer ton espace.</p>
+        </div>
 
-        <form.Field
-          name="lastName"
-          children={ (field) => (
-            <>
-              <label htmlFor={ field.name }>Nom :</label>
-              <Input
-                data-testid="lastname-input"
-                value={ field.state.value }
-                onBlur={ field.handleBlur }
-                onChange={ (e: any) => field.handleChange(e.target.value) }
-                placeholder="Nom"/>
-            </>
-          ) }
-        />
+        <Form
+          layout="vertical"
+          className="registration-form__form"
+          onFinish={ () => {
+            form.handleSubmit();
+          } }
+        >
+          <div className="registration-form__grid">
+            <form.Field
+              name="username"
+              children={ (field) => (
+                <div className="registration-form__field registration-form__field--full">
+                  <label htmlFor={ field.name }>Nom d'utilisateur</label>
+                  <Input
+                    id={ field.name }
+                    data-testid="username-input"
+                    value={ field.state.value }
+                    onBlur={ field.handleBlur }
+                    onChange={ (e: any) => field.handleChange(e.target.value) }
+                    disabled={ createProfileIsPending }
+                    placeholder="Nom d'utilisateur"
+                  />
+                </div>
+              ) }
+            />
 
-        <Form.Item wrapperCol={ { offset: 8, span: 16 } }>
-          <Button type="primary" htmlType="submit">
-            S'inscrire
-          </Button>
-        </Form.Item>
-      </Form>
+            <form.Field
+              name="email"
+              children={ (field) => (
+                <div className="registration-form__field registration-form__field--full">
+                  <label htmlFor={ field.name }>Email</label>
+                  <Input
+                    id={ field.name }
+                    data-testid="email-input"
+                    value={ field.state.value }
+                    onBlur={ field.handleBlur }
+                    onChange={ (e: any) => field.handleChange(e.target.value) }
+                    disabled={ createProfileIsPending }
+                    placeholder="Email"
+                  />
+                </div>
+              ) }
+            />
+
+            <form.Field
+              name="firstName"
+              children={ (field) => (
+                <div className="registration-form__field">
+                  <label htmlFor={ field.name }>Prénom</label>
+                  <Input
+                    id={ field.name }
+                    data-testid="firstname-input"
+                    value={ field.state.value }
+                    onBlur={ field.handleBlur }
+                    onChange={ (e: any) => field.handleChange(e.target.value) }
+                    disabled={ createProfileIsPending }
+                    placeholder="Prénom"
+                  />
+                </div>
+              ) }
+            />
+
+            <form.Field
+              name="lastName"
+              children={ (field) => (
+                <div className="registration-form__field">
+                  <label htmlFor={ field.name }>Nom</label>
+                  <Input
+                    id={ field.name }
+                    data-testid="lastname-input"
+                    value={ field.state.value }
+                    onBlur={ field.handleBlur }
+                    onChange={ (e: any) => field.handleChange(e.target.value) }
+                    disabled={ createProfileIsPending }
+                    placeholder="Nom"
+                  />
+                </div>
+              ) }
+            />
+
+            <form.Field
+              name="password"
+              children={ (field) => (
+                <div className="registration-form__field registration-form__field--full">
+                  <label htmlFor={ field.name }>Mot de passe</label>
+                  <Input.Password
+                    id={ field.name }
+                    data-testid="password-input"
+                    value={ field.state.value }
+                    onBlur={ field.handleBlur }
+                    onChange={ (e: any) => field.handleChange(e.target.value) }
+                    disabled={ createProfileIsPending }
+                    placeholder="Mot de passe"
+                  />
+                </div>
+              ) }
+            />
+          </div>
+
+          <div className="registration-form__actions">
+            <Button
+              className="registration-form__submit"
+              type="primary"
+              htmlType="submit"
+              loading={ createProfileIsPending }
+            >
+              S'inscrire
+            </Button>
+            <span className="registration-form__hint">
+              Déjà un compte ? <Link to="/login">Se connecter</Link>
+            </span>
+          </div>
+        </Form>
+      </section>
     </div>
   );
 }
