@@ -5,6 +5,8 @@ import { Button, Form, Input } from 'antd';
 import { useCreateProfile } from '../../stores/profile/profile.commands.ts';
 import { useNavigate } from 'react-router';
 import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useToaster } from '../../components/toaster/Toaster.tsx';
 
 interface RegistrationFormValues {
   username: string;
@@ -16,6 +18,14 @@ interface RegistrationFormValues {
 
 export const Registration = () => {
   const navigate = useNavigate();
+  const { notify } = useToaster();
+
+  useEffect(() => {
+    notify({
+      type: 'info',
+      title: 'Vous allez etre la bienvenue',
+    });
+  }, [notify]);
 
   const onCreateProfileError = (_: string) => {
     // TODO do something

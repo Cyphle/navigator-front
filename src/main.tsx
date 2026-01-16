@@ -10,6 +10,7 @@ import { Sidebar } from './shared/sidebar/Sidebar.tsx';
 import { UserInfo } from './stores/user/user.types.ts';
 import { PRIMARY_COLOR } from './theme-variables.ts';
 import { useUserInfo } from './stores/user/user.queries.ts';
+import { Toaster } from './components/toaster/Toaster.tsx';
 
 // TODO c'est pour load des data avant le chargement de la page
 export async function appLoader() {
@@ -20,16 +21,18 @@ const SiteContent = ({ userInfo }: { userInfo: Option<UserInfo> }) => {
   return (
     <UserContextProvider>
       <ConfigProvider theme={ { token: { colorPrimary: PRIMARY_COLOR } } }>
-        <div className="app-shell">
-          <Sidebar />
-          <div className="app-shell__main">
-            <Header userInfo={userInfo}/>
-            <main className="app-shell__content">
-              <Outlet/>
-            </main>
-            <Footer/>
+        <Toaster>
+          <div className="app-shell">
+            <Sidebar />
+            <div className="app-shell__main">
+              <Header userInfo={userInfo}/>
+              <main className="app-shell__content">
+                <Outlet/>
+              </main>
+              <Footer/>
+            </div>
           </div>
-        </div>
+        </Toaster>
       </ConfigProvider>
     </UserContextProvider>
   )
