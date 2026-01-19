@@ -4,12 +4,15 @@ import { renderWithRouter } from '../../../test-utils/render';
 import { Header } from './Header';
 import { useUser } from '../../contexts/user/user.context';
 import { none, some } from '../../helpers/option';
+import { logout } from '../../services/user.service.ts';
+import { fireEvent, waitFor } from '@testing-library/react';
 
 jest.mock('react-router-dom', () => {
   const originalModule = jest.requireActual('react-router-dom');
   return {
     ...originalModule,
     NavLink: jest.fn(({ children, to }) => <a href={to}>{children}</a>),
+    useNavigate: jest.fn(),
   };
 });
 
@@ -18,14 +21,23 @@ jest.mock('../../contexts/user/user.context.tsx', () => ({
   setUserState: jest.fn(),
 }));
 
+jest.mock('../../services/user.service.ts', () => ({
+  logout: jest.fn(),
+}));
+
 describe('Header Component', () => {
   const someUserInfo = some({ firstName: 'John', lastName: 'Doe', username: 'johndoe', email: 'john.doe@example.com' });
+  const mockNavigate = jest.fn();
 
   beforeEach(() => {
+    const { useNavigate } = jest.requireMock('react-router-dom');
+    useNavigate.mockReturnValue(mockNavigate);
     (useUser as jest.Mock).mockReturnValue({
       userState: { firstName: 'John', lastName: 'Doe' },
       setUserState: jest.fn(),
     });
+    mockNavigate.mockClear();
+    (logout as jest.Mock).mockResolvedValue(undefined);
   });
 
   test('renders the header with correct elements', () => {
@@ -96,5 +108,29 @@ describe('Header Component', () => {
     renderWithRouter(<Header userInfo={none}/>);
 
     expect(mockSetUserState).not.toHaveBeenCalled();
+  });
+
+  test('shows logout button when user is logged in', () => {
+    renderWithRouter(<Header userInfo={someUserInfo}/>);
+
+    expect(screen.getByRole('button', { name: 'Logout' })).toBeInTheDocument();
+  });
+
+  test('does not show logout button when user is not logged in', () => {
+    renderWithRouter(<Header userInfo={none}/>);
+
+    expect(screen.queryByRole('button', { name: 'Logout' })).not.toBeInTheDocument();
+  });
+
+  test('logs out and redirects to registration', async () => {
+    renderWithRouter(<Header userInfo={someUserInfo}/>);
+
+    const logoutButton = screen.getByRole('button', { name: 'Logout' });
+    fireEvent.click(logoutButton);
+
+    await waitFor(() => {
+      expect(logout).toHaveBeenCalled();
+      expect(mockNavigate).toHaveBeenCalledWith('/registration');
+    });
   });
 });

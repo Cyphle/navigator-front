@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%= title %></title>
+    <style>
+      body {
+        font-family: "Open Sans", Arial, sans-serif;
+        background: linear-gradient(135deg, #e2e8f0, #f8fafc);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 100vh;
+        margin: 0;
+        color: #1f2937;
+      }
+      .login-card {
+        background: #ffffff;
+        border-radius: 18px;
+        box-shadow: 0 16px 30px rgba(15, 23, 42, 0.12);
+        padding: 32px;
+        width: min(420px, 90vw);
+        display: grid;
+        gap: 18px;
+      }
+      .login-card h1 {
+        margin: 0;
+        font-size: 24px;
+      }
+      .login-card p {
+        margin: 0;
+        color: #64748b;
+      }
+      .login-field {
+        display: grid;
+        gap: 8px;
+      }
+      label {
+        font-size: 13px;
+        font-weight: 600;
+        color: #475569;
+      }
+      input {
+        border: 1px solid #e2e8f0;
+        background: #f8fafc;
+        border-radius: 12px;
+        padding: 10px 12px;
+        font-size: 14px;
+      }
+      button {
+        border: none;
+        border-radius: 12px;
+        padding: 12px 16px;
+        background: linear-gradient(120deg, #3b82f6, #2563eb);
+        color: #ffffff;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      button:hover {
+        background: linear-gradient(120deg, #2563eb, #1d4ed8);
+      }
+    </style>
+  </head>
+  <body>
+    <form class="login-card" method="POST" action="<%= actionUrl %>">
+      <div>
+        <h1>Connexion</h1>
+        <p>Connectez-vous pour acceder a votre espace Navigator.</p>
+      </div>
+
+      <div class="login-field">
+        <label for="username">Nom d'utilisateur</label>
+        <input id="username" name="username" placeholder="Nom d'utilisateur" required />
+      </div>
+
+      <div class="login-field">
+        <label for="password">Mot de passe</label>
+        <input id="password" type="password" name="password" placeholder="Mot de passe" required />
+      </div>
+
+      <input type="hidden" name="redirectTo" value="<%= redirectTo %>" />
+
+      <button type="submit">Se connecter</button>
+    </form>
+  </body>
+</html>

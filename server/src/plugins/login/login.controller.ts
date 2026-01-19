@@ -13,6 +13,12 @@ export const loginController = (handler: (database: Database) => (request: Custo
     }
     
     const profile = handler(request.database!!)(request, loginRequest);
+    const redirectTo = getStringBodyElement<string | undefined>(request, 'redirectTo');
+
+    if (redirectTo) {
+      reply.redirect(redirectTo, 302);
+      return;
+    }
 
     reply
       .code(201)

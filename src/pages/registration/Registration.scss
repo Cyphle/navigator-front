@@ -245,14 +245,16 @@
   font-size: 13px;
 }
 
-.registration-form__hint a {
+.registration-form__link {
+  padding: 0;
+  height: auto;
   color: #2563eb;
   font-weight: 600;
-  text-decoration: none;
+  text-align: left;
 }
 
-.registration-form__hint a:hover {
-  text-decoration: underline;
+.registration-form__link:hover {
+  color: #1d4ed8;
 }
 
 @media (max-width: 1100px) {

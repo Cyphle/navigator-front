@@ -24,7 +24,7 @@ export const responseToUserInfo = (data: any | undefined): Option<UserInfo> => {
 }
 
 export const logout = (): Promise<void> => {
-  return getOne(`user/logout`, () => {});
+  return getOne(`logout`, () => {});
 }
 
 // TODO to be tested

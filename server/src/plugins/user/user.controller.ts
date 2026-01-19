@@ -37,7 +37,9 @@ export const userInfoController = (handler: (database: Database) => (username: s
 export const logoutController = () => (fastify: FastifyInstance): void => {
   fastify.get('/logout', (request: CustomFastifyRequest, reply: FastifyReply) => {
     const connectedProfile = request.session.get('user');
-    fastify.log.info(`User ${connectedProfile.username} is login out`);
+    if (connectedProfile) {
+      fastify.log.info(`User ${connectedProfile.username} is login out`);
+    }
 
     if (connectedProfile === undefined) {
       reply.code(403).send();

@@ -14,8 +14,21 @@ jest.mock('react-router', () => ({
 }));
 
 describe('Registration', () => {
+  const originalLocation = window.location;
+
+  beforeAll(() => {
+    // jsdom does not allow direct assignment to window.location.href
+    delete (window as { location?: Location }).location;
+    (window as { location: { href: string } }).location = { href: '' };
+  });
+
+  afterAll(() => {
+    (window as { location: Location }).location = originalLocation;
+  });
+
   beforeEach(() => {
     (useCreateProfile as jest.Mock).mockClear();
+    (window as { location: { href: string } }).location.href = '';
   });
 
   test('should render', () => {
@@ -24,7 +37,7 @@ describe('Registration', () => {
     expect(screen.getByText('Crée toi un compte')).toBeInTheDocument();
   });
 
-  ftest('should handle form submission', async () => {
+  test('should handle form submission', async () => {
     const mockMutate = jest.fn();
     (useCreateProfile as jest.Mock).mockImplementation(() => ({
       mutate: mockMutate,
@@ -60,5 +73,14 @@ describe('Registration', () => {
         password: 'passpass',
       });
     });
+  });
+
+  test('should redirect to server login', () => {
+    render(<Registration/>);
+
+    const loginButton = screen.getByRole('button', { name: 'Si vous avez déjà un compte connectez vous' });
+    fireEvent.click(loginButton);
+
+    expect(window.location.href).toBe('http://localhost:9000/login');
   });
 });

@@ -4,7 +4,6 @@ import { CreateProfileRequest } from '../../stores/profile/profile.types.ts';
 import { Button, Form, Input } from 'antd';
 import { useCreateProfile } from '../../stores/profile/profile.commands.ts';
 import { useNavigate } from 'react-router';
-import { Link } from 'react-router-dom';
 import { useEffect } from 'react';
 import { useToaster } from '../../components/toaster/Toaster.tsx';
 
@@ -26,6 +25,10 @@ export const Registration = () => {
       title: 'Vous allez etre la bienvenue',
     });
   }, [notify]);
+
+  const handleLoginRedirect = () => {
+    window.location.href = 'http://localhost:9000/login';
+  };
 
   const onCreateProfileError = (_: string) => {
     // TODO do something
@@ -283,9 +286,13 @@ export const Registration = () => {
             >
               S'inscrire
             </Button>
-            <span className="registration-form__hint">
-              Déjà un compte ? <Link to="/login">Se connecter</Link>
-            </span>
+            <Button
+              className="registration-form__link"
+              type="text"
+              onClick={ handleLoginRedirect }
+            >
+              Si vous avez déjà un compte connectez vous
+            </Button>
           </div>
         </Form>
       </section>

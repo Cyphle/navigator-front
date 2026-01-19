@@ -1,5 +1,6 @@
 import { FastifyError, FastifyInstance, FastifyPluginOptions, FastifyReply, FastifyRequest } from 'fastify';
 import { registerController } from './security.controller';
+import { logoutController } from '../user/user.controller';
 import { registerHandler } from './security.handlers';
 
 export const securityPlugin = async (fastify: FastifyInstance, options: FastifyPluginOptions) => {
@@ -10,4 +11,5 @@ export const securityPlugin = async (fastify: FastifyInstance, options: FastifyP
   })
 
   registerController(registerHandler)(fastify);
-}
+  logoutController()(fastify);
+} 

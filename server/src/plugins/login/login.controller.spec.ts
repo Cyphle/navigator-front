@@ -16,4 +16,20 @@ describe('Login controller', () => {
         done();
       });
   });
+
+  test('should redirect when redirectTo is provided', (done) => {
+    mockFastify({}, [loginController(loginHandler)])
+      .inject()
+      .post('/')
+      .body({
+        username: 'john.doe',
+        password: 'passpass',
+        redirectTo: 'http://localhost:5173/registration',
+      })
+      .end((err, res) => {
+        expect(res?.statusCode).toEqual(302);
+        expect(res?.headers.location).toEqual('http://localhost:5173/registration');
+        done();
+      });
+  });
 });
