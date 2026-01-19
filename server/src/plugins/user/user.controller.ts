@@ -7,20 +7,14 @@ import { Profile } from '../profile/profile.types';
 export const userInfoController = (handler: (database: Database) => (username: string) => UserInfo | undefined) => (fastify: FastifyInstance): void => {
   fastify.get('/info', (request: CustomFastifyRequest, reply: FastifyReply) => {
     let connectedProfile = request.session.get('user');
-
-    if (connectedProfile === undefined) {
-      const profiles = request.database!!.read<Profile>('profiles');
-      if (profiles.length) {
-        connectedProfile = profiles[0];
-        // @ts-ignore
-        request.session.set('user', connectedProfile);
-      }
-    }
+    fastify.log.info(`Current session ${JSON.stringify(request.session)}`);
 
     if (connectedProfile === undefined) {
       reply.code(403).send();
     } else {
       const info = handler(request.database!!)(connectedProfile.username);
+      // @ts-ignore
+      request.session.set('user', connectedProfile);
 
       if (!!info) {
         reply
@@ -37,9 +31,8 @@ export const userInfoController = (handler: (database: Database) => (username: s
 export const logoutController = () => (fastify: FastifyInstance): void => {
   fastify.get('/logout', (request: CustomFastifyRequest, reply: FastifyReply) => {
     const connectedProfile = request.session.get('user');
-    if (connectedProfile) {
-      fastify.log.info(`User ${connectedProfile.username} is login out`);
-    }
+    fastify.log.info(`Current session ${JSON.stringify(request.session)}`);
+    fastify.log.info(`User ${connectedProfile.username} is login out`);
 
     if (connectedProfile === undefined) {
       reply.code(403).send();
