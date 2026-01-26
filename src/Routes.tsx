@@ -1,12 +1,12 @@
 import { createBrowserRouter } from 'react-router-dom';
-import Main, { appLoader } from './main.tsx';
+import Main, { initialDataLoader } from './main.tsx';
 import { AccountPage, accountParamsLoader } from './pages/account/Account.tsx';
 import { AccountsPage } from './pages/accounts/Accounts.tsx';
 import { Home } from './pages/home/Home.tsx';
 import { Login } from './pages/login/Login.tsx';
 import { Profile } from './pages/profile/Profile.tsx';
 import { Registration } from './pages/registration/Registration.tsx';
-import ErrorPage from './shared/ErrorPage.tsx';
+import ErrorPage from './shared/error/ErrorPage.tsx';
 
 export interface RouteDefinition {
   id?: number;
@@ -68,7 +68,7 @@ const ROUTES = [
     path: '/',
     element: <Main />,
     errorElement: <ErrorPage />,
-    loader: appLoader,
+    loader: initialDataLoader,
     children: [
       {
         errorElement: <ErrorPage />,

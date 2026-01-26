@@ -12,28 +12,9 @@ import { PRIMARY_COLOR } from './theme-variables.ts';
 import { Toaster } from './components/toaster/Toaster.tsx';
 import { getUserInfo } from './services/user.service.ts';
 
-export async function appLoader() {
+export async function initialDataLoader() {
   const userInfo = await getUserInfo();
   return { userInfo };
-}
-
-const SiteContent = ({ userInfo }: { userInfo: Option<UserInfo> }) => {
-  return (
-    <ConfigProvider theme={ { token: { colorPrimary: PRIMARY_COLOR } } }>
-      <Toaster>
-        <div className="app-shell">
-          <Sidebar />
-          <div className="app-shell__main">
-            <Header userInfo={userInfo}/>
-            <main className="app-shell__content">
-              <Outlet/>
-            </main>
-            <Footer/>
-          </div>
-        </div>
-      </Toaster>
-    </ConfigProvider>
-  )
 }
 
 const Main = () => {
@@ -57,7 +38,20 @@ const Main = () => {
 
   return (
     <UserContextProvider initialUser={initialUser}>
-      <SiteContent userInfo={userInfo} />
+      <ConfigProvider theme={ { token: { colorPrimary: PRIMARY_COLOR } } }>
+        <Toaster>
+          <div className="app-shell">
+            <Sidebar />
+            <div className="app-shell__main">
+              <Header userInfo={userInfo}/>
+              <main className="app-shell__content">
+                <Outlet/>
+              </main>
+              <Footer/>
+            </div>
+          </div>
+        </Toaster>
+      </ConfigProvider>
     </UserContextProvider>
   );
 }
