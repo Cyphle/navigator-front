@@ -1,4 +1,4 @@
-import { createContext, Dispatch, PropsWithChildren, SetStateAction, useContext, useState } from 'react';
+import { createContext, Dispatch, PropsWithChildren, SetStateAction, useContext, useEffect, useState } from 'react';
 import { AuthenticatedUser } from './user.types.ts';
 
 export interface UserContextType {
@@ -8,13 +8,22 @@ export interface UserContextType {
 
 export const UserContext = createContext<UserContextType>({} as UserContextType);
 
-export const UserContextProvider = ({ children }: PropsWithChildren) => {
-  const [userState, setUserState] = useState({
-    username: '',
-    email: '',
-    firstName: '',
-    lastName: '',
-  });
+const emptyUser: AuthenticatedUser = {
+  username: '',
+  email: '',
+  firstName: '',
+  lastName: '',
+};
+
+export const UserContextProvider = ({
+  children,
+  initialUser
+}: PropsWithChildren<{ initialUser?: AuthenticatedUser }>) => {
+  const [userState, setUserState] = useState<AuthenticatedUser>(initialUser ?? emptyUser);
+
+  useEffect(() => {
+    setUserState(initialUser ?? emptyUser);
+  }, [initialUser]);
 
   return (
     <UserContext.Provider value={ { userState, setUserState } }>

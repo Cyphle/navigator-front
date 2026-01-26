@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useUser } from '../../contexts/user/user.context.tsx';
 import { Option } from '../../helpers/option.ts';
@@ -7,14 +6,8 @@ import { logout } from '../../services/user.service.ts';
 import './Header.scss';
 
 export const Header = ({ userInfo }: { userInfo: Option<UserInfo> }) => {
-  const { userState, setUserState } = useUser();
+  const { userState } = useUser();
   const navigate = useNavigate();
-  
-  useEffect(() => {
-    userInfo.apply((userInfo: UserInfo) => {
-      setUserState(userInfo);
-    });
-  }, [setUserState, userInfo]);
 
   const fullName = `${userState.firstName} ${userState.lastName}`.trim();
   const initials = `${userState.firstName?.[0] ?? ''}${userState.lastName?.[0] ?? ''}` || 'U';

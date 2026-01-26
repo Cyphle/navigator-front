@@ -1,65 +1,65 @@
 import { ConfigProvider } from 'antd';
-import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { Outlet, useLoaderData, useLocation, useNavigate } from 'react-router-dom';
+import { useEffect, useMemo } from 'react';
 import { UserContextProvider } from './contexts/user/user.context.tsx';
-import { none, Option } from './helpers/option.ts';
+import { Option } from './helpers/option.ts';
 import './main.scss';
 import { Footer } from './shared/footer/Footer.tsx';
 import { Header } from './shared/header/Header.tsx';
 import { Sidebar } from './shared/sidebar/Sidebar.tsx';
 import { UserInfo } from './stores/user/user.types.ts';
 import { PRIMARY_COLOR } from './theme-variables.ts';
-import { useUserInfo } from './stores/user/user.queries.ts';
 import { Toaster } from './components/toaster/Toaster.tsx';
+import { getUserInfo } from './services/user.service.ts';
 
-// TODO c'est pour load des data avant le chargement de la page
 export async function appLoader() {
-  return {};
+  const userInfo = await getUserInfo();
+  return { userInfo };
 }
 
 const SiteContent = ({ userInfo }: { userInfo: Option<UserInfo> }) => {
   return (
-    <UserContextProvider>
-      <ConfigProvider theme={ { token: { colorPrimary: PRIMARY_COLOR } } }>
-        <Toaster>
-          <div className="app-shell">
-            <Sidebar />
-            <div className="app-shell__main">
-              <Header userInfo={userInfo}/>
-              <main className="app-shell__content">
-                <Outlet/>
-              </main>
-              <Footer/>
-            </div>
+    <ConfigProvider theme={ { token: { colorPrimary: PRIMARY_COLOR } } }>
+      <Toaster>
+        <div className="app-shell">
+          <Sidebar />
+          <div className="app-shell__main">
+            <Header userInfo={userInfo}/>
+            <main className="app-shell__content">
+              <Outlet/>
+            </main>
+            <Footer/>
           </div>
-        </Toaster>
-      </ConfigProvider>
-    </UserContextProvider>
+        </div>
+      </Toaster>
+    </ConfigProvider>
   )
 }
 
 const Main = () => {
-  const { isPending, isError, data, error } = useUserInfo();
+  const { userInfo } = useLoaderData() as { userInfo: Option<UserInfo> };
   const navigate = useNavigate();
   const location = useLocation();
 
-  const isAuthenticated = data?.isSome?.() ?? false;
+  const isAuthenticated = userInfo.isSome();
+  const initialUser = useMemo(() => userInfo.getOrElse({
+    username: '',
+    email: '',
+    firstName: '',
+    lastName: '',
+  }), [userInfo]);
 
   useEffect(() => {
-    if (!isPending && !isAuthenticated && location.pathname === '/') {
+    if (!isAuthenticated && location.pathname === '/') {
       navigate('/registration', { replace: true });
     }
-  }, [isPending, isAuthenticated, location.pathname, navigate]);
+  }, [isAuthenticated, location.pathname, navigate]);
 
-  if (isPending) {
-    return <span>Loading...</span>;
-  }
-
-  if (isError) {
-    return <span>Error: { error.message }</span>;
-  }
-
-  return <SiteContent userInfo={(data ?? none) as Option<UserInfo>} />
+  return (
+    <UserContextProvider initialUser={initialUser}>
+      <SiteContent userInfo={userInfo} />
+    </UserContextProvider>
+  );
 }
 
 export default Main;
