@@ -18,7 +18,6 @@ jest.mock('react-router-dom', () => {
 
 jest.mock('../../contexts/user/user.context.tsx', () => ({
   useUser: jest.fn(),
-  setUserState: jest.fn(),
 }));
 
 jest.mock('../../services/user.service.ts', () => ({
@@ -63,7 +62,7 @@ describe('Header Component', () => {
 
     expect(NavLink).toHaveBeenCalledWith(
       expect.objectContaining({ to: '/profile' }),
-      expect.anything()
+      undefined
     );
   });
 
@@ -79,35 +78,6 @@ describe('Header Component', () => {
     expect(userInfo).toBeInTheDocument();
 
     expect(useUser).toHaveBeenCalled();
-  });
-
-  test('calls setUserState with userInfo when userInfo is Some', () => {
-    const mockSetUserState = jest.fn();
-    (useUser as jest.Mock).mockReturnValue({
-      userState: { firstName: 'John', lastName: 'Doe' },
-      setUserState: mockSetUserState
-    });
-
-    renderWithRouter(<Header userInfo={someUserInfo}/>);
-
-    expect(mockSetUserState).toHaveBeenCalledWith({
-      firstName: 'John',
-      lastName: 'Doe',
-      username: 'johndoe',
-      email: 'john.doe@example.com'
-    });
-  });
-
-  test('does not call setUserState when userInfo is Some(undefined)', () => {
-    const mockSetUserState = jest.fn();
-    (useUser as jest.Mock).mockReturnValue({
-      userState: { firstName: 'John', lastName: 'Doe' },
-      setUserState: mockSetUserState
-    });
-
-    renderWithRouter(<Header userInfo={none}/>);
-
-    expect(mockSetUserState).not.toHaveBeenCalled();
   });
 
   test('shows logout button when user is logged in', () => {

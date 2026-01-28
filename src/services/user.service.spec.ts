@@ -48,7 +48,7 @@ describe('user.service', () => {
 
   describe('logout', () => {
     test('should call getOne with correct parameters', async () => {
-      (getOne as jest.Mock).mockResolvedValue({});
+      (getOne as jest.Mock).mockResolvedValue(undefined);
       
       await logout();
 
@@ -56,7 +56,7 @@ describe('user.service', () => {
     });
 
     test('should return void on success', async () => {
-      (getOne as jest.Mock).mockResolvedValue({});
+      (getOne as jest.Mock).mockResolvedValue(undefined);
       
       const result = await logout();
 

@@ -27,7 +27,7 @@ describe('Profile service', () => {
       };
       const result = await createProfile(createProfileRequest);
 
-      expect(post).toHaveBeenCalledWith('profiles', createProfileRequest, responseToProfile);
+      expect(post).toHaveBeenCalledWith('register', createProfileRequest, responseToProfile);
       expect(result).toEqual(mockProfileResponse);
     });
   });

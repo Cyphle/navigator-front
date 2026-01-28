@@ -2,6 +2,7 @@ import { render, screen } from '../../../test-utils';
 import { Registration } from './Registration.tsx';
 import { fireEvent, waitFor } from '@testing-library/react';
 import { useCreateProfile } from '../../stores/profile/profile.commands.ts';
+import { redirectToLogin } from '../../helpers/navigation.ts';
 
 jest.mock('../../stores/profile/profile.commands.ts', () => ({
   useCreateProfile: jest.fn().mockImplementation(() => ({
@@ -13,22 +14,14 @@ jest.mock('react-router', () => ({
   useNavigate: jest.fn(),
 }));
 
+jest.mock('../../helpers/navigation.ts', () => ({
+  redirectToLogin: jest.fn(),
+}));
+
 describe('Registration', () => {
-  const originalLocation = window.location;
-
-  beforeAll(() => {
-    // jsdom does not allow direct assignment to window.location.href
-    delete (window as { location?: Location }).location;
-    (window as { location: { href: string } }).location = { href: '' };
-  });
-
-  afterAll(() => {
-    (window as { location: Location }).location = originalLocation;
-  });
-
   beforeEach(() => {
     (useCreateProfile as jest.Mock).mockClear();
-    (window as { location: { href: string } }).location.href = '';
+    (redirectToLogin as jest.Mock).mockClear();
   });
 
   test('should render', () => {
@@ -81,6 +74,6 @@ describe('Registration', () => {
     const loginButton = screen.getByRole('button', { name: 'Si vous avez déjà un compte connectez vous' });
     fireEvent.click(loginButton);
 
-    expect(window.location.href).toBe('http://localhost:9000/login');
+    expect(redirectToLogin).toHaveBeenCalled();
   });
 });

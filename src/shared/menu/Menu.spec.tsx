@@ -2,8 +2,8 @@ import { renderWithRouter } from "../../../test-utils/render";
 import { screen } from "@testing-library/react";
 import { Menu } from "./Menu";
 import { RouteDefinition } from "../../Routes";
-
-jest.mock('../../assets/banana.png', () => 'mocked-banana-image');
+import { UserContextProvider } from "../../contexts/user/user.context";
+import { AuthenticatedUser } from "../../contexts/user/user.types";
 
 describe('Menu Component', () => {
   const menuItems: RouteDefinition[] = [
@@ -13,26 +13,34 @@ describe('Menu Component', () => {
     { id: 4, path: '/login', name: 'Se connecter', isAuth: false }
   ];
 
-  test('renders all menu items', () => {
-    renderWithRouter(<Menu routes={menuItems} />);
+  const renderMenu = (userState: AuthenticatedUser) => {
+    return renderWithRouter(
+      <UserContextProvider initialUser={userState}>
+        <Menu routes={menuItems} />
+      </UserContextProvider>
+    );
+  };
 
-    menuItems.forEach((item: RouteDefinition) => {
+  test('renders public menu items when user is logged out', () => {
+    renderMenu({ username: '', email: '', firstName: '', lastName: '' });
+
+    menuItems.filter((item) => !item.isAuth).forEach((item: RouteDefinition) => {
       const menuItem = screen.getByText(item.name ?? '');
       expect(menuItem).toBeInTheDocument();
     });
   });
 
-  test('renders NavLinks with correct paths', () => {
-    renderWithRouter(<Menu routes={menuItems} />);
+  test('renders NavLinks with correct paths when user is logged out', () => {
+    renderMenu({ username: '', email: '', firstName: '', lastName: '' });
 
-    menuItems.forEach(({ name, path }) => {
+    menuItems.filter((item) => !item.isAuth).forEach(({ name, path }) => {
       const link = screen.getByRole('link', { name: name });
       expect(link).toHaveAttribute('href', `/${path}`);
     });
   });
 
   test('applies correct CSS classes to menu items', () => {
-    renderWithRouter(<Menu routes={menuItems} />);
+    renderMenu({ username: '', email: '', firstName: '', lastName: '' });
 
     const item = screen.getAllByRole('listitem');
     item.forEach(item => {

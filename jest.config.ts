@@ -6,7 +6,8 @@ const config: Config = {
   testEnvironment: "jest-environment-jsdom",
   moduleNameMapper: {
     "assets/images/generated-icons": "identity-obj-proxy",
-    "^.+\\.(css|less|scss)$": "identity-obj-proxy"
+    "^.+\\.(css|less|scss)$": "identity-obj-proxy",
+    "^.+\\.(png|jpg|jpeg|gif|svg)$": "<rootDir>/test-utils/fileMock.ts"
   },
   modulePaths: [
     "<rootDir>/src"

@@ -6,6 +6,7 @@ import { useCreateProfile } from '../../stores/profile/profile.commands.ts';
 import { useNavigate } from 'react-router';
 import { useEffect } from 'react';
 import { useToaster } from '../../components/toaster/Toaster.tsx';
+import { redirectToLogin } from '../../helpers/navigation.ts';
 
 interface RegistrationFormValues {
   username: string;
@@ -27,7 +28,7 @@ export const Registration = () => {
   }, [notify]);
 
   const handleLoginRedirect = () => {
-    window.location.href = 'http://localhost:9000/login';
+    redirectToLogin();
   };
 
   const onCreateProfileError = (_: string) => {

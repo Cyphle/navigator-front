@@ -8,7 +8,7 @@ describe('Footer', () => {
     expect(container).toMatchInlineSnapshot(`
       <footer>
         <p>
-          © 2024 Navigator
+          © 2026 Navigator
         </p>
       </footer>
     `);
