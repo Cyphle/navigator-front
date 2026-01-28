@@ -1,10 +1,6 @@
 import { createBrowserRouter } from 'react-router-dom';
 import Main, { initialDataLoader } from './main.tsx';
-import { AccountPage, accountParamsLoader } from './pages/account/Account.tsx';
-import { AccountsPage } from './pages/accounts/Accounts.tsx';
 import { Home } from './pages/home/Home.tsx';
-import { Login } from './pages/login/Login.tsx';
-import { Profile } from './pages/profile/Profile.tsx';
 import { Registration } from './pages/registration/Registration.tsx';
 import ErrorPage from './shared/error/ErrorPage.tsx';
 
@@ -29,36 +25,9 @@ export const ROUTES_PATHS: RouteDefinitionWithComponent[] = [
   },
   {
     id: 1,
-    path: 'accounts',
-    element: <AccountsPage />,
-    name: 'Mes comptes',
-    isAuth: true
-  },
-  {
-    path: 'accounts/:id',
-    element: <AccountPage />,
-    loader: accountParamsLoader,
-    isAuth: true
-  },
-  {
-    id: 2,
-    path: 'profile',
-    element: <Profile />,
-    name: 'Profil',
-    isAuth: true
-  },
-  {
-    id: 3,
     path: 'registration',
     element: <Registration />,
     name: 'S\'inscrire',
-    isAuth: false
-  },
-  {
-    id: 4,
-    path: 'login',
-    element: <Login />,
-    name: 'Se connecter',
     isAuth: false
   }
 ];

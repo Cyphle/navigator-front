@@ -26,15 +26,3 @@ export const responseToUserInfo = (data: any | undefined): Option<UserInfo> => {
 export const logout = (): Promise<void> => {
   return getOne(`logout`, () => {});
 }
-
-// TODO to be tested
-export const authenticate = (code: string, sessionState: string, iss: string): Promise<Option<{}>> => {
-  return getOne(`login?code=${code}&session_state=${sessionState}&iss=${iss}`, responseToAuthenticate)
-    .catch((_: JsonError<HttpError>) => {
-      return none;
-    });
-}
-
-export const responseToAuthenticate = (_: any | undefined): Option<{}> => {
-  return some({});
-}
