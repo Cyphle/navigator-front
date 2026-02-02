@@ -1,10 +1,10 @@
 import './Registration.scss';
-import { formOptions, useForm } from '@tanstack/react-form';
+import { useForm } from '@tanstack/react-form';
 import { CreateProfileRequest } from '../../stores/profile/profile.types.ts';
 import { Button, Form, Input } from 'antd';
 import { useCreateProfile } from '../../stores/profile/profile.commands.ts';
 import { useNavigate } from 'react-router';
-import { useEffect } from 'react';
+import { ChangeEvent, useEffect } from 'react';
 import { useToaster } from '../../components/toaster/Toaster.tsx';
 import { redirectToLogin } from '../../helpers/navigation.ts';
 
@@ -45,7 +45,18 @@ export const Registration = () => {
     isPending: createProfileIsPending,
   } = useCreateProfile(onCreateProfileError, onCreateProfileSuccess);
 
-  const options = formOptions<RegistrationFormValues>({
+  const form = useForm<
+    RegistrationFormValues,
+    never,
+    never,
+    never,
+    never,
+    never,
+    never,
+    never,
+    never,
+    never
+  >({
     defaultValues: {
       username: '',
       email: '',
@@ -53,10 +64,6 @@ export const Registration = () => {
       lastName: '',
       password: '',
     },
-  });
-
-  const form = useForm({
-    ...options,
     onSubmit: async ({ value }) => {
       const payload: CreateProfileRequest = {
         username: value.username,
@@ -195,9 +202,9 @@ export const Registration = () => {
                   <Input
                     id={ field.name }
                     data-testid="username-input"
-                    value={ field.state.value }
+                    value={ field.state.value ?? '' }
                     onBlur={ field.handleBlur }
-                    onChange={ (e: any) => field.handleChange(e.target.value) }
+                    onChange={ (e: ChangeEvent<HTMLInputElement>) => field.handleChange(e.target.value) }
                     disabled={ createProfileIsPending }
                     placeholder="Nom d'utilisateur"
                   />
@@ -213,9 +220,9 @@ export const Registration = () => {
                   <Input
                     id={ field.name }
                     data-testid="email-input"
-                    value={ field.state.value }
+                    value={ field.state.value ?? '' }
                     onBlur={ field.handleBlur }
-                    onChange={ (e: any) => field.handleChange(e.target.value) }
+                    onChange={ (e: ChangeEvent<HTMLInputElement>) => field.handleChange(e.target.value) }
                     disabled={ createProfileIsPending }
                     placeholder="Email"
                   />
@@ -231,9 +238,9 @@ export const Registration = () => {
                   <Input
                     id={ field.name }
                     data-testid="firstname-input"
-                    value={ field.state.value }
+                    value={ field.state.value ?? '' }
                     onBlur={ field.handleBlur }
-                    onChange={ (e: any) => field.handleChange(e.target.value) }
+                    onChange={ (e: ChangeEvent<HTMLInputElement>) => field.handleChange(e.target.value) }
                     disabled={ createProfileIsPending }
                     placeholder="Prénom"
                   />
@@ -249,9 +256,9 @@ export const Registration = () => {
                   <Input
                     id={ field.name }
                     data-testid="lastname-input"
-                    value={ field.state.value }
+                    value={ field.state.value ?? '' }
                     onBlur={ field.handleBlur }
-                    onChange={ (e: any) => field.handleChange(e.target.value) }
+                    onChange={ (e: ChangeEvent<HTMLInputElement>) => field.handleChange(e.target.value) }
                     disabled={ createProfileIsPending }
                     placeholder="Nom"
                   />
@@ -267,9 +274,9 @@ export const Registration = () => {
                   <Input.Password
                     id={ field.name }
                     data-testid="password-input"
-                    value={ field.state.value }
+                    value={ field.state.value ?? '' }
                     onBlur={ field.handleBlur }
-                    onChange={ (e: any) => field.handleChange(e.target.value) }
+                    onChange={ (e: ChangeEvent<HTMLInputElement>) => field.handleChange(e.target.value) }
                     disabled={ createProfileIsPending }
                     placeholder="Mot de passe"
                   />

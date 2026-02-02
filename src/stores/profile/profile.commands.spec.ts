@@ -15,8 +15,9 @@ describe('useCreateProfile', () => {
   const request: CreateProfileRequest = {
     username: 'johndoe',
     email: 'johndoe@banana.fr',
-    firstName: 'John',
-    lastName: 'Doe',
+    first_name: 'John',
+    last_name: 'Doe',
+    password: 'passpass',
   };
 
   beforeEach(() => {

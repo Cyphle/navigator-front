@@ -79,7 +79,6 @@ describe('Toaster', () => {
 
     expect(warningMock).toHaveBeenCalledWith({
       message: 'Warning',
-      description: undefined,
       placement: 'bottomRight',
       duration: 4.5,
       className: 'navigator-toaster',

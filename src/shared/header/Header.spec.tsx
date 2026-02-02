@@ -60,10 +60,9 @@ describe('Header Component', () => {
 
     renderWithRouter(<Header userInfo={someUserInfo}/>);
 
-    expect(NavLink).toHaveBeenCalledWith(
-      expect.objectContaining({ to: '/profile' }),
-      undefined
-    );
+    expect(NavLink).toHaveBeenCalled();
+    const navLinkCalls = (NavLink as jest.Mock).mock.calls.map((call) => call[0]);
+    expect(navLinkCalls.some((props) => props?.to === '/profile')).toBe(true);
   });
 
   test('displays user information from useUser hook', () => {

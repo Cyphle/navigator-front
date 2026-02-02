@@ -21,9 +21,10 @@ describe('Profile service', () => {
 
       const createProfileRequest: CreateProfileRequest = {
         username: 'jane.doe',
-        firstName: 'Jane',
-        lastName: 'Doe',
         email: 'jane@example.com',
+        first_name: 'Jane',
+        last_name: 'Doe',
+        password: 'password123',
       };
       const result = await createProfile(createProfileRequest);
 
