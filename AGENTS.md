@@ -29,3 +29,4 @@
 ## Development
 - Type everything and avoid using `any`.
 - Use the most used dependencies and the latest stable versions that are compatible with the project.
+- The project should always compile after any implemenation change.
