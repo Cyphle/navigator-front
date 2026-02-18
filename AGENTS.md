@@ -25,3 +25,6 @@
 ## Local development
 - For local development, there is mock server based on fastify. All new communications with the server should have its mocked version.
 - All developments should make sure to work with the mock server.
+
+## Development
+- Type everything and avoid using `any`.
