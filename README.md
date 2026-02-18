@@ -3,8 +3,6 @@
 Navigate through your life, unlead your mind in this app.
 
 ## TODO
-1. Nettoyer
-2. Corrier les tests
 3. Monter les versions
 4. Faire la page de registration
 5. Ajouter un entrée "Gestion des familles"
