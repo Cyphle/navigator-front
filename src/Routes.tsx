@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import type { LoaderFunction, RouteObject } from 'react-router-dom';
 import Main, { initialDataLoader } from './main.tsx';
 import { Home } from './pages/home/Home.tsx';
 import { Registration } from './pages/registration/Registration.tsx';
@@ -35,12 +36,12 @@ export interface RouteDefinition {
 
 export interface RouteDefinitionWithComponent extends RouteDefinition {
   element: ReactNode;
-  loader?: ({ params }: { params: { [key: string]: string } }) => Promise<any>;
+  loader?: LoaderFunction;
 }
 
 export interface RouteDefinitionConfig extends RouteDefinition {
   element?: ReactNode;
-  loader?: ({ params }: { params: { [key: string]: string } }) => Promise<any>;
+  loader?: LoaderFunction;
 }
 
 export const ROUTES_PATHS: RouteDefinitionConfig[] = [
@@ -138,7 +139,14 @@ export const ROUTES_PATHS: RouteDefinitionConfig[] = [
 export const ROUTES_WITH_COMPONENT = ROUTES_PATHS
   .filter((route): route is RouteDefinitionWithComponent => !!route.element);
 
-export const APP_ROUTES = [
+const ROUTE_OBJECTS: RouteObject[] = ROUTES_WITH_COMPONENT.map((route) => ({
+  index: route.index,
+  path: route.path,
+  element: route.element,
+  loader: route.loader
+}));
+
+export const APP_ROUTES: RouteObject[] = [
   {
     path: '/',
     element: <Main />,
@@ -147,19 +155,8 @@ export const APP_ROUTES = [
     children: [
       {
         errorElement: <ErrorPage />,
-        children: ROUTES_WITH_COMPONENT
+        children: ROUTE_OBJECTS
       }
     ]
   },
 ];
-
-export const ROUTES_WITHOUT_COMPONENT: RouteDefinition[] = ROUTES_PATHS
-  .map((route: RouteDefinitionConfig) => ({
-    id: route.id,
-    index: route.index,
-    path: route.path,
-    name: route.name,
-    category: route.category,
-    icon: route.icon,
-    isAuth: route.isAuth
-  }));
