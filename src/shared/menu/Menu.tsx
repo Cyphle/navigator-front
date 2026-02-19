@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router-dom';
 import { ROUTES_CATEGORIES, ROUTES_PATHS } from '../../Routes';
 import type { RouteDefinitionConfig } from '../../Routes';
+import { useUser } from '../../contexts/user/user.context';
 
 interface MenuSection {
   title?: string;
@@ -8,15 +9,10 @@ interface MenuSection {
 }
 
 const getDefaultIcon = (): React.ReactNode | undefined => {
-  return (
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M4 6h16v2H4V6Zm0 5h16v2H4v-2Zm0 5h10v2H4v-2Z" />
-      </svg>
-  )
+  return ROUTES_PATHS.find((route) => route.name === 'Menus de la semaine')?.icon;
 };
 
-const buildSections = (): MenuSection[] => {
-  const menuEntries = ROUTES_PATHS.filter((route) => !!route.name);
+const buildSections = (menuEntries: RouteDefinitionConfig[]): MenuSection[] => {
   const uncategorized = menuEntries.filter((item) => !item.category);
   const categorized = ROUTES_CATEGORIES
     .map((category) => ({
@@ -44,7 +40,16 @@ const resolvePath = (item: RouteDefinitionConfig): string | undefined => {
 };
 
 export const Menu = () => {
-  const sections = buildSections();
+  const { userState } = useUser();
+  const isAuthenticated = userState.username !== '';
+  const menuEntries = ROUTES_PATHS
+    .filter((route) => !!route.name)
+    .filter((route) => (
+      isAuthenticated
+        ? route.isAuth
+        : route.isAuth === false
+    ));
+  const sections = buildSections(menuEntries);
   const defaultIcon = getDefaultIcon();
 
   return (
