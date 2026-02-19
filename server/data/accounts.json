@@ -1,16 +1,54 @@
 [
   {
     "id": 1,
-    "name": "Commun CIC",
-    "type": "SHARED",
-    "starting_amount": 1000.0,
-    "creation_date": "2021-01-01"
+    "username": "john.doe",
+    "summary": {
+      "name": "Commun CIC",
+      "type": "SHARED",
+      "startingBalance": 1000,
+      "currentBalance": 1000,
+      "projectedBalance": 1000
+    },
+    "budgets": [],
+    "transactions": []
   },
   {
-    "id": 1,
-    "name": "Boursobank",
-    "type": "PERSONAL",
-    "starting_amount": 2000.0,
-    "creation_date": "2021-01-01"
+    "id": 2,
+    "username": "john.doe",
+    "summary": {
+      "name": "Boursobank",
+      "type": "PERSONAL",
+      "startingBalance": 2000,
+      "currentBalance": 2000,
+      "projectedBalance": 2000
+    },
+    "budgets": [],
+    "transactions": []
+  },
+  {
+    "id": 3,
+    "username": "john.doe",
+    "summary": {
+      "name": "Livret A",
+      "type": "PERSONAL",
+      "startingBalance": 500,
+      "currentBalance": 500,
+      "projectedBalance": 500
+    },
+    "budgets": [],
+    "transactions": []
+  },
+  {
+    "id": 4,
+    "username": "jane.doe",
+    "summary": {
+      "name": "Compte joint",
+      "type": "SHARED",
+      "startingBalance": 1500,
+      "currentBalance": 1500,
+      "projectedBalance": 1500
+    },
+    "budgets": [],
+    "transactions": []
   }
 ]

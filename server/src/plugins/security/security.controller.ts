@@ -9,8 +9,8 @@ export const registerController = (handler: (database: Database) => (request: Re
     const command: RegisterRequest = {
       username: getStringBodyElement<string>(request, 'username'),
       email: getStringBodyElement<string>(request, 'email'),
-      first_name: getStringBodyElement<string>(request, 'first_name'),
-      last_name: getStringBodyElement<string>(request, 'last_name'),
+      firstName: getStringBodyElement<string>(request, 'first_name'),
+      lastName: getStringBodyElement<string>(request, 'last_name'),
     }
 
     handler(request.database!!)(command);

@@ -5,7 +5,7 @@ describe('In memory database', () => {
   test('should get mock data and store them in memory', () => {
     const database = new Database();
 
-    expect(Object.keys(database.dump())).toEqual(['accounts', 'profiles']);
+    expect(Object.keys(database.dump())).toEqual(['accounts', 'dashboard', 'profiles']);
   });
 
   test('toto', () => {

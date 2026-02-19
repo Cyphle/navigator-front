@@ -6,10 +6,11 @@ export const userInfoByUsernameHandler = (database: Database) => (username: stri
   const userInfo = database.readOneByField<Profile>('profiles', 'username', username);
   if (!!userInfo) {
     return {
+      id: userInfo.id,
       username: userInfo.username,
       email: userInfo.email,
-      firstName: userInfo.first_name,
-      lastName: userInfo.last_name
+      firstName: userInfo.firstName,
+      lastName: userInfo.lastName
     };
   } else {
     return undefined;

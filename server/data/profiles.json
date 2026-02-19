@@ -3,7 +3,7 @@
     "id": 1,
     "username": "john.doe",
     "email": "john.doe@banana.fr",
-    "first_name": "John",
-    "last_name": "Doe"
+    "firstName": "John",
+    "lastName": "Doe"
   }
 ]
