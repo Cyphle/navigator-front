@@ -17,4 +17,10 @@ describe('Menu', () => {
 
     expect(screen.getByRole('link', { name: /profil/i })).toHaveAttribute('href', '/profile');
   });
+
+  test('renders registration entry even without an icon', () => {
+    renderWithRouter(<Menu />);
+
+    expect(screen.getByRole('link', { name: /s'inscrire/i })).toHaveAttribute('href', '/registration');
+  });
 });

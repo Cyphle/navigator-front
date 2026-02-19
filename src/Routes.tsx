@@ -4,6 +4,7 @@ import Main, { initialDataLoader } from './main.tsx';
 import { Home } from './pages/home/Home.tsx';
 import { Registration } from './pages/registration/Registration.tsx';
 import ErrorPage from './shared/error/ErrorPage.tsx';
+import { Families } from './pages/families/Families.tsx';
 
 export const ROUTES_CATEGORIES = [
   {
@@ -19,7 +20,7 @@ export const ROUTES_CATEGORIES = [
     order: 3
   },
   {
-    name: 'Configuration',
+    name: 'Famille',
     order: 4
   }
 ];
@@ -126,12 +127,20 @@ export const ROUTES_PATHS: RouteDefinitionConfig[] = [
     id: 8,
     name: 'Profil',
     path: 'profile',
-    category: 'Configuration',
+    category: 'Famille',
     icon: (
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm0 2c-4.4 0-8 2.2-8 5v1h16v-1c0-2.8-3.6-5-8-5Z" />
       </svg>
     ),
+    isAuth: true
+  },
+  {
+    id: 9,
+    name: 'Mes familles',
+    path: 'families',
+    element: <Families />,
+    category: 'Famille',
     isAuth: true
   }
 ];
