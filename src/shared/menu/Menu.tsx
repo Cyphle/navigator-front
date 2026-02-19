@@ -1,70 +1,80 @@
-import { NavLink, useNavigate } from 'react-router-dom';
-import { RouteDefinition } from '../../Routes.tsx';
-import { useUser } from '../../contexts/user/user.context.tsx';
-import { logout } from '../../services/user.service.ts';
-import './Menu.scss';
+import { NavLink } from 'react-router-dom';
+import { ROUTES_CATEGORIES, ROUTES_PATHS } from '../../Routes';
+import type { RouteDefinitionConfig } from '../../Routes';
 
-export const Menu = ({ routes }: { routes: RouteDefinition[] }) => {
-  const { userState, setUserState } = useUser();
-  const navigate = useNavigate();
+interface MenuSection {
+  title?: string;
+  items: RouteDefinitionConfig[];
+}
 
-  const navItems = routes
-    .filter((route: RouteDefinition) => !!route.id)
-    .filter((route: RouteDefinition) => (userState.username !== '' && route.isAuth) || (userState.username === '' && !route.isAuth))
-    .map((route: RouteDefinition) => ({
-      id: route.id,
-      name: route.name,
-      path: `/${route.path}`
-    }));
+const buildSections = (): MenuSection[] => {
+  const menuEntries = ROUTES_PATHS.filter((route) => !!route.icon);
+  const uncategorized = menuEntries.filter((item) => !item.category);
+  const categorized = ROUTES_CATEGORIES
+    .map((category) => ({
+      title: category.name,
+      items: menuEntries.filter((item) => item.category === category.name)
+    }))
+    .filter((section) => section.items.length > 0);
 
-  const isLogged = userState.username !== '';
+  return [
+    ...(uncategorized.length > 0 ? [{ items: uncategorized }] : []),
+    ...categorized
+  ];
+};
 
-  // TODO to betested
-  const disconnect = () => {
-    logout()
-      .then(() => {
-        setUserState({
-          username: '',
-          firstName: '',
-          lastName: '',
-          email: ''
-        });
-        navigate('/');
-      })
-      .catch((error) => {
-        console.error('logout error', error);
-      });
+const resolvePath = (item: RouteDefinitionConfig): string | undefined => {
+  if (item.index) {
+    return '/';
   }
 
+  if (!item.path) {
+    return undefined;
+  }
+
+  return item.path.startsWith('/') ? item.path : `/${item.path}`;
+};
+
+export const Menu = () => {
+  const sections = buildSections();
+
   return (
-    <div className="main-menu">
-      <ul>
-        {navItems.map(item => (
-          <li
-            key={item.id}
-            className='p-4 hover:bg-[#4553d1] rounded-xl m-2 cursor-pointer duration-300 hover:text-white'
-          >
-            <NavLink
-              to={item.path}
-              className={({ isActive, isPending }) =>
-                isActive
-                  ? 'active'
-                  : isPending
-                    ? 'pending'
-                    : ''
-              }
-            >
-              {item.name}
-            </NavLink>
-          </li>
-        ))}
-        {isLogged ?
-          (<li>
-            <button onClick={disconnect}>Se déconnecter</button>
-          </li>)
-          : (<></>)
-        }
-      </ul>
-    </div>
-  )
-}
+    <nav className="app-sidebar__nav" aria-label="Navigation principale">
+      {sections.map((section) => (
+        <div key={section.title ?? 'root'} className="app-sidebar__section">
+          {section.title ? <p className="app-sidebar__title">{section.title}</p> : null}
+          <ul>
+            {section.items.map((item) => {
+              const path = resolvePath(item);
+
+              return (
+                <li key={item.id}>
+                  {path ? (
+                    <NavLink
+                      to={path}
+                      className={({ isActive }) =>
+                        `app-sidebar__item${isActive ? ' is-active' : ''}`
+                      }
+                    >
+                      <span className="app-sidebar__icon">{item.icon}</span>
+                      <span>{item.name}</span>
+                    </NavLink>
+                  ) : (
+                    <button
+                      className="app-sidebar__item is-disabled"
+                      type="button"
+                      aria-disabled="true"
+                    >
+                      <span className="app-sidebar__icon">{item.icon}</span>
+                      <span>{item.name}</span>
+                    </button>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      ))}
+    </nav>
+  );
+};

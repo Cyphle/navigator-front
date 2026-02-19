@@ -1,50 +1,20 @@
-import { renderWithRouter } from "../../../test-utils/render";
-import { screen } from "@testing-library/react";
-import { Menu } from "./Menu";
-import { RouteDefinition } from "../../Routes";
-import { UserContextProvider } from "../../contexts/user/user.context";
-import { AuthenticatedUser } from "../../contexts/user/user.types";
+import { screen } from '../../../test-utils';
+import { renderWithRouter } from '../../../test-utils/render';
+import { ROUTES_CATEGORIES } from '../../Routes';
+import { Menu } from './Menu';
 
-describe('Menu Component', () => {
-  const menuItems: RouteDefinition[] = [
-    { id: 1, path: '/accounts', name: 'Mes comptes', isAuth: true },
-    { id: 2, path: '/profile', name: 'Profil', isAuth: true },
-    { id: 3, path: '/subscribe', name: 'S\'inscrire', isAuth: false },
-    { id: 4, path: '/login', name: 'Se connecter', isAuth: false }
-  ];
+describe('Menu', () => {
+  test('renders categories in ROUTES_CATEGORIES order', () => {
+    renderWithRouter(<Menu />);
 
-  const renderMenu = (userState: AuthenticatedUser) => {
-    return renderWithRouter(
-      <UserContextProvider initialUser={userState}>
-        <Menu routes={menuItems} />
-      </UserContextProvider>
-    );
-  };
-
-  test('renders public menu items when user is logged out', () => {
-    renderMenu({ username: '', email: '', firstName: '', lastName: '' });
-
-    menuItems.filter((item) => !item.isAuth).forEach((item: RouteDefinition) => {
-      const menuItem = screen.getByText(item.name ?? '');
-      expect(menuItem).toBeInTheDocument();
-    });
+    const titles = Array.from(document.querySelectorAll('.app-sidebar__title'))
+      .map((element) => element.textContent);
+    expect(titles).toEqual(ROUTES_CATEGORIES.map((category) => category.name));
   });
 
-  test('renders NavLinks with correct paths when user is logged out', () => {
-    renderMenu({ username: '', email: '', firstName: '', lastName: '' });
+  test('renders profile link', () => {
+    renderWithRouter(<Menu />);
 
-    menuItems.filter((item) => !item.isAuth).forEach(({ name, path }) => {
-      const link = screen.getByRole('link', { name: name });
-      expect(link).toHaveAttribute('href', `/${path}`);
-    });
-  });
-
-  test('applies correct CSS classes to menu items', () => {
-    renderMenu({ username: '', email: '', firstName: '', lastName: '' });
-
-    const item = screen.getAllByRole('listitem');
-    item.forEach(item => {
-      expect(item).toHaveClass('p-4', 'hover:bg-[#4553d1]', 'rounded-xl', 'm-2', 'cursor-pointer', 'duration-300', 'hover:text-white');
-    });
+    expect(screen.getByRole('link', { name: /profil/i })).toHaveAttribute('href', '/profile');
   });
 });

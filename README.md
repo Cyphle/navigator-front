@@ -3,10 +3,9 @@
 Navigate through your life, unlead your mind in this app.
 
 ## TODO
-3. Monter les versions
-4. Faire la page de registration
 5. Ajouter un entrée "Gestion des familles"
 6. Afficher la liste des familles et un aperçu de leur constitution (pas en mode tableau parce qu'y aura rarement plus de 3 familles)
+7. Faire la page de registration
 
 ## Features
 - Gestion de familles
