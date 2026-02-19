@@ -1,0 +1,123 @@
+@use "../../variables.scss" as *;
+
+.families-page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.families-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+
+  h1 {
+    margin: 0 0 6px 0;
+  }
+
+  p {
+    margin: 0;
+    color: $text-muted-color;
+  }
+}
+
+.families-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.family-card {
+  background: $white-color;
+  border-radius: 16px;
+  padding: 20px;
+  @include default-shadow;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.family-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+
+  h2 {
+    margin: 0 0 4px 0;
+  }
+
+  p {
+    margin: 0;
+    color: $text-muted-color;
+  }
+}
+
+.family-card__status {
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.family-card__status--active {
+  background: rgba(2, 122, 193, 0.12);
+  color: $main-color;
+}
+
+.family-card__status--inactive {
+  background: rgba(107, 114, 128, 0.2);
+  color: $text-muted-color;
+}
+
+.family-card__owner {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: $text-muted-color;
+}
+
+.family-card__members {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  li {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+  }
+}
+
+.family-card__actions {
+  display: flex;
+  gap: 8px;
+}
+
+.family-form-modal {
+  .ant-modal-content {
+    border-radius: 16px;
+    @include default-shadow;
+  }
+}
+
+.family-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  label {
+    font-size: 13px;
+    color: $text-muted-color;
+  }
+}
+
+.family-form__actions {
+  display: flex;
+  gap: 8px;
+}

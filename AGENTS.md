@@ -6,6 +6,7 @@
 - Avoid an excessive number of unit tests; keep tests focused and purposeful.
 - Components must be tested to verify that CTAs work.
 - Hooks must be tested, including their behavior within components.
+- Services and stores (including queries and commands) should be tested to verify that they work as expected.
 - Factor test data creation as much as possible into factories located in `test-utils`.
 
 ## Expressiveness
@@ -23,10 +24,14 @@
 - Provide an easy user journey that follows UX best practices (CTA and information hierarchy, etc.).
 
 ## Local development
-- For local development, there is mock server based on fastify. All new communications with the server should have its mocked version.
+- For local development, there is mock server based on fastify in the subfolder `server`. All new communications with the server should have its mocked version.
 - All developments should make sure to work with the mock server.
+- New pages and features should have a mock server implementation.
 
 ## Development
 - Type everything and avoid using `any`.
 - Use the most used dependencies and the latest stable versions that are compatible with the project.
 - The project should always compile after any implemenation change.
+- Respect the design used for Home using FetchTemplate for loading initial data.
+- Use react query mutations for creating and updating data.
+- Never put mock data in the production code. Mock data should be served by the mock server.

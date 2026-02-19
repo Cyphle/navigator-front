@@ -1,0 +1,41 @@
+[
+  {
+    "id": 1,
+    "name": "Famille Martin",
+    "owner": {
+      "id": 101,
+      "email": "sarah.martin@banana.fr",
+      "relation": "Owner"
+    },
+    "members": [
+      {
+        "id": 102,
+        "email": "leo.martin@banana.fr",
+        "relation": "Son"
+      },
+      {
+        "id": 103,
+        "email": "emma.martin@banana.fr",
+        "relation": "Daughter"
+      }
+    ],
+    "status": "ACTIVE"
+  },
+  {
+    "id": 2,
+    "name": "Famille Dupont",
+    "owner": {
+      "id": 201,
+      "email": "claire.dupont@banana.fr",
+      "relation": "Owner"
+    },
+    "members": [
+      {
+        "id": 202,
+        "email": "lucas.dupont@banana.fr",
+        "relation": "Brother"
+      }
+    ],
+    "status": "ACTIVE"
+  }
+]

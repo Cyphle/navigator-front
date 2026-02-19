@@ -20,7 +20,7 @@ export const ROUTES_CATEGORIES = [
     order: 3
   },
   {
-    name: 'Famille',
+    name: 'Configuration',
     order: 4
   }
 ];
@@ -67,6 +67,19 @@ export const ROUTES_PATHS: RouteDefinitionConfig[] = [
   },
   {
     id: 3,
+    name: 'Familles',
+    path: 'families',
+    element: <Families />,
+    category: 'Organisation familiale',
+    icon: (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M16 11a3 3 0 1 0-3-3 3 3 0 0 0 3 3Zm-8 1a3 3 0 1 0-3-3 3 3 0 0 0 3 3Zm8 2c-2.7 0-5 1.3-5 3v2h10v-2c0-1.7-2.3-3-5-3Zm-8 1c-2.2 0-4 1.1-4 2.5V19h8v-1.5C12 16.1 10.2 15 8 15Z" />
+      </svg>
+    ),
+    isAuth: true
+  },
+  {
+    id: 4,
     name: 'Calendrier partage',
     category: 'Organisation familiale',
     icon: (
@@ -77,7 +90,7 @@ export const ROUTES_PATHS: RouteDefinitionConfig[] = [
     isAuth: true
   },
   {
-    id: 4,
+    id: 5,
     name: 'Todos familiaux',
     category: 'Organisation familiale',
     icon: (
@@ -89,7 +102,7 @@ export const ROUTES_PATHS: RouteDefinitionConfig[] = [
     isAuth: true
   },
   {
-    id: 5,
+    id: 6,
     name: 'Recettes',
     category: 'Repas',
     icon: (
@@ -100,7 +113,7 @@ export const ROUTES_PATHS: RouteDefinitionConfig[] = [
     isAuth: true
   },
   {
-    id: 6,
+    id: 7,
     name: 'Menus de la semaine',
     category: 'Repas',
     icon: (
@@ -111,7 +124,7 @@ export const ROUTES_PATHS: RouteDefinitionConfig[] = [
     isAuth: true
   },
   {
-    id: 7,
+    id: 8,
     name: 'Liste de courses',
     category: 'Courses',
     icon: (
@@ -124,23 +137,15 @@ export const ROUTES_PATHS: RouteDefinitionConfig[] = [
     isAuth: true
   },
   {
-    id: 8,
+    id: 9,
     name: 'Profil',
     path: 'profile',
-    category: 'Famille',
+    category: 'Configuration',
     icon: (
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm0 2c-4.4 0-8 2.2-8 5v1h16v-1c0-2.8-3.6-5-8-5Z" />
       </svg>
     ),
-    isAuth: true
-  },
-  {
-    id: 9,
-    name: 'Mes familles',
-    path: 'families',
-    element: <Families />,
-    category: 'Famille',
     isAuth: true
   }
 ];

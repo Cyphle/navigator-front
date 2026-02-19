@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useUser } from '../../contexts/user/user.context.tsx';
 import { Option } from '../../helpers/option.ts';
 import { UserInfo } from '../../stores/user/user.types.ts';
@@ -8,6 +8,7 @@ import './Header.scss';
 export const Header = ({ userInfo }: { userInfo: Option<UserInfo> }) => {
   const { userState } = useUser();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const fullName = `${userState.firstName} ${userState.lastName}`.trim();
   const initials = `${userState.firstName?.[0] ?? ''}${userState.lastName?.[0] ?? ''}` || 'U';
@@ -18,11 +19,25 @@ export const Header = ({ userInfo }: { userInfo: Option<UserInfo> }) => {
     navigate('/registration');
   };
 
+  const headerContent = (() => {
+    if (location.pathname.startsWith('/families')) {
+      return {
+        title: 'Familles',
+        subtitle: 'Gerer la famille au meme endroit'
+      };
+    }
+
+    return {
+      title: 'Dashboard',
+      subtitle: 'Gerer la famille au meme endroit'
+    };
+  })();
+
   return (
     <header className="app-header">
       <div className="app-header__title">
-        <h1>Dashboard</h1>
-        <p>Gerer la famille au meme endroit</p>
+        <h1>{headerContent.title}</h1>
+        <p>{headerContent.subtitle}</p>
       </div>
 
       <div className="app-header__actions">

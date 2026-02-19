@@ -7,6 +7,7 @@ import { loginPlugin } from './plugins/login/login.plugin';
 import { userPlugin } from './plugins/user/user.plugin';
 import { securityPlugin } from './plugins/security/security.plugin';
 import { dashboardPlugin } from './plugins/dashboard/dashboard.plugin';
+import { familiesPlugin } from './plugins/families/families.plugin';
 
 const fastify = initFastify(
   [decorateWithUser, decorateWithDatabase],
@@ -16,7 +17,8 @@ const fastify = initFastify(
     { plugin: loginPlugin, routesPrefix: '/login' },
     { plugin: userPlugin, routesPrefix: '/user' },
     { plugin: securityPlugin, routesPrefix: '' },
-    { plugin: dashboardPlugin, routesPrefix: '/dashboard' }
+    { plugin: dashboardPlugin, routesPrefix: '/dashboard' },
+    { plugin: familiesPlugin, routesPrefix: '/families' }
   ]
 );
 

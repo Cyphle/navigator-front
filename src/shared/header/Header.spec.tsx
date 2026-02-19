@@ -13,6 +13,7 @@ jest.mock('react-router-dom', () => {
     ...originalModule,
     NavLink: jest.fn(({ children, to }) => <a href={to}>{children}</a>),
     useNavigate: jest.fn(),
+    useLocation: jest.fn(),
   };
 });
 
@@ -29,8 +30,9 @@ describe('Header Component', () => {
   const mockNavigate = jest.fn();
 
   beforeEach(() => {
-    const { useNavigate } = jest.requireMock('react-router-dom');
+    const { useNavigate, useLocation } = jest.requireMock('react-router-dom');
     useNavigate.mockReturnValue(mockNavigate);
+    useLocation.mockReturnValue({ pathname: '/' });
     (useUser as jest.Mock).mockReturnValue({
       userState: { firstName: 'John', lastName: 'Doe' },
       setUserState: jest.fn(),
