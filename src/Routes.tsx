@@ -6,6 +6,7 @@ import { Registration } from './pages/registration/Registration.tsx';
 import ErrorPage from './shared/error/ErrorPage.tsx';
 import { Families } from './pages/families/Families.tsx';
 import { Recipes } from './pages/recipes/Recipes.tsx';
+import { Profile } from './pages/profile/Profile.tsx';
 
 export const ROUTES_CATEGORIES = [
   {
@@ -144,6 +145,7 @@ export const ROUTES_PATHS: RouteDefinitionConfig[] = [
     name: 'Profil',
     path: 'profile',
     category: 'Configuration',
+    element: <Profile />,
     icon: (
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M12 12a4 4 0 1 0-4-4 4 4 0 0 0 4 4Zm0 2c-4.4 0-8 2.2-8 5v1h16v-1c0-2.8-3.6-5-8-5Z" />
