@@ -15,7 +15,10 @@ export const initFastify = (
     logger: true
   });
 
-  server.register(cors, {});
+  server.register(cors, {
+    origin: true,
+    credentials: true
+  });
   server.register(fastifyCookie, {});
   server.register(fastifyFormbody);
   // @ts-ignore

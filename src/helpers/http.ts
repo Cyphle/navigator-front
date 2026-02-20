@@ -6,6 +6,7 @@ export const BASE_PATH = 'api';
 export const getMany = <T>(path: string, mapper: (data: any) => T[]): Promise<T[]> => {
   return fetch(`${BASE_PATH}/${path}`, {
     method: 'GET',
+    credentials: 'include',
   })
     .then(response => {
       return response.json();
@@ -19,6 +20,7 @@ export const getMany = <T>(path: string, mapper: (data: any) => T[]): Promise<T[
 // TODO to be tested
 export const getOne = <T>(path: string, mapper: (data: any) => T): Promise<T> => {
   return fetch(`${BASE_PATH}/${path}`, {
+    credentials: 'include',
   })
     .then((response: Response) => {
       if (response.status === 403) {
@@ -39,6 +41,7 @@ export const post = <R, T>(path: string, body: R, mapper: (data: any) => T): Pro
     headers: {
       'Content-Type': 'application/json',
     },
+    credentials: 'include',
     body: JSON.stringify(body),
   })
     .then(response => {
