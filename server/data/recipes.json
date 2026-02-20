@@ -1,0 +1,208 @@
+[
+  {
+    "id": 1,
+    "name": "Salade de quinoa aux herbes",
+    "category": "ENTREE",
+    "imageUrl": "https://images.unsplash.com/photo-1546069901-eacef0df6022?auto=format&fit=crop&w=200&q=80",
+    "ingredients": [
+      "150 g de quinoa",
+      "1 concombre",
+      "2 tomates",
+      "Menthe fraîche",
+      "Huile d'olive"
+    ],
+    "steps": [
+      "Cuire le quinoa puis laisser refroidir.",
+      "Couper les légumes en dés.",
+      "Mélanger avec la menthe et l'huile d'olive."
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Velouté de butternut",
+    "category": "ENTREE",
+    "ingredients": [
+      "1 butternut",
+      "1 oignon",
+      "20 cl de crème",
+      "Bouillon de légumes"
+    ],
+    "steps": [
+      "Faire revenir l'oignon.",
+      "Ajouter la courge et le bouillon.",
+      "Mixer puis ajouter la crème."
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Poulet rôti du dimanche",
+    "category": "PLAT",
+    "imageUrl": "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=200&q=80",
+    "ingredients": [
+      "1 poulet fermier",
+      "Pommes de terre",
+      "Thym",
+      "Beurre"
+    ],
+    "steps": [
+      "Préchauffer le four.",
+      "Enfourner le poulet avec les pommes de terre.",
+      "Arroser régulièrement."
+    ]
+  },
+  {
+    "id": 4,
+    "name": "Ratatouille express",
+    "category": "PLAT",
+    "ingredients": [
+      "1 aubergine",
+      "1 courgette",
+      "1 poivron",
+      "Sauce tomate"
+    ],
+    "steps": [
+      "Couper les légumes.",
+      "Faire revenir puis ajouter la sauce.",
+      "Laisser mijoter."
+    ]
+  },
+  {
+    "id": 5,
+    "name": "Tarte aux pommes",
+    "category": "DESSERT",
+    "imageUrl": "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=200&q=80",
+    "parts": [
+      {
+        "name": "Pâte sucrée",
+        "ingredients": [
+          "200 g de farine",
+          "100 g de beurre",
+          "50 g de sucre"
+        ],
+        "steps": [
+          "Sabler la pâte.",
+          "Former une boule et réserver."
+        ]
+      },
+      {
+        "name": "Garniture",
+        "ingredients": [
+          "3 pommes",
+          "Compote",
+          "Cannelle"
+        ],
+        "steps": [
+          "Étaler la pâte.",
+          "Disposer la compote et les pommes.",
+          "Cuire au four."
+        ]
+      }
+    ]
+  },
+  {
+    "id": 6,
+    "name": "Mousse au chocolat",
+    "category": "DESSERT",
+    "ingredients": [
+      "200 g de chocolat",
+      "4 œufs",
+      "50 g de sucre"
+    ],
+    "steps": [
+      "Faire fondre le chocolat.",
+      "Monter les blancs en neige.",
+      "Incorporer délicatement."
+    ]
+  },
+  {
+    "id": 7,
+    "name": "Sauce pesto maison",
+    "category": "SAUCE",
+    "ingredients": [
+      "Basilic",
+      "Pignons de pin",
+      "Parmesan",
+      "Huile d'olive"
+    ],
+    "steps": [
+      "Mixer le basilic et les pignons.",
+      "Ajouter le parmesan puis l'huile."
+    ]
+  },
+  {
+    "id": 8,
+    "name": "Sauce tomate rapide",
+    "category": "SAUCE",
+    "ingredients": [
+      "Tomates concassées",
+      "Ail",
+      "Oignon",
+      "Herbes de Provence"
+    ],
+    "steps": [
+      "Faire revenir l'ail et l'oignon.",
+      "Ajouter les tomates et les herbes.",
+      "Laisser réduire."
+    ]
+  },
+  {
+    "id": 9,
+    "name": "Planche apéro",
+    "category": "APERO",
+    "ingredients": [
+      "Fromages variés",
+      "Charcuterie",
+      "Fruits secs"
+    ],
+    "steps": [
+      "Disposer les ingrédients sur une planche.",
+      "Ajouter quelques olives."
+    ]
+  },
+  {
+    "id": 10,
+    "name": "Houmous express",
+    "category": "APERO",
+    "ingredients": [
+      "Pois chiches",
+      "Tahini",
+      "Citron",
+      "Ail"
+    ],
+    "steps": [
+      "Mixer tous les ingrédients.",
+      "Assaisonner."
+    ]
+  },
+  {
+    "id": 11,
+    "name": "Gratin de courgettes",
+    "category": "PLAT",
+    "ingredients": [
+      "Courgettes",
+      "Crème",
+      "Fromage râpé"
+    ],
+    "steps": [
+      "Couper les courgettes.",
+      "Ajouter la crème et le fromage.",
+      "Cuire au four."
+    ]
+  },
+  {
+    "id": 12,
+    "name": "Panna cotta vanille",
+    "category": "DESSERT",
+    "ingredients": [
+      "Crème",
+      "Sucre",
+      "Vanille",
+      "Gélatine"
+    ],
+    "steps": [
+      "Chauffer la crème avec le sucre.",
+      "Ajouter la gélatine et la vanille.",
+      "Laisser prendre au frais."
+    ]
+  }
+]

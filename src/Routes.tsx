@@ -5,6 +5,7 @@ import { Home } from './pages/home/Home.tsx';
 import { Registration } from './pages/registration/Registration.tsx';
 import ErrorPage from './shared/error/ErrorPage.tsx';
 import { Families } from './pages/families/Families.tsx';
+import { Recipes } from './pages/recipes/Recipes.tsx';
 
 export const ROUTES_CATEGORIES = [
   {
@@ -104,7 +105,9 @@ export const ROUTES_PATHS: RouteDefinitionConfig[] = [
   {
     id: 6,
     name: 'Recettes',
+    path: 'recipes',
     category: 'Repas',
+    element: <Recipes />,
     icon: (
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M6 4h10a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.8.4L13 17l-4.2 2.9a.5.5 0 0 1-.8-.4V6a2 2 0 0 1 2-2Z" />

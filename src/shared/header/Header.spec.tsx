@@ -54,6 +54,26 @@ describe('Header Component', () => {
     expect(profileLink).toHaveAttribute('href', '/profile');
   });
 
+  test('renders families header content', () => {
+    const { useLocation } = jest.requireMock('react-router-dom');
+    useLocation.mockReturnValue({ pathname: '/families' });
+
+    renderWithRouter(<Header userInfo={someUserInfo}/>);
+
+    expect(screen.getByText('Familles')).toBeInTheDocument();
+    expect(screen.getByText('Mes familles, pour vivre ensemble')).toBeInTheDocument();
+  });
+
+  test('renders recipes header content', () => {
+    const { useLocation } = jest.requireMock('react-router-dom');
+    useLocation.mockReturnValue({ pathname: '/recipes' });
+
+    renderWithRouter(<Header userInfo={someUserInfo}/>);
+
+    expect(screen.getByText('Recettes')).toBeInTheDocument();
+    expect(screen.getByText('Mes recettes, celles de ma famille mais pas que')).toBeInTheDocument();
+  });
+
   test('uses NavLink for the profile', () => {
     (useUser as jest.Mock).mockReturnValue({
       userState: { firstName: 'Jane', lastName: 'Smith' },

@@ -23,7 +23,14 @@ export const Header = ({ userInfo }: { userInfo: Option<UserInfo> }) => {
     if (location.pathname.startsWith('/families')) {
       return {
         title: 'Familles',
-        subtitle: 'Gerer la famille au meme endroit'
+        subtitle: 'Mes familles, pour vivre ensemble'
+      };
+    }
+
+    if (location.pathname.startsWith('/recipes')) {
+      return {
+        title: 'Recettes',
+        subtitle: 'Mes recettes, celles de ma famille mais pas que'
       };
     }
 
