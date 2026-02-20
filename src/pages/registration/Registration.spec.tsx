@@ -7,6 +7,7 @@ import { redirectToLogin } from '../../helpers/navigation.ts';
 jest.mock('../../stores/profile/profile.commands.ts', () => ({
   useCreateProfile: jest.fn().mockImplementation(() => ({
     mutate: jest.fn(),
+    isPending: false,
   })),
 }));
 
@@ -34,6 +35,7 @@ describe('Registration', () => {
     const mockMutate = jest.fn();
     (useCreateProfile as jest.Mock).mockImplementation(() => ({
       mutate: mockMutate,
+      isPending: false,
     }));
     render(<Registration/>);
 
@@ -75,5 +77,68 @@ describe('Registration', () => {
     fireEvent.click(loginButton);
 
     expect(redirectToLogin).toHaveBeenCalled();
+  });
+
+  test('should disable submit when form is invalid', () => {
+    render(<Registration/>);
+
+    const submit = screen.getByRole('button', { name: 'S\'inscrire' });
+    expect(submit).toBeDisabled();
+  });
+
+  test('should display error modal when registration fails', async () => {
+    (useCreateProfile as jest.Mock).mockImplementation((onError: () => void) => ({
+      mutate: () => onError(),
+      isPending: false,
+    }));
+
+    render(<Registration/>);
+
+    const usernameInput = screen.getByTestId('username-input');
+    const emailInput = screen.getByTestId('email-input');
+    const firstNameInput = screen.getByTestId('firstname-input');
+    const lastNameInput = screen.getByTestId('lastname-input');
+    const passwordInput = screen.getByTestId('password-input');
+
+    fireEvent.change(usernameInput, { target: { value: 'johndoe', }, });
+    fireEvent.change(emailInput, { target: { value: 'johndoe@banana.fr', }, });
+    fireEvent.change(firstNameInput, { target: { value: 'John', }, });
+    fireEvent.change(lastNameInput, { target: { value: 'Doe', }, });
+    fireEvent.change(passwordInput, { target: { value: 'passpass', }, });
+
+    const submit = screen.getByRole('button', { name: 'S\'inscrire' });
+    fireEvent.click(submit);
+
+    await waitFor(() => {
+      expect(screen.getByText('Something went wrong with your registration. Please contact the support.')).toBeInTheDocument();
+    });
+  });
+
+  test('should redirect to login after success', async () => {
+    (useCreateProfile as jest.Mock).mockImplementation((_onError: () => void, onSuccess: () => void) => ({
+      mutate: () => onSuccess(),
+      isPending: false,
+    }));
+
+    render(<Registration/>);
+
+    const usernameInput = screen.getByTestId('username-input');
+    const emailInput = screen.getByTestId('email-input');
+    const firstNameInput = screen.getByTestId('firstname-input');
+    const lastNameInput = screen.getByTestId('lastname-input');
+    const passwordInput = screen.getByTestId('password-input');
+
+    fireEvent.change(usernameInput, { target: { value: 'johndoe', }, });
+    fireEvent.change(emailInput, { target: { value: 'johndoe@banana.fr', }, });
+    fireEvent.change(firstNameInput, { target: { value: 'John', }, });
+    fireEvent.change(lastNameInput, { target: { value: 'Doe', }, });
+    fireEvent.change(passwordInput, { target: { value: 'passpass', }, });
+
+    const submit = screen.getByRole('button', { name: 'S\'inscrire' });
+    fireEvent.click(submit);
+
+    await waitFor(() => {
+      expect(redirectToLogin).toHaveBeenCalled();
+    });
   });
 });

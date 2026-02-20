@@ -1,12 +1,11 @@
 import './Registration.scss';
-import { useForm } from '@tanstack/react-form';
 import { CreateProfileRequest } from '../../stores/profile/profile.types.ts';
-import { Button, Form, Input } from 'antd';
+import { Button, Input, Modal } from 'antd';
 import { useCreateProfile } from '../../stores/profile/profile.commands.ts';
-import { useNavigate } from 'react-router';
-import { ChangeEvent, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useToaster } from '../../components/toaster/Toaster.tsx';
 import { redirectToLogin } from '../../helpers/navigation.ts';
+import { Controller, useForm } from 'react-hook-form';
 
 interface RegistrationFormValues {
   username: string;
@@ -17,8 +16,8 @@ interface RegistrationFormValues {
 }
 
 export const Registration = () => {
-  const navigate = useNavigate();
   const { notify } = useToaster();
+  const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
 
   useEffect(() => {
     notify({
@@ -32,12 +31,11 @@ export const Registration = () => {
   };
 
   const onCreateProfileError = (_: string) => {
-    // TODO do something
+    setIsErrorModalOpen(true);
   };
 
   const onCreateProfileSuccess = () => {
-    // TODO do something better than redirecting to homepager
-    navigate(`/`);
+    redirectToLogin();
   };
 
   const {
@@ -45,18 +43,12 @@ export const Registration = () => {
     isPending: createProfileIsPending,
   } = useCreateProfile(onCreateProfileError, onCreateProfileSuccess);
 
-  const form = useForm<
-    RegistrationFormValues,
-    never,
-    never,
-    never,
-    never,
-    never,
-    never,
-    never,
-    never,
-    never
-  >({
+  const {
+    control,
+    handleSubmit,
+    formState: { isValid },
+  } = useForm<RegistrationFormValues>({
+    mode: 'onChange',
     defaultValues: {
       username: '',
       email: '',
@@ -64,18 +56,18 @@ export const Registration = () => {
       lastName: '',
       password: '',
     },
-    onSubmit: async ({ value }) => {
-      const payload: CreateProfileRequest = {
-        username: value.username,
-        email: value.email,
-        first_name: value.firstName,
-        last_name: value.lastName,
-        password: value.password,
-      };
-
-      createProfileMutation(payload);
-    },
   });
+  const onSubmit = (value: RegistrationFormValues) => {
+    const payload: CreateProfileRequest = {
+      username: value.username,
+      email: value.email,
+      first_name: value.firstName,
+      last_name: value.lastName,
+      password: value.password,
+    };
+
+    createProfileMutation(payload);
+  };
 
   return (
     <div className="registration-page">
@@ -135,25 +127,25 @@ export const Registration = () => {
           <p>Entre les informations principales pour lancer ton espace.</p>
         </div>
 
-        <Form
-          layout="vertical"
+        <form
           className="registration-form__form"
-          onFinish={ () => {
-            form.handleSubmit();
-          } }
+          onSubmit={ handleSubmit(onSubmit) }
         >
           <div className="registration-form__grid">
-            <form.Field
+            <Controller
               name="username"
-              children={ (field) => (
+              control={ control }
+              rules={ { required: true } }
+              render={ ({ field }) => (
                 <div className="registration-form__field registration-form__field--full">
                   <label htmlFor={ field.name }>Nom d'utilisateur</label>
                   <Input
                     id={ field.name }
                     data-testid="username-input"
-                    value={ field.state.value ?? '' }
-                    onBlur={ field.handleBlur }
-                    onChange={ (e: ChangeEvent<HTMLInputElement>) => field.handleChange(e.target.value) }
+                    value={ field.value }
+                    onBlur={ field.onBlur }
+                    onChange={ field.onChange }
+                    name={ field.name }
                     disabled={ createProfileIsPending }
                     placeholder="Nom d'utilisateur"
                   />
@@ -161,17 +153,20 @@ export const Registration = () => {
               ) }
             />
 
-            <form.Field
+            <Controller
               name="email"
-              children={ (field) => (
+              control={ control }
+              rules={ { required: true } }
+              render={ ({ field }) => (
                 <div className="registration-form__field registration-form__field--full">
                   <label htmlFor={ field.name }>Email</label>
                   <Input
                     id={ field.name }
                     data-testid="email-input"
-                    value={ field.state.value ?? '' }
-                    onBlur={ field.handleBlur }
-                    onChange={ (e: ChangeEvent<HTMLInputElement>) => field.handleChange(e.target.value) }
+                    value={ field.value }
+                    onBlur={ field.onBlur }
+                    onChange={ field.onChange }
+                    name={ field.name }
                     disabled={ createProfileIsPending }
                     placeholder="Email"
                   />
@@ -179,17 +174,20 @@ export const Registration = () => {
               ) }
             />
 
-            <form.Field
+            <Controller
               name="firstName"
-              children={ (field) => (
+              control={ control }
+              rules={ { required: true } }
+              render={ ({ field }) => (
                 <div className="registration-form__field">
                   <label htmlFor={ field.name }>Prénom</label>
                   <Input
                     id={ field.name }
                     data-testid="firstname-input"
-                    value={ field.state.value ?? '' }
-                    onBlur={ field.handleBlur }
-                    onChange={ (e: ChangeEvent<HTMLInputElement>) => field.handleChange(e.target.value) }
+                    value={ field.value }
+                    onBlur={ field.onBlur }
+                    onChange={ field.onChange }
+                    name={ field.name }
                     disabled={ createProfileIsPending }
                     placeholder="Prénom"
                   />
@@ -197,17 +195,20 @@ export const Registration = () => {
               ) }
             />
 
-            <form.Field
+            <Controller
               name="lastName"
-              children={ (field) => (
+              control={ control }
+              rules={ { required: true } }
+              render={ ({ field }) => (
                 <div className="registration-form__field">
                   <label htmlFor={ field.name }>Nom</label>
                   <Input
                     id={ field.name }
                     data-testid="lastname-input"
-                    value={ field.state.value ?? '' }
-                    onBlur={ field.handleBlur }
-                    onChange={ (e: ChangeEvent<HTMLInputElement>) => field.handleChange(e.target.value) }
+                    value={ field.value }
+                    onBlur={ field.onBlur }
+                    onChange={ field.onChange }
+                    name={ field.name }
                     disabled={ createProfileIsPending }
                     placeholder="Nom"
                   />
@@ -215,17 +216,20 @@ export const Registration = () => {
               ) }
             />
 
-            <form.Field
+            <Controller
               name="password"
-              children={ (field) => (
+              control={ control }
+              rules={ { required: true } }
+              render={ ({ field }) => (
                 <div className="registration-form__field registration-form__field--full">
                   <label htmlFor={ field.name }>Mot de passe</label>
                   <Input.Password
                     id={ field.name }
                     data-testid="password-input"
-                    value={ field.state.value ?? '' }
-                    onBlur={ field.handleBlur }
-                    onChange={ (e: ChangeEvent<HTMLInputElement>) => field.handleChange(e.target.value) }
+                    value={ field.value }
+                    onBlur={ field.onBlur }
+                    onChange={ field.onChange }
+                    name={ field.name }
                     disabled={ createProfileIsPending }
                     placeholder="Mot de passe"
                   />
@@ -240,6 +244,7 @@ export const Registration = () => {
               type="primary"
               htmlType="submit"
               loading={ createProfileIsPending }
+              disabled={ !isValid || createProfileIsPending }
             >
               S'inscrire
             </Button>
@@ -251,8 +256,16 @@ export const Registration = () => {
               Si vous avez déjà un compte connectez vous
             </Button>
           </div>
-        </Form>
+        </form>
       </section>
+      <Modal
+        open={isErrorModalOpen}
+        onCancel={() => setIsErrorModalOpen(false)}
+        footer={null}
+        title="Erreur"
+      >
+        <p>Something went wrong with your registration. Please contact the support.</p>
+      </Modal>
     </div>
   );
 }
