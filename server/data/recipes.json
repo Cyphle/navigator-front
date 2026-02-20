@@ -4,6 +4,7 @@
     "name": "Salade de quinoa aux herbes",
     "category": "ENTREE",
     "imageUrl": "https://images.unsplash.com/photo-1546069901-eacef0df6022?auto=format&fit=crop&w=200&q=80",
+    "rating": 4,
     "ingredients": [
       "150 g de quinoa",
       "1 concombre",
@@ -21,6 +22,7 @@
     "id": 2,
     "name": "Velouté de butternut",
     "category": "ENTREE",
+    "rating": 3,
     "ingredients": [
       "1 butternut",
       "1 oignon",
@@ -38,6 +40,7 @@
     "name": "Poulet rôti du dimanche",
     "category": "PLAT",
     "imageUrl": "https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=200&q=80",
+    "rating": 5,
     "ingredients": [
       "1 poulet fermier",
       "Pommes de terre",
@@ -54,6 +57,7 @@
     "id": 4,
     "name": "Ratatouille express",
     "category": "PLAT",
+    "rating": 2,
     "ingredients": [
       "1 aubergine",
       "1 courgette",
@@ -71,6 +75,7 @@
     "name": "Tarte aux pommes",
     "category": "DESSERT",
     "imageUrl": "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=200&q=80",
+    "rating": 5,
     "parts": [
       {
         "name": "Pâte sucrée",
@@ -103,6 +108,7 @@
     "id": 6,
     "name": "Mousse au chocolat",
     "category": "DESSERT",
+    "rating": 4,
     "ingredients": [
       "200 g de chocolat",
       "4 œufs",
@@ -118,6 +124,7 @@
     "id": 7,
     "name": "Sauce pesto maison",
     "category": "SAUCE",
+    "rating": 5,
     "ingredients": [
       "Basilic",
       "Pignons de pin",
@@ -133,6 +140,7 @@
     "id": 8,
     "name": "Sauce tomate rapide",
     "category": "SAUCE",
+    "rating": 3,
     "ingredients": [
       "Tomates concassées",
       "Ail",
@@ -149,6 +157,7 @@
     "id": 9,
     "name": "Planche apéro",
     "category": "APERO",
+    "rating": 4,
     "ingredients": [
       "Fromages variés",
       "Charcuterie",
@@ -163,6 +172,7 @@
     "id": 10,
     "name": "Houmous express",
     "category": "APERO",
+    "rating": 3,
     "ingredients": [
       "Pois chiches",
       "Tahini",
@@ -178,6 +188,7 @@
     "id": 11,
     "name": "Gratin de courgettes",
     "category": "PLAT",
+    "rating": 4,
     "ingredients": [
       "Courgettes",
       "Crème",
@@ -193,6 +204,7 @@
     "id": 12,
     "name": "Panna cotta vanille",
     "category": "DESSERT",
+    "rating": 5,
     "ingredients": [
       "Crème",
       "Sucre",

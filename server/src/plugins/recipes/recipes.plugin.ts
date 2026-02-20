@@ -1,6 +1,6 @@
 import { FastifyError, FastifyInstance, FastifyPluginOptions, FastifyReply, FastifyRequest } from 'fastify';
-import { deleteRecipeController, getRecipesController } from './recipes.controller';
-import { deleteRecipeHandler, getRecipesHandler } from './recipes.handlers';
+import { deleteRecipeController, getRecipesController, updateRecipeRatingController } from './recipes.controller';
+import { deleteRecipeHandler, getRecipesHandler, updateRecipeRatingHandler } from './recipes.handlers';
 
 export const recipesPlugin = async (fastify: FastifyInstance, _options: FastifyPluginOptions) => {
   fastify.log.info('Initiating recipes plugin');
@@ -11,4 +11,5 @@ export const recipesPlugin = async (fastify: FastifyInstance, _options: FastifyP
 
   getRecipesController(getRecipesHandler)(fastify);
   deleteRecipeController(deleteRecipeHandler)(fastify);
+  updateRecipeRatingController(updateRecipeRatingHandler)(fastify);
 };

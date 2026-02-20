@@ -3,7 +3,9 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { Button, Input, Modal, Pagination, Select } from 'antd';
 import { useFetchRecipesPage } from '../../stores/recipes/recipes.queries';
 import type { Recipe, RecipeCategory } from '../../stores/recipes/recipes.types';
-import { useDeleteRecipe } from '../../stores/recipes/recipes.commands';
+import { useDeleteRecipe, useUpdateRecipeRating } from '../../stores/recipes/recipes.commands';
+import { RecipeList } from './components/RecipeList';
+import { RecipeFormModal } from './components/RecipeFormModal';
 
 const CATEGORY_LABELS: Record<RecipeCategory, string> = {
   ENTREE: 'Entrée',
@@ -14,12 +16,6 @@ const CATEGORY_LABELS: Record<RecipeCategory, string> = {
 };
 
 const DEFAULT_PAGE_SIZE = 10;
-
-const HotDishIcon = () => (
-  <svg viewBox="0 0 24 24" aria-hidden="true" className="recipe-card__icon" data-testid="default-recipe-icon">
-    <path d="M4 13.5a8 8 0 0 0 16 0V12H4v1.5Zm-1-3.5h18v2H3v-2Zm3.5-6.5c1.2 1.1 1.8 2.3 1.8 3.5h-1.5c0-.8-.3-1.6-1.2-2.4l.9-1.1Zm5 0c1.2 1.1 1.8 2.3 1.8 3.5h-1.5c0-.8-.3-1.6-1.2-2.4l.9-1.1Zm5 0c1.2 1.1 1.8 2.3 1.8 3.5h-1.5c0-.8-.3-1.6-1.2-2.4l.9-1.1Z" />
-  </svg>
-);
 
 const isMultiPartRecipe = (recipe: Recipe): boolean => Array.isArray(recipe.parts) && recipe.parts.length > 0;
 
@@ -104,6 +100,10 @@ export const Recipes = () => {
     isPending: deleteRecipePending,
   } = useDeleteRecipe(onDeleteError, onDeleteSuccess);
 
+  const {
+    mutate: updateRatingMutation,
+  } = useUpdateRecipeRating(() => undefined, () => undefined);
+
   const total = data?.total ?? 0;
   const recipes = data?.items ?? [];
 
@@ -174,11 +174,7 @@ export const Recipes = () => {
 
   return (
     <div className="recipes-page">
-      <header className="recipes-header">
-        <div>
-          <h1>Recettes</h1>
-          <p>Retrouve toutes les recettes organisées par catégorie.</p>
-        </div>
+      <div className="recipes-header">
         <div className="recipes-header__actions">
           <Input
             value={searchInput}
@@ -206,60 +202,18 @@ export const Recipes = () => {
             Ajouter une recette
           </Button>
         </div>
-      </header>
+      </div>
 
       <section className="recipes-list">
-        {recipes.map((recipe) => (
-          <article
-            key={recipe.id}
-            className="recipe-card"
-            onClick={() => setSelectedRecipe(recipe)}
-          >
-            <div className="recipe-card__media">
-              {recipe.imageUrl ? (
-                <img src={recipe.imageUrl} alt={recipe.name} className="recipe-card__image" />
-              ) : (
-                <HotDishIcon />
-              )}
-            </div>
-            <div className="recipe-card__content">
-              <div>
-                <h2>{recipe.name}</h2>
-                <span className="recipe-card__category">{CATEGORY_LABELS[recipe.category]}</span>
-              </div>
-              <div className="recipe-card__actions">
-                <Button
-                  type="text"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    setEditRecipeTarget(recipe);
-                  }}
-                >
-                  Modifier
-                </Button>
-                <Button
-                  type="text"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    setShareRecipeTarget(recipe);
-                  }}
-                >
-                  Partager
-                </Button>
-                <Button
-                  danger
-                  type="text"
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    setDeleteRecipeTarget(recipe);
-                  }}
-                >
-                  Supprimer
-                </Button>
-              </div>
-            </div>
-          </article>
-        ))}
+        <RecipeList
+          recipes={recipes}
+          categoryLabels={CATEGORY_LABELS}
+          onSelect={setSelectedRecipe}
+          onEdit={setEditRecipeTarget}
+          onShare={setShareRecipeTarget}
+          onDelete={setDeleteRecipeTarget}
+          onRate={(id, rating) => updateRatingMutation({ id, rating })}
+        />
       </section>
 
       <div className="recipes-pagination">
@@ -313,14 +267,12 @@ export const Recipes = () => {
         <p>Es-tu sûr de vouloir supprimer cette recette ?</p>
       </Modal>
 
-      <Modal
+      <RecipeFormModal
         open={Boolean(editRecipeTarget)}
+        mode="edit"
+        recipe={editRecipeTarget}
         onCancel={() => setEditRecipeTarget(null)}
-        footer={null}
-        title="Mettre à jour la recette"
-      >
-        <p>Le formulaire de mise à jour sera disponible prochainement.</p>
-      </Modal>
+      />
 
       <Modal
         open={Boolean(shareRecipeTarget)}
@@ -331,14 +283,11 @@ export const Recipes = () => {
         <p>Le partage avec les familles sera disponible prochainement.</p>
       </Modal>
 
-      <Modal
+      <RecipeFormModal
         open={isCreateModalOpen}
+        mode="create"
         onCancel={() => setIsCreateModalOpen(false)}
-        footer={null}
-        title="Créer une recette"
-      >
-        <p>Le formulaire de création sera disponible prochainement.</p>
-      </Modal>
+      />
     </div>
   );
 };

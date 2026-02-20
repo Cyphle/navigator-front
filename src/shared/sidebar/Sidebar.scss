@@ -36,6 +36,12 @@
 }
 
 .app-sidebar__section {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 8px;
+
   ul {
     list-style: none;
     padding: 0;
@@ -118,6 +124,10 @@
   }
 
   .app-sidebar__section {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+
     ul {
       display: flex;
       gap: 10px;

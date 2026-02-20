@@ -2,7 +2,7 @@ import { act, fireEvent, screen, waitFor, within } from '@testing-library/react'
 import { render } from '../../../test-utils';
 import { Recipes } from './Recipes';
 import { useFetchRecipesPage } from '../../stores/recipes/recipes.queries';
-import { useDeleteRecipe } from '../../stores/recipes/recipes.commands';
+import { useDeleteRecipe, useUpdateRecipeRating } from '../../stores/recipes/recipes.commands';
 
 jest.mock('../../stores/recipes/recipes.queries.ts', () => ({
   useFetchRecipesPage: jest.fn(),
@@ -10,6 +10,7 @@ jest.mock('../../stores/recipes/recipes.queries.ts', () => ({
 
 jest.mock('../../stores/recipes/recipes.commands.ts', () => ({
   useDeleteRecipe: jest.fn(),
+  useUpdateRecipeRating: jest.fn(),
 }));
 
 const recipesPage = {
@@ -18,6 +19,7 @@ const recipesPage = {
       id: 1,
       name: 'Salade de quinoa',
       category: 'ENTREE',
+      rating: 4,
       ingredients: ['Quinoa', 'Tomates'],
       steps: ['Cuire le quinoa', 'Mélanger'],
     },
@@ -25,6 +27,7 @@ const recipesPage = {
       id: 2,
       name: 'Tarte aux pommes',
       category: 'DESSERT',
+      rating: 5,
       imageUrl: 'https://example.com/tarte.jpg',
       parts: [
         {
@@ -51,6 +54,9 @@ describe('Recipes', () => {
       mutate: jest.fn(),
       isPending: false,
     }));
+    (useUpdateRecipeRating as jest.Mock).mockImplementation(() => ({
+      mutate: jest.fn(),
+    }));
   });
 
   afterEach(() => {
@@ -60,7 +66,6 @@ describe('Recipes', () => {
   test('renders recipes list with category and fallback icon', () => {
     render(<Recipes />);
 
-    expect(screen.getByText('Recettes')).toBeInTheDocument();
     expect(screen.getByText('Toutes les catégories')).toBeInTheDocument();
     expect(screen.getByText('Salade de quinoa')).toBeInTheDocument();
     expect(screen.getByText('Entrée')).toBeInTheDocument();
@@ -121,6 +126,23 @@ describe('Recipes', () => {
 
     await waitFor(() => {
       expect(useFetchRecipesPage).toHaveBeenLastCalledWith(1, 10, undefined, 'tarte');
+    });
+  });
+
+  test('updates rating when selecting stars', async () => {
+    const updateRating = jest.fn();
+    (useUpdateRecipeRating as jest.Mock).mockImplementation(() => ({
+      mutate: updateRating,
+    }));
+
+    render(<Recipes />);
+
+    const rating = screen.getByTestId('recipe-rating-1');
+    const stars = within(rating).getAllByRole('radio');
+    fireEvent.click(stars[4]);
+
+    await waitFor(() => {
+      expect(updateRating).toHaveBeenCalledWith({ id: 1, rating: 5 });
     });
   });
 });

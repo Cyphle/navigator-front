@@ -1,0 +1,104 @@
+@use "../../variables.scss" as *;
+
+.weekly-menus-page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.weekly-menus-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.weekly-menus-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.weekly-menus-list__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+.weekly-menus-card {
+  background: $white-color;
+  border-radius: 16px;
+  padding: 16px;
+  @include default-shadow;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  h2 {
+    margin: 0 0 4px 0;
+    font-size: 16px;
+  }
+}
+
+.weekly-menus-card__category {
+  font-size: 12px;
+  color: $text-muted-color;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.weekly-menus-selected {
+  background: $white-color;
+  border-radius: 16px;
+  padding: 16px;
+  @include default-shadow;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.weekly-menus-selected__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+
+  h2 {
+    margin: 0;
+    font-size: 16px;
+  }
+
+  span {
+    font-size: 12px;
+    color: $text-muted-color;
+  }
+}
+
+.weekly-menus-selected__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.weekly-menus-selected__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(2, 122, 193, 0.08);
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 13px;
+}
+
+.weekly-menus-empty {
+  margin: 0;
+  color: $text-muted-color;
+}
+
+.weekly-menus-pagination {
+  display: flex;
+  justify-content: flex-end;
+}

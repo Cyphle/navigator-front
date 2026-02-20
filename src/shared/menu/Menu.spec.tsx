@@ -1,6 +1,5 @@
 import { screen } from '../../../test-utils';
 import { renderWithRouter } from '../../../test-utils/render';
-import { ROUTES_CATEGORIES } from '../../Routes';
 import { UserContextProvider } from '../../contexts/user/user.context';
 import type { AuthenticatedUser } from '../../contexts/user/user.types';
 import { Menu } from './Menu';
@@ -14,12 +13,10 @@ describe('Menu', () => {
     );
   };
 
-  test('renders categories in ROUTES_CATEGORIES order when authenticated', () => {
+  test('renders menu entries when authenticated', () => {
     renderMenu({ username: 'john', email: 'john@doe.fr', firstName: 'John', lastName: 'Doe' });
 
-    const titles = Array.from(document.querySelectorAll('.app-sidebar__title'))
-      .map((element) => element.textContent);
-    expect(titles).toEqual(ROUTES_CATEGORIES.map((category) => category.name));
+    expect(screen.getByRole('link', { name: /dashboard/i })).toBeInTheDocument();
   });
 
   test('renders profile link when authenticated', () => {
@@ -33,6 +30,6 @@ describe('Menu', () => {
 
     expect(screen.getByRole('link', { name: /s'inscrire/i })).toHaveAttribute('href', '/registration');
     expect(screen.queryByRole('link', { name: /profil/i })).not.toBeInTheDocument();
-    expect(screen.queryByText('Organisation familiale')).not.toBeInTheDocument();
+    expect(document.querySelectorAll('.app-sidebar__title')).toHaveLength(0);
   });
 });

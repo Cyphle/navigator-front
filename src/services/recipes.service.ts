@@ -5,7 +5,9 @@ export const getRecipesPage = (
   page: number,
   pageSize: number,
   category?: RecipeCategory | string,
-  search?: string
+  search?: string,
+  minRating?: number,
+  sort?: string
 ): Promise<RecipesPage> => {
   const params = new URLSearchParams({
     page: page.toString(),
@@ -20,11 +22,23 @@ export const getRecipesPage = (
     params.set('search', search);
   }
 
+  if (minRating && minRating > 0) {
+    params.set('minRating', minRating.toString());
+  }
+
+  if (sort) {
+    params.set('sort', sort);
+  }
+
   return getOne(`recipes?${params.toString()}`, responseToRecipesPage);
 };
 
 export const deleteRecipe = (id: number): Promise<boolean> => {
   return post(`recipes/${id}/delete`, {}, (data: any) => Boolean(data?.success));
+};
+
+export const updateRecipeRating = (id: number, rating: number): Promise<Recipe> => {
+  return post(`recipes/${id}/rating`, { rating }, responseToRecipe);
 };
 
 const responseToRecipesPage = (data: any): RecipesPage => {
@@ -58,6 +72,7 @@ const responseToRecipe = (data: any): Recipe => ({
   name: data?.name ?? 'Recette',
   category: data?.category ?? 'PLAT',
   imageUrl: data?.imageUrl ?? undefined,
+  rating: typeof data?.rating === 'number' ? data.rating : 0,
   ingredients: Array.isArray(data?.ingredients) ? data.ingredients : undefined,
   steps: Array.isArray(data?.steps) ? data.steps : undefined,
   parts: Array.isArray(data?.parts)

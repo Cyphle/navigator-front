@@ -27,10 +27,24 @@ export const Header = ({ userInfo }: { userInfo: Option<UserInfo> }) => {
       };
     }
 
+    if (location.pathname.startsWith('/weekly-menus')) {
+      return {
+        title: 'Recettes de la semaine et plus',
+        subtitle: 'Pour bien manger dans les jours à venir'
+      };
+    }
+
     if (location.pathname.startsWith('/recipes')) {
       return {
         title: 'Recettes',
         subtitle: 'Mes recettes, celles de ma famille mais pas que'
+      };
+    }
+
+    if (location.pathname.startsWith('/profile')) {
+      return {
+        title: 'Mon profil',
+        subtitle: 'Moi moi et encore moi. Mais aussi nous'
       };
     }
 

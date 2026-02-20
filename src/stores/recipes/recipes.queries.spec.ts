@@ -18,7 +18,7 @@ describe('recipes queries', () => {
 
     const { result } = renderQueryHook(() => useFetchRecipesPage(1, 6, 'DESSERT', 'tarte'));
 
-    expect(getRecipesPage).toHaveBeenCalledWith(1, 6, 'DESSERT', 'tarte');
+    expect(getRecipesPage).toHaveBeenCalledWith(1, 6, 'DESSERT', 'tarte', undefined, undefined);
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
   });
 });

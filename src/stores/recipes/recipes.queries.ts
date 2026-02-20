@@ -6,10 +6,12 @@ export const useFetchRecipesPage = (
   page: number,
   pageSize: number,
   category?: string,
-  search?: string
+  search?: string,
+  minRating?: number,
+  sort?: string
 ): UseQueryResult<RecipesPage, Error> => {
   return useQuery({
-    queryKey: ['recipes', page, pageSize, category, search],
-    queryFn: () => getRecipesPage(page, pageSize, category, search)
+    queryKey: ['recipes', page, pageSize, category, search, minRating, sort],
+    queryFn: () => getRecipesPage(page, pageSize, category, search, minRating, sort)
   });
 };

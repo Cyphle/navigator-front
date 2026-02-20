@@ -7,31 +7,12 @@ import ErrorPage from './shared/error/ErrorPage.tsx';
 import { Families } from './pages/families/Families.tsx';
 import { Recipes } from './pages/recipes/Recipes.tsx';
 import { Profile } from './pages/profile/Profile.tsx';
-
-export const ROUTES_CATEGORIES = [
-  {
-    name: 'Organisation familiale',
-    order: 1
-  },
-  {
-    name: 'Repas',
-    order: 2
-  },
-  {
-    name: 'Courses',
-    order: 3
-  },
-  {
-    name: 'Configuration',
-    order: 4
-  }
-];
+import { WeeklyMenus } from './pages/weekly-menus/WeeklyMenus.tsx';
 
 export interface RouteDefinition {
   id?: number;
   index?: boolean;
   path?: string;
-  category?: string;
   name?: string;
   isAuth: boolean;
   icon?: ReactNode;
@@ -72,7 +53,6 @@ export const ROUTES_PATHS: RouteDefinitionConfig[] = [
     name: 'Familles',
     path: 'families',
     element: <Families />,
-    category: 'Organisation familiale',
     icon: (
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M16 11a3 3 0 1 0-3-3 3 3 0 0 0 3 3Zm-8 1a3 3 0 1 0-3-3 3 3 0 0 0 3 3Zm8 2c-2.7 0-5 1.3-5 3v2h10v-2c0-1.7-2.3-3-5-3Zm-8 1c-2.2 0-4 1.1-4 2.5V19h8v-1.5C12 16.1 10.2 15 8 15Z" />
@@ -83,7 +63,6 @@ export const ROUTES_PATHS: RouteDefinitionConfig[] = [
   {
     id: 4,
     name: 'Calendrier partage',
-    category: 'Organisation familiale',
     icon: (
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M7 3v2H5a2 2 0 0 0-2 2v11a3 3 0 0 0 3 3h12a3 3 0 0 0 3-3V7a2 2 0 0 0-2-2h-2V3h-2v2H9V3H7Zm12 8H5v7a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-7Z" />
@@ -94,7 +73,6 @@ export const ROUTES_PATHS: RouteDefinitionConfig[] = [
   {
     id: 5,
     name: 'Todos familiaux',
-    category: 'Organisation familiale',
     icon: (
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M7 12.5 10.5 16 17 9.5l-1.4-1.4-5.1 5.1L8.4 11.1 7 12.5Z" />
@@ -107,7 +85,6 @@ export const ROUTES_PATHS: RouteDefinitionConfig[] = [
     id: 6,
     name: 'Recettes',
     path: 'recipes',
-    category: 'Repas',
     element: <Recipes />,
     icon: (
       <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -119,7 +96,8 @@ export const ROUTES_PATHS: RouteDefinitionConfig[] = [
   {
     id: 7,
     name: 'Menus de la semaine',
-    category: 'Repas',
+    path: 'weekly-menus',
+    element: <WeeklyMenus />,
     icon: (
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M4 6h16v2H4V6Zm0 5h16v2H4v-2Zm0 5h10v2H4v-2Z" />
@@ -130,7 +108,6 @@ export const ROUTES_PATHS: RouteDefinitionConfig[] = [
   {
     id: 8,
     name: 'Liste de courses',
-    category: 'Courses',
     icon: (
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M7 6h15l-1.6 9.5a2 2 0 0 1-2 1.7H9.4a2 2 0 0 1-2-1.6L5.4 5H2V3h4l1 3Z" />
@@ -144,7 +121,6 @@ export const ROUTES_PATHS: RouteDefinitionConfig[] = [
     id: 9,
     name: 'Profil',
     path: 'profile',
-    category: 'Configuration',
     element: <Profile />,
     icon: (
       <svg viewBox="0 0 24 24" aria-hidden="true">

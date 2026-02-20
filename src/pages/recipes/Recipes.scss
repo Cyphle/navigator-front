@@ -9,17 +9,8 @@
 .recipes-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-end;
   gap: 16px;
-
-  h1 {
-    margin: 0 0 6px 0;
-  }
-
-  p {
-    margin: 0;
-    color: $text-muted-color;
-  }
 }
 
 .recipes-header__actions {
@@ -96,6 +87,10 @@
   color: $text-muted-color;
   text-transform: uppercase;
   letter-spacing: 0.05em;
+}
+
+.recipe-card__rating {
+  margin-top: 8px;
 }
 
 .recipe-card__actions {

@@ -1,31 +1,12 @@
 import { NavLink } from 'react-router-dom';
-import { ROUTES_CATEGORIES, ROUTES_PATHS } from '../../Routes';
+import { ROUTES_PATHS } from '../../Routes';
 import type { RouteDefinitionConfig } from '../../Routes';
 import { useUser } from '../../contexts/user/user.context';
-
-interface MenuSection {
-  title?: string;
-  items: RouteDefinitionConfig[];
-}
 
 const getDefaultIcon = (): React.ReactNode | undefined => {
   return ROUTES_PATHS.find((route) => route.name === 'Menus de la semaine')?.icon;
 };
 
-const buildSections = (menuEntries: RouteDefinitionConfig[]): MenuSection[] => {
-  const uncategorized = menuEntries.filter((item) => !item.category);
-  const categorized = ROUTES_CATEGORIES
-    .map((category) => ({
-      title: category.name,
-      items: menuEntries.filter((item) => item.category === category.name)
-    }))
-    .filter((section) => section.items.length > 0);
-
-  return [
-    ...(uncategorized.length > 0 ? [{ items: uncategorized }] : []),
-    ...categorized
-  ];
-};
 
 const resolvePath = (item: RouteDefinitionConfig): string | undefined => {
   if (item.index) {
@@ -49,46 +30,40 @@ export const Menu = () => {
         ? route.isAuth
         : route.isAuth === false
     ));
-  const sections = buildSections(menuEntries);
   const defaultIcon = getDefaultIcon();
 
   return (
     <nav className="app-sidebar__nav" aria-label="Navigation principale">
-      {sections.map((section) => (
-        <div key={section.title ?? 'root'} className="app-sidebar__section">
-          {section.title ? <p className="app-sidebar__title">{section.title}</p> : null}
-          <ul>
-            {section.items.map((item) => {
-              const path = resolvePath(item);
+      <ul className="app-sidebar__section">
+        {menuEntries.map((item) => {
+          const path = resolvePath(item);
 
-              return (
-                <li key={item.id}>
-                  {path ? (
-                    <NavLink
-                      to={path}
-                      className={({ isActive }) =>
-                        `app-sidebar__item${isActive ? ' is-active' : ''}`
-                      }
-                    >
-                    <span className="app-sidebar__icon">{item.icon ?? defaultIcon}</span>
-                    <span>{item.name}</span>
-                  </NavLink>
-                ) : (
-                  <button
-                    className="app-sidebar__item is-disabled"
-                    type="button"
-                    aria-disabled="true"
-                  >
-                    <span className="app-sidebar__icon">{item.icon ?? defaultIcon}</span>
-                    <span>{item.name}</span>
-                  </button>
-                  )}
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-      ))}
+          return (
+            <li key={item.id}>
+              {path ? (
+                <NavLink
+                  to={path}
+                  className={({ isActive }) =>
+                    `app-sidebar__item${isActive ? ' is-active' : ''}`
+                  }
+                >
+                  <span className="app-sidebar__icon">{item.icon ?? defaultIcon}</span>
+                  <span>{item.name}</span>
+                </NavLink>
+              ) : (
+                <button
+                  className="app-sidebar__item is-disabled"
+                  type="button"
+                  aria-disabled="true"
+                >
+                  <span className="app-sidebar__icon">{item.icon ?? defaultIcon}</span>
+                  <span>{item.name}</span>
+                </button>
+              )}
+            </li>
+          );
+        })}
+      </ul>
     </nav>
   );
 };

@@ -11,6 +11,7 @@ export interface Recipe {
   name: string;
   category: RecipeCategory;
   imageUrl?: string;
+  rating: number;
   ingredients?: string[];
   steps?: string[];
   parts?: RecipePart[];

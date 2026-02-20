@@ -74,6 +74,26 @@ describe('Header Component', () => {
     expect(screen.getByText('Mes recettes, celles de ma famille mais pas que')).toBeInTheDocument();
   });
 
+  test('renders weekly menus header content', () => {
+    const { useLocation } = jest.requireMock('react-router-dom');
+    useLocation.mockReturnValue({ pathname: '/weekly-menus' });
+
+    renderWithRouter(<Header userInfo={someUserInfo}/>);
+
+    expect(screen.getByText('Recettes de la semaine et plus')).toBeInTheDocument();
+    expect(screen.getByText('Pour bien manger dans les jours à venir')).toBeInTheDocument();
+  });
+
+  test('renders profile header content', () => {
+    const { useLocation } = jest.requireMock('react-router-dom');
+    useLocation.mockReturnValue({ pathname: '/profile' });
+
+    renderWithRouter(<Header userInfo={someUserInfo}/>);
+
+    expect(screen.getByText('Mon profil')).toBeInTheDocument();
+    expect(screen.getByText('Moi moi et encore moi. Mais aussi nous')).toBeInTheDocument();
+  });
+
   test('uses NavLink for the profile', () => {
     (useUser as jest.Mock).mockReturnValue({
       userState: { firstName: 'Jane', lastName: 'Smith' },
