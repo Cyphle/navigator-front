@@ -77,57 +77,6 @@ export const Registration = () => {
     },
   });
 
-// // TODO clean
-//   useEffect(() => {
-//     fetch(`${BASE_PATH}/get-from-session`, {})
-//     .then((data) => {
-//       console.log('data from session', data);
-//     })
-//     .catch((err) => {
-//       console.log('err', err);
-//     });
-//   }, []);
-//
-//
-// // TODO clean
-//     useEffect(() => {
-//         fetch(`${BASE_PATH}/profiles`, {})
-//             .then((response: Response) => {
-//                 if (response.status === 403) {
-//                     throw new JsonError({ code: 403, message: 'Forbidden' });
-//                 }
-//
-//                 return response.json();
-//             })
-//             .then(data => {
-//                 console.log('profile view', data);
-//             });
-//     }, []);
-
-// // TODO clean
-//     useEffect(() => {
-//         fetch(`${BASE_PATH}/delete-from-session`, {})
-//             .then((response: Response) => {
-//                 console.log('delete session res', response);
-//             });
-//     }, []);
-
-// // TODO clean
-//     useEffect(() => {
-//         fetch(`${BASE_PATH}/logout`, {})
-//             .then((response: Response) => {
-//                 console.log('logout res', response);
-//             });
-//     }, []);
-
-// TODO clean
-//     useEffect(() => {
-//         fetch(`${BASE_PATH}/register`, {})
-//             .then((response: Response) => {
-//                 console.log('delete session res', response);
-//             });
-//     }, []);
-
   return (
     <div className="registration-page">
       <section className="registration-card registration-hero">
