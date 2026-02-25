@@ -8,6 +8,7 @@ import { Families } from './pages/families/Families.tsx';
 import { Recipes } from './pages/recipes/Recipes.tsx';
 import { Profile } from './pages/profile/Profile.tsx';
 import { WeeklyMenus } from './pages/weekly-menus/WeeklyMenus.tsx';
+import { ShoppingLists } from './pages/shopping-lists/ShoppingLists.tsx';
 
 export interface RouteDefinition {
   id?: number;
@@ -108,6 +109,8 @@ export const ROUTES_PATHS: RouteDefinitionConfig[] = [
   {
     id: 8,
     name: 'Liste de courses',
+    path: 'shopping-lists',
+    element: <ShoppingLists />,
     icon: (
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M7 6h15l-1.6 9.5a2 2 0 0 1-2 1.7H9.4a2 2 0 0 1-2-1.6L5.4 5H2V3h4l1 3Z" />

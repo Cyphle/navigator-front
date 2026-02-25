@@ -10,6 +10,7 @@ import { dashboardPlugin } from './plugins/dashboard/dashboard.plugin';
 import { familiesPlugin } from './plugins/families/families.plugin';
 import { recipesPlugin } from './plugins/recipes/recipes.plugin';
 import { plannedMenusPlugin } from './plugins/planned-menus/planned-menus.plugin';
+import { shoppingListsPlugin } from './plugins/shopping-lists/shopping-lists.plugin';
 
 const fastify = initFastify(
   [decorateWithUser, decorateWithDatabase],
@@ -22,7 +23,8 @@ const fastify = initFastify(
     { plugin: dashboardPlugin, routesPrefix: '/dashboard' },
     { plugin: familiesPlugin, routesPrefix: '/families' },
     { plugin: recipesPlugin, routesPrefix: '/recipes' },
-    { plugin: plannedMenusPlugin, routesPrefix: '' }
+    { plugin: plannedMenusPlugin, routesPrefix: '' },
+    { plugin: shoppingListsPlugin, routesPrefix: '' }
   ]
 );
 

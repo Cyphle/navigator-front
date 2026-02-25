@@ -1,0 +1,65 @@
+@use "../../variables.scss" as *;
+
+.shopping-lists-view {
+  padding: 24px;
+}
+
+.shopping-lists-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+
+  h1 {
+    margin: 0;
+    font-size: 24px;
+  }
+}
+
+.shopping-lists-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.shopping-list-card {
+  @include default-shadow;
+
+  .ant-card-meta-avatar {
+    display: flex;
+    align-items: center;
+  }
+}
+
+.shopping-list-detail {
+  padding: 24px;
+}
+
+.detail-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+
+  h1 {
+    margin: 0;
+    font-size: 24px;
+  }
+
+  p {
+    margin: 4px 0 0 0;
+    color: $text-muted-color;
+  }
+}
+
+.detail-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  h3 {
+    margin: 16px 0 8px 0;
+    font-size: 16px;
+    font-weight: 600;
+  }
+}
