@@ -102,3 +102,69 @@
   display: flex;
   justify-content: flex-end;
 }
+
+// New styles for planned menu lists
+
+.planned-menu-lists-view {
+  padding: 24px;
+}
+
+.planned-menu-lists-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+
+  h1 {
+    margin: 0;
+    font-size: 24px;
+  }
+}
+
+.planned-menu-lists-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
+}
+
+.planned-menu-list-card {
+  @include default-shadow;
+}
+
+.planned-menu-list-detail {
+  padding: 24px;
+}
+
+.detail-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+
+  h1 {
+    margin: 0;
+    font-size: 24px;
+  }
+
+  p {
+    margin: 4px 0 0 0;
+    color: $text-muted-color;
+  }
+}
+
+.detail-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.recipe-browser {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  .ant-list {
+    max-height: 400px;
+    overflow-y: auto;
+  }
+}

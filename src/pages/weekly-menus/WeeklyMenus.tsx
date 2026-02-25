@@ -1,60 +1,115 @@
 import './WeeklyMenus.scss';
-import { useMemo, useState } from 'react';
-import { Pagination, Select } from 'antd';
-import { useFetchRecipesPage } from '../../stores/recipes/recipes.queries';
-import type { Recipe, RecipeCategory } from '../../stores/recipes/recipes.types';
-import { WeeklyMenusList } from './components/WeeklyMenusList';
-import { WeeklyMenusSelected } from './components/WeeklyMenusSelected';
-
-const CATEGORY_LABELS: Record<RecipeCategory, string> = {
-  ENTREE: 'Entrée',
-  PLAT: 'Plat',
-  DESSERT: 'Dessert',
-  SAUCE: 'Sauce',
-  APERO: 'Apéro',
-};
-
-const DEFAULT_PAGE_SIZE = 10;
-
-const SORT_OPTIONS = [
-  { value: 'NAME_ASC', label: 'Nom (A → Z)' },
-  { value: 'NAME_DESC', label: 'Nom (Z → A)' },
-  { value: 'RATING_DESC', label: 'Note élevée' },
-  { value: 'RATING_ASC', label: 'Note faible' },
-];
+import { useState } from 'react';
+import { message } from 'antd';
+import {
+  useFetchAllPlannedMenuLists,
+  useFetchPlannedMenuListById,
+  useCreatePlannedMenuList,
+  useUpdatePlannedMenuList,
+  useDeletePlannedMenuList,
+  useAddRecipeToPlannedMenuList,
+  useRemoveRecipeFromPlannedMenuList,
+} from '../../stores/planned-menus/planned-menus.queries';
+import { PlannedMenuListsView } from './components/PlannedMenuListsView';
+import { PlannedMenuListForm } from './components/PlannedMenuListForm';
+import { PlannedMenuListDetail } from './components/PlannedMenuListDetail';
+import type { CreatePlannedMenuListInput } from '../../stores/planned-menus/planned-menus.types';
 
 export const WeeklyMenus = () => {
-  const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(DEFAULT_PAGE_SIZE);
-  const [categoryFilter, setCategoryFilter] = useState<'ALL' | RecipeCategory>('ALL');
-  const [minRating, setMinRating] = useState<number | undefined>(undefined);
-  const [sort, setSort] = useState('NAME_ASC');
-  const [selectedRecipes, setSelectedRecipes] = useState<Recipe[]>([]);
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [selectedListId, setSelectedListId] = useState<number | null>(null);
 
-  const recipesQuery = useFetchRecipesPage(
-    page,
-    pageSize,
-    categoryFilter === 'ALL' ? undefined : categoryFilter,
-    undefined,
-    minRating,
-    sort
-  );
+  const { data: lists, isPending, isError, error } = useFetchAllPlannedMenuLists();
+  const { data: selectedList } = useFetchPlannedMenuListById(selectedListId || 0);
+  const createMutation = useCreatePlannedMenuList();
+  const updateMutation = useUpdatePlannedMenuList();
+  const deleteMutation = useDeletePlannedMenuList();
+  const addRecipeMutation = useAddRecipeToPlannedMenuList();
+  const removeRecipeMutation = useRemoveRecipeFromPlannedMenuList();
 
-  const { data, isPending, isError, error } = recipesQuery;
-  const recipes = data?.items ?? [];
-  const total = data?.total ?? 0;
+  const handleCreateList = (input: CreatePlannedMenuListInput) => {
+    createMutation.mutate(input, {
+      onSuccess: () => {
+        message.success('Liste créée avec succès');
+        setIsFormOpen(false);
+      },
+      onError: () => {
+        message.error('Erreur lors de la création de la liste');
+      },
+    });
+  };
 
-  const selectedIds = useMemo(
-    () => new Set(selectedRecipes.map((recipe) => recipe.id)),
-    [selectedRecipes]
-  );
+  const handleDeleteList = (id: number) => {
+    deleteMutation.mutate(id, {
+      onSuccess: () => {
+        message.success('Liste supprimée');
+      },
+      onError: () => {
+        message.error('Erreur lors de la suppression');
+      },
+    });
+  };
 
-  const handleSelectRecipe = (recipe: Recipe) => {
-    setSelectedRecipes((prev) => (prev.some((item) => item.id === recipe.id) ? prev : [...prev, recipe]));
+  const handleToggleShoppingList = (id: number, isActive: boolean) => {
+    updateMutation.mutate(
+      { id, input: { isActiveShoppingList: isActive } },
+      {
+        onSuccess: () => {
+          message.success(isActive ? 'Liste de courses activée' : 'Liste de courses désactivée');
+        },
+        onError: () => {
+          message.error('Erreur lors de la mise à jour');
+        },
+      }
+    );
+  };
+
+  const handleAddRecipe = (recipeId: number, recipeName: string, assignedDays?: string[]) => {
+    if (!selectedListId) return;
+
+    addRecipeMutation.mutate(
+      { listId: selectedListId, recipeId, recipeName, assignedDays },
+      {
+        onSuccess: () => {
+          message.success('Recette ajoutée');
+        },
+        onError: () => {
+          message.error("Erreur lors de l'ajout de la recette");
+        },
+      }
+    );
   };
 
   const handleRemoveRecipe = (recipeId: number) => {
-    setSelectedRecipes((prev) => prev.filter((recipe) => recipe.id !== recipeId));
+    if (!selectedListId) return;
+
+    removeRecipeMutation.mutate(
+      { listId: selectedListId, recipeId },
+      {
+        onSuccess: () => {
+          message.success('Recette retirée');
+        },
+        onError: () => {
+          message.error('Erreur lors du retrait de la recette');
+        },
+      }
+    );
+  };
+
+  const handleUpdateRecipeDays = (recipeId: number, recipeName: string, assignedDays?: string[]) => {
+    if (!selectedListId) return;
+
+    addRecipeMutation.mutate(
+      { listId: selectedListId, recipeId, recipeName, assignedDays },
+      {
+        onSuccess: () => {
+          message.success('Jours mis à jour');
+        },
+        onError: () => {
+          message.error('Erreur lors de la mise à jour');
+        },
+      }
+    );
   };
 
   if (isPending) {
@@ -65,76 +120,36 @@ export const WeeklyMenus = () => {
     return <div>Error: {error.message}</div>;
   }
 
+  // Show detail view if a list is selected
+  if (selectedListId && selectedList) {
+    return (
+      <PlannedMenuListDetail
+        list={selectedList}
+        onBack={() => setSelectedListId(null)}
+        onAddRecipe={handleAddRecipe}
+        onRemoveRecipe={handleRemoveRecipe}
+        onUpdateRecipeDays={handleUpdateRecipeDays}
+      />
+    );
+  }
+
+  // Show list view
   return (
-    <div className="weekly-menus-page">
-      <div className="weekly-menus-filters">
-        <Select
-          value={categoryFilter}
-          onChange={(value) => {
-            setPage(1);
-            setCategoryFilter(value);
-          }}
-          options={[
-            { value: 'ALL', label: 'Toutes les catégories' },
-            { value: 'ENTREE', label: CATEGORY_LABELS.ENTREE },
-            { value: 'PLAT', label: CATEGORY_LABELS.PLAT },
-            { value: 'DESSERT', label: CATEGORY_LABELS.DESSERT },
-            { value: 'SAUCE', label: CATEGORY_LABELS.SAUCE },
-            { value: 'APERO', label: CATEGORY_LABELS.APERO },
-          ]}
-        />
-        <Select
-          value={minRating ?? 'ALL'}
-          onChange={(value) => {
-            setPage(1);
-            setMinRating(value === 'ALL' ? undefined : Number(value));
-          }}
-          options={[
-            { value: 'ALL', label: 'Toutes les notes' },
-            { value: 5, label: '5 étoiles' },
-            { value: 4, label: '4 étoiles +' },
-            { value: 3, label: '3 étoiles +' },
-            { value: 2, label: '2 étoiles +' },
-            { value: 1, label: '1 étoile +' },
-          ]}
-        />
-        <Select
-          value={sort}
-          onChange={(value) => {
-            setPage(1);
-            setSort(value);
-          }}
-          options={SORT_OPTIONS}
-        />
-      </div>
+    <>
+      <PlannedMenuListsView
+        lists={lists || []}
+        onCreateNew={() => setIsFormOpen(true)}
+        onSelectList={setSelectedListId}
+        onDelete={handleDeleteList}
+        onToggleShoppingList={handleToggleShoppingList}
+      />
 
-      <section className="weekly-menus-selected" data-testid="weekly-menus-selected">
-        <WeeklyMenusSelected selectedRecipes={selectedRecipes} onRemove={handleRemoveRecipe} />
-      </section>
-
-      <section className="weekly-menus-list">
-        <WeeklyMenusList
-          recipes={recipes}
-          categoryLabels={CATEGORY_LABELS}
-          selectedIds={selectedIds}
-          onSelect={handleSelectRecipe}
-        />
-      </section>
-
-      <div className="weekly-menus-pagination">
-        <Pagination
-          current={page}
-          pageSize={pageSize}
-          total={total}
-          showSizeChanger
-          pageSizeOptions={['10', '50', '100']}
-          onChange={(nextPage) => setPage(nextPage)}
-          onShowSizeChange={(_currentPage, nextPageSize) => {
-            setPage(1);
-            setPageSize(nextPageSize);
-          }}
-        />
-      </div>
-    </div>
+      <PlannedMenuListForm
+        open={isFormOpen}
+        onCancel={() => setIsFormOpen(false)}
+        onSubmit={handleCreateList}
+        isLoading={createMutation.isPending}
+      />
+    </>
   );
 };

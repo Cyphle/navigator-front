@@ -9,6 +9,7 @@ import { securityPlugin } from './plugins/security/security.plugin';
 import { dashboardPlugin } from './plugins/dashboard/dashboard.plugin';
 import { familiesPlugin } from './plugins/families/families.plugin';
 import { recipesPlugin } from './plugins/recipes/recipes.plugin';
+import { plannedMenusPlugin } from './plugins/planned-menus/planned-menus.plugin';
 
 const fastify = initFastify(
   [decorateWithUser, decorateWithDatabase],
@@ -20,7 +21,8 @@ const fastify = initFastify(
     { plugin: securityPlugin, routesPrefix: '' },
     { plugin: dashboardPlugin, routesPrefix: '/dashboard' },
     { plugin: familiesPlugin, routesPrefix: '/families' },
-    { plugin: recipesPlugin, routesPrefix: '/recipes' }
+    { plugin: recipesPlugin, routesPrefix: '/recipes' },
+    { plugin: plannedMenusPlugin, routesPrefix: '' }
   ]
 );
 

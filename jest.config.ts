@@ -26,7 +26,10 @@ const config: Config = {
     "router.tsx",
     "main.tsx"
   ],
-  modulePathIgnorePatterns: ["server"]
+  modulePathIgnorePatterns: ["server"],
+  transformIgnorePatterns: [
+    "node_modules/(?!(dayjs)/)"
+  ]
 };
 
 export default config;

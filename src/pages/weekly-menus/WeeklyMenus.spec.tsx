@@ -1,41 +1,141 @@
-import { fireEvent, screen, within } from '@testing-library/react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { render } from '../../../test-utils';
+import { aPlannedMenuList } from '../../../test-utils/factories';
 import { WeeklyMenus } from './WeeklyMenus';
-import { useFetchRecipesPage } from '../../stores/recipes/recipes.queries';
+import {
+  useFetchAllPlannedMenuLists,
+  useFetchPlannedMenuListById,
+  useCreatePlannedMenuList,
+  useUpdatePlannedMenuList,
+  useDeletePlannedMenuList,
+  useAddRecipeToPlannedMenuList,
+  useRemoveRecipeFromPlannedMenuList,
+} from '../../stores/planned-menus/planned-menus.queries';
 
-jest.mock('../../stores/recipes/recipes.queries.ts', () => ({
-  useFetchRecipesPage: jest.fn(),
+jest.mock('../../stores/planned-menus/planned-menus.queries', () => ({
+  useFetchAllPlannedMenuLists: jest.fn(),
+  useFetchPlannedMenuListById: jest.fn(),
+  useCreatePlannedMenuList: jest.fn(),
+  useUpdatePlannedMenuList: jest.fn(),
+  useDeletePlannedMenuList: jest.fn(),
+  useAddRecipeToPlannedMenuList: jest.fn(),
+  useRemoveRecipeFromPlannedMenuList: jest.fn(),
 }));
 
-const recipesPage = {
-  items: [
-    { id: 1, name: 'Salade', category: 'ENTREE', rating: 4 },
-    { id: 2, name: 'Tarte', category: 'DESSERT', rating: 5 },
-  ],
-  page: 1,
-  pageSize: 10,
-  total: 2,
-};
+const mockMutation = () => ({
+  mutate: jest.fn(),
+  isPending: false,
+  isSuccess: false,
+  isError: false,
+});
 
 describe('WeeklyMenus', () => {
-  test('renders recipes and allows selection', () => {
-    (useFetchRecipesPage as jest.Mock).mockImplementation(() => ({
-      data: recipesPage,
+  beforeEach(() => {
+    (useCreatePlannedMenuList as jest.Mock).mockReturnValue(mockMutation());
+    (useUpdatePlannedMenuList as jest.Mock).mockReturnValue(mockMutation());
+    (useDeletePlannedMenuList as jest.Mock).mockReturnValue(mockMutation());
+    (useAddRecipeToPlannedMenuList as jest.Mock).mockReturnValue(mockMutation());
+    (useRemoveRecipeFromPlannedMenuList as jest.Mock).mockReturnValue(mockMutation());
+    (useFetchPlannedMenuListById as jest.Mock).mockReturnValue({
+      data: undefined,
       isPending: false,
       isError: false,
-    }));
+    });
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  test('shows empty state when no planned menu lists', () => {
+    (useFetchAllPlannedMenuLists as jest.Mock).mockReturnValue({
+      data: [],
+      isPending: false,
+      isError: false,
+    });
 
     render(<WeeklyMenus />);
 
-    expect(screen.getByText('Salade')).toBeInTheDocument();
+    expect(screen.getByText('Aucune liste de menus planifiés')).toBeInTheDocument();
+  });
 
-    fireEvent.click(screen.getAllByRole('button', { name: /ajouter/i })[0]);
+  test('renders planned menu lists', () => {
+    const lists = [
+      aPlannedMenuList({ id: 1, name: 'Menu semaine 1' }),
+      aPlannedMenuList({ id: 2, name: 'Menu semaine 2' }),
+    ];
 
-    const selected = screen.getByTestId('weekly-menus-selected');
-    expect(within(selected).getByText('Recettes sélectionnées')).toBeInTheDocument();
-    expect(within(selected).getByText('Salade')).toBeInTheDocument();
+    (useFetchAllPlannedMenuLists as jest.Mock).mockReturnValue({
+      data: lists,
+      isPending: false,
+      isError: false,
+    });
 
-    fireEvent.click(screen.getByRole('button', { name: /retirer/i }));
-    expect(screen.queryByText('Aucune recette sélectionnée.')).toBeInTheDocument();
+    render(<WeeklyMenus />);
+
+    expect(screen.getByText('Menu semaine 1')).toBeInTheDocument();
+    expect(screen.getByText('Menu semaine 2')).toBeInTheDocument();
+  });
+
+  test('shows loading state', () => {
+    (useFetchAllPlannedMenuLists as jest.Mock).mockReturnValue({
+      data: undefined,
+      isPending: true,
+      isError: false,
+    });
+
+    render(<WeeklyMenus />);
+
+    expect(screen.getByText('Loading...')).toBeInTheDocument();
+  });
+
+  test('shows error state', () => {
+    (useFetchAllPlannedMenuLists as jest.Mock).mockReturnValue({
+      data: undefined,
+      isPending: false,
+      isError: true,
+      error: new Error('Test error'),
+    });
+
+    render(<WeeklyMenus />);
+
+    expect(screen.getByText(/error/i)).toBeInTheDocument();
+  });
+
+  test('opens create form when create button clicked', async () => {
+    (useFetchAllPlannedMenuLists as jest.Mock).mockReturnValue({
+      data: [],
+      isPending: false,
+      isError: false,
+    });
+
+    render(<WeeklyMenus />);
+
+    fireEvent.click(screen.getByRole('button', { name: /créer ma première liste/i }));
+
+    await waitFor(() => {
+      expect(screen.getByRole('dialog')).toBeInTheDocument();
+    });
+  });
+
+  test('creates new list when form submitted', async () => {
+    const mutateMock = jest.fn();
+    (useFetchAllPlannedMenuLists as jest.Mock).mockReturnValue({
+      data: [],
+      isPending: false,
+      isError: false,
+    });
+    (useCreatePlannedMenuList as jest.Mock).mockReturnValue({
+      ...mockMutation(),
+      mutate: mutateMock,
+    });
+
+    render(<WeeklyMenus />);
+
+    fireEvent.click(screen.getByRole('button', { name: /créer ma première liste/i }));
+
+    await waitFor(() => {
+      expect(screen.getByRole('dialog')).toBeInTheDocument();
+    });
   });
 });

@@ -4,7 +4,7 @@ import { Recipe, RecipeCategory, RecipesPage } from './recipes.types';
 export const getRecipesHandler = (database: Database) => (
   page: number,
   pageSize: number,
-  category?: RecipeCategory,
+  category?: string,
   search?: string,
   minRating?: number,
   sort?: string
