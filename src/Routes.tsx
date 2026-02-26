@@ -9,6 +9,7 @@ import { Recipes } from './pages/recipes/Recipes.tsx';
 import { Profile } from './pages/profile/Profile.tsx';
 import { WeeklyMenus } from './pages/weekly-menus/WeeklyMenus.tsx';
 import { ShoppingLists } from './pages/shopping-lists/ShoppingLists.tsx';
+import { FamilyTodos } from './pages/family-todos/FamilyTodos.tsx';
 
 export interface RouteDefinition {
   id?: number;
@@ -74,6 +75,8 @@ export const ROUTES_PATHS: RouteDefinitionConfig[] = [
   {
     id: 5,
     name: 'Todos familiaux',
+    path: 'family-todos',
+    element: <FamilyTodos />,
     icon: (
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M7 12.5 10.5 16 17 9.5l-1.4-1.4-5.1 5.1L8.4 11.1 7 12.5Z" />
