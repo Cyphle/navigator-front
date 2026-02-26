@@ -23,13 +23,19 @@ const resolvePath = (item: RouteDefinitionConfig): string | undefined => {
 export const Menu = () => {
   const { userState } = useUser();
   const isAuthenticated = userState.username !== '';
+
+  if (!isAuthenticated) {
+    return (
+      <nav className="app-sidebar__nav" aria-label="Navigation principale">
+        <ul className="app-sidebar__section">
+        </ul>
+      </nav>
+    );
+  }
+
   const menuEntries = ROUTES_PATHS
     .filter((route) => !!route.name)
-    .filter((route) => (
-      isAuthenticated
-        ? route.isAuth
-        : route.isAuth === false
-    ));
+    .filter((route) => route.isAuth);
   const defaultIcon = getDefaultIcon();
 
   return (
