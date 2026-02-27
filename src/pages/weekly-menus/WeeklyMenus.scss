@@ -1,9 +1,11 @@
 @use "../../variables.scss" as *;
+@use "../../theme.scss" as *;
 
 .weekly-menus-page {
+  @include luxury-page;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 32px;
 }
 
 .weekly-menus-filters {

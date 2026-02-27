@@ -13,7 +13,6 @@ export const TodoListsView = ({ lists, onCreateNew, onSelectList, onDelete }: To
   return (
     <div className="family-todos">
       <div className="todos-header">
-        <h1>Todos familiaux</h1>
         <Button type="primary" icon={<PlusOutlined />} onClick={onCreateNew}>
           Nouvelle liste
         </Button>

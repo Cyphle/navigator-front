@@ -1,14 +1,28 @@
+@use "../../theme.scss" as *;
+
 .family-todos {
-  padding: 24px;
+  @include luxury-page;
 
   .todos-header {
-    margin-bottom: 24px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    margin-bottom: 32px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid $gray-border;
+  }
+
+  .ant-card {
+    @include luxury-card;
+    padding: 24px;
   }
 
   .todo-item-detail {
     margin-top: 8px;
-    color: #666;
+    color: $gray-medium;
     font-size: 14px;
+    font-weight: 300;
+    letter-spacing: 0.5px;
   }
 
   .status-tag {

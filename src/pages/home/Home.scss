@@ -1,18 +1,21 @@
+@use "../../theme.scss" as *;
+
 .dashboard {
+  @include luxury-page;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 32px;
 }
 
 .dashboard__grid {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
-  gap: 20px;
+  gap: 32px;
 }
 
 .card {
-  background: #ffffff;
-  border-radius: 18px;
+  @include luxury-card;
+  border-radius: 0;
   padding: 18px;
   box-shadow: 0 16px 30px rgba(15, 23, 42, 0.08);
   display: flex;

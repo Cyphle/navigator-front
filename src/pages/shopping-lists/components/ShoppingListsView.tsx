@@ -18,7 +18,6 @@ export const ShoppingListsView = ({
   return (
     <div className="shopping-lists-view">
       <div className="shopping-lists-header">
-        <h1>Mes listes de courses</h1>
         <Button type="primary" icon={<PlusOutlined />} onClick={onCreateNew}>
           Nouvelle liste
         </Button>

@@ -28,6 +28,27 @@ export const Header = ({ userInfo }: { userInfo: Option<UserInfo> }) => {
       };
     }
 
+    if (location.pathname.startsWith('/calendars')) {
+      return {
+        title: 'Mes calendriers',
+        subtitle: 'Pour gérer mon temps et celui de ma famille'
+      };
+    }
+
+    if (location.pathname.startsWith('/family-todos')) {
+      return {
+        title: 'To do lists',
+        subtitle: 'Mes tâches et celles de ma famille'
+      };
+    }
+
+    if (location.pathname.startsWith('/shopping-lists')) {
+      return {
+        title: 'Listes de course',
+        subtitle: 'Acheter acheter acheter ! Pour ma famille et moi'
+      };
+    }
+
     if (location.pathname.startsWith('/weekly-menus')) {
       return {
         title: 'Recettes de la semaine et plus',

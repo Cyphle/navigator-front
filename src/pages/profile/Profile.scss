@@ -1,19 +1,22 @@
 @use "../../variables.scss" as *;
+@use "../../theme.scss" as *;
 
 .profile-page {
+  @include luxury-page;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 32px;
 }
 
 .profile-card {
-  background: $white-color;
-  border-radius: 16px;
-  padding: 20px;
-  @include default-shadow;
+  @include luxury-card;
 
   h2 {
-    margin: 0 0 12px 0;
+    @include luxury-title;
+    font-size: 18px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid $gray-border;
   }
 }
 

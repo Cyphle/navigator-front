@@ -1,41 +1,33 @@
 @use "../../variables.scss" as *;
+@use "../../theme.scss" as *;
 
 .families-page {
+  @include luxury-page;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 32px;
 }
 
 .families-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 16px;
-
-  h1 {
-    margin: 0 0 6px 0;
-  }
-
-  p {
-    margin: 0;
-    color: $text-muted-color;
-  }
+  padding-bottom: 24px;
+  border-bottom: 1px solid $gray-border;
 }
 
 .families-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 32px;
 }
 
 .family-card {
-  background: $white-color;
-  border-radius: 16px;
-  padding: 20px;
-  @include default-shadow;
+  @include luxury-card;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
 }
 
 .family-card__header {
@@ -55,21 +47,25 @@
 }
 
 .family-card__status {
-  padding: 4px 10px;
-  border-radius: 999px;
-  font-size: 12px;
+  padding: 4px 12px;
+  border-radius: 0;
+  font-size: 11px;
+  font-weight: 400;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 1px;
+  border: 1px solid;
 }
 
 .family-card__status--active {
-  background: rgba(2, 122, 193, 0.12);
-  color: $main-color;
+  background: $ocean-pale;
+  color: $ocean-blue;
+  border-color: $ocean-blue;
 }
 
 .family-card__status--inactive {
-  background: rgba(107, 114, 128, 0.2);
-  color: $text-muted-color;
+  background: $gray-light;
+  color: $gray-medium;
+  border-color: $gray-border;
 }
 
 .family-card__owner {

@@ -104,10 +104,6 @@ const FamiliesContent = ({ data }: { data: Family[] }) => {
   return (
     <div className="families-page">
       <header className="families-header">
-        <div>
-          <h1>Familles</h1>
-          <p>Gere les espaces familiaux, les membres et leur statut.</p>
-        </div>
         <Button type="primary" onClick={handleCreateClick}>
           Creer une famille
         </Button>

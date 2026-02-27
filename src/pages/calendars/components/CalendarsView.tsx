@@ -1,4 +1,4 @@
-import { Button, Calendar as AntCalendar, Badge, Card, List, Modal, Popconfirm, Radio, Space, Tag } from 'antd';
+import { Button, Calendar as AntCalendar, Badge, Card, List, Modal, Popconfirm, Radio, Select, Space, Tag } from 'antd';
 import { PlusOutlined, DeleteOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
@@ -120,82 +120,43 @@ export const CalendarsView = ({
   return (
     <div className="calendars-view">
       <div className="calendars-header">
-        <h1>Calendrier partagé</h1>
+        <Select
+          mode="multiple"
+          placeholder="Mes calendriers"
+          value={Array.from(visibleCalendars)}
+          onChange={(values) => setVisibleCalendars(new Set(values))}
+          style={{ width: 300 }}
+          size="large"
+          maxTagCount="responsive"
+          options={calendars.map((cal) => ({
+            label: (
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <div
+                  style={{
+                    width: '12px',
+                    height: '12px',
+                    borderRadius: '50%',
+                    backgroundColor: cal.color,
+                  }}
+                />
+                <span>{cal.name}</span>
+                {cal.type === 'SHARED' && (
+                  <Tag color="blue" style={{ marginLeft: 'auto' }}>
+                    Partagé
+                  </Tag>
+                )}
+              </div>
+            ),
+            value: cal.id,
+          }))}
+        />
         <Button type="primary" icon={<PlusOutlined />} onClick={onCreateCalendar}>
           Nouveau calendrier
         </Button>
       </div>
 
       <div className="calendars-content">
-        <div className="calendar-sidebar">
-          <Card title="Mes calendriers" size="small">
-            <List
-              dataSource={calendars}
-              renderItem={(calendar) => (
-                <List.Item
-                  className="calendar-item"
-                  onClick={() => toggleCalendarVisibility(calendar.id)}
-                  style={{ cursor: 'pointer' }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1 }}>
-                    <input
-                      type="checkbox"
-                      checked={visibleCalendars.has(calendar.id)}
-                      onChange={() => toggleCalendarVisibility(calendar.id)}
-                      onClick={(e) => e.stopPropagation()}
-                    />
-                    <div
-                      style={{
-                        width: '12px',
-                        height: '12px',
-                        borderRadius: '50%',
-                        backgroundColor: calendar.color,
-                      }}
-                    />
-                    <span>{calendar.name}</span>
-                    {calendar.type === 'SHARED' && (
-                      <Tag color="blue" style={{ marginLeft: 'auto' }}>
-                        Partagé
-                      </Tag>
-                    )}
-                  </div>
-                  <Space>
-                    <Button
-                      type="text"
-                      size="small"
-                      icon={<PlusOutlined />}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onCreateEvent(calendar.id);
-                      }}
-                    />
-                    <Popconfirm
-                      title="Supprimer ce calendrier ?"
-                      description="Tous les événements seront supprimés."
-                      onConfirm={(e) => {
-                        e?.stopPropagation();
-                        onDeleteCalendar(calendar.id);
-                      }}
-                      okText="Oui"
-                      cancelText="Non"
-                    >
-                      <Button
-                        type="text"
-                        size="small"
-                        danger
-                        icon={<DeleteOutlined />}
-                        onClick={(e) => e.stopPropagation()}
-                      />
-                    </Popconfirm>
-                  </Space>
-                </List.Item>
-              )}
-            />
-          </Card>
-        </div>
-
-        <div className="calendar-main">
-          <Card>
+        <Card>
             <div className="calendar-controls">
               <Radio.Group value={viewMode} onChange={(e) => setViewMode(e.target.value)} buttonStyle="solid">
                 <Radio.Button value="month">Mois</Radio.Button>
@@ -232,7 +193,6 @@ export const CalendarsView = ({
               value={selectedDate}
             />
           </Card>
-        </div>
 
         <Modal
           title="Détails de l'événement"
