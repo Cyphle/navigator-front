@@ -198,10 +198,10 @@ export const Recipes = () => {
               { value: 'APERO', label: CATEGORY_LABELS.APERO },
             ]}
           />
-          <Button type="primary" onClick={() => setIsCreateModalOpen(true)}>
-            Ajouter une recette
-          </Button>
         </div>
+        <Button type="primary" onClick={() => setIsCreateModalOpen(true)}>
+          Ajouter une recette
+        </Button>
       </div>
 
       <section className="recipes-list">

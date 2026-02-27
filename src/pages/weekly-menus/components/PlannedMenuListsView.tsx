@@ -21,7 +21,6 @@ export const PlannedMenuListsView = ({
   return (
     <div className="planned-menu-lists-view">
       <div className="planned-menu-lists-header">
-        <h1>Mes listes de menus planifiés</h1>
         <Button type="primary" icon={<PlusOutlined />} onClick={onCreateNew}>
           Nouvelle liste
         </Button>

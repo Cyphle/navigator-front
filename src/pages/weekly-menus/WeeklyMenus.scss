@@ -113,13 +113,17 @@
 
 .planned-menu-lists-header {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   margin-bottom: 24px;
 
   h1 {
     margin: 0;
     font-size: 24px;
+  }
+
+  button {
+    @include luxury-button;
   }
 }
 
