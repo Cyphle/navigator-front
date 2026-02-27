@@ -10,6 +10,7 @@ import { Profile } from './pages/profile/Profile.tsx';
 import { WeeklyMenus } from './pages/weekly-menus/WeeklyMenus.tsx';
 import { ShoppingLists } from './pages/shopping-lists/ShoppingLists.tsx';
 import { FamilyTodos } from './pages/family-todos/FamilyTodos.tsx';
+import { Calendars } from './pages/calendars/Calendars.tsx';
 
 export interface RouteDefinition {
   id?: number;
@@ -65,6 +66,8 @@ export const ROUTES_PATHS: RouteDefinitionConfig[] = [
   {
     id: 4,
     name: 'Calendrier partage',
+    path: 'calendars',
+    element: <Calendars />,
     icon: (
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M7 3v2H5a2 2 0 0 0-2 2v11a3 3 0 0 0 3 3h12a3 3 0 0 0 3-3V7a2 2 0 0 0-2-2h-2V3h-2v2H9V3H7Zm12 8H5v7a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-7Z" />
