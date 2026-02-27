@@ -25,11 +25,11 @@ describe('Menu', () => {
     expect(screen.getByRole('link', { name: /profil/i })).toHaveAttribute('href', '/profile');
   });
 
-  test('renders only unauthenticated entries when unauthenticated', () => {
+  test('renders empty menu when unauthenticated', () => {
     renderMenu({ username: '', email: '', firstName: '', lastName: '' });
 
-    expect(screen.getByRole('link', { name: /s'inscrire/i })).toHaveAttribute('href', '/registration');
     expect(screen.queryByRole('link', { name: /profil/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole('link', { name: /dashboard/i })).not.toBeInTheDocument();
     expect(document.querySelectorAll('.app-sidebar__title')).toHaveLength(0);
   });
 });

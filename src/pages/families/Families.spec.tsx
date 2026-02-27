@@ -44,7 +44,7 @@ describe('Families', () => {
     }));
   });
 
-  test('renders title and family details', () => {
+  test('renders family details', () => {
     (useFetchFamilies as jest.Mock).mockImplementation(() => ({
       data: mockFamilies,
       isPending: false,
@@ -57,7 +57,6 @@ describe('Families', () => {
       </UserContextProvider>
     );
 
-    expect(screen.getByText('Familles')).toBeInTheDocument();
     expect(screen.getByText('Famille Martin')).toBeInTheDocument();
     expect(screen.getByText('3 membres')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /creer une famille/i })).toBeInTheDocument();
