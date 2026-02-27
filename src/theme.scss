@@ -1,0 +1,77 @@
+// Luxury ocean blue palette - Global theme
+$ocean-blue: #3B82F6;
+$ocean-light: #60A5FA;
+$ocean-pale: #EFF6FF;
+$white: #FFFFFF;
+$black: #000000;
+$gray-light: #F8F9FA;
+$gray-medium: #6B7280;
+$gray-border: #E5E7EB;
+
+// Luxury design mixins
+@mixin luxury-page {
+  padding: 40px;
+  background: $gray-light;
+  min-height: 100vh;
+}
+
+@mixin luxury-card {
+  background: $white;
+  border-radius: 0;
+  border: 1px solid $gray-border;
+  box-shadow: none;
+  overflow: hidden;
+  padding: 32px;
+}
+
+@mixin luxury-button {
+  background: $ocean-blue;
+  border: none;
+  border-radius: 0;
+  font-weight: 400;
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  color: $white;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  padding: 12px 32px;
+
+  &:hover {
+    background: $ocean-light;
+  }
+}
+
+@mixin luxury-button-outline {
+  background: transparent;
+  border: 1px solid $gray-border;
+  border-radius: 0;
+  color: $black;
+  font-weight: 300;
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  padding: 10px 24px;
+
+  &:hover {
+    background: $ocean-blue;
+    border-color: $ocean-blue;
+    color: $white;
+  }
+}
+
+@mixin luxury-title {
+  font-weight: 300;
+  color: $black;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+@mixin luxury-text {
+  font-weight: 300;
+  color: $black;
+  letter-spacing: 0.5px;
+}
