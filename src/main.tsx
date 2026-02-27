@@ -20,7 +20,6 @@ export async function initialDataLoader() {
 const Main = () => {
   const { userInfo } = useLoaderData() as { userInfo: Option<UserInfo> };
   const navigate = useNavigate();
-  const location = useLocation();
 
   const isAuthenticated = userInfo.isSome();
   const initialUser = useMemo(() => userInfo.getOrElse({
@@ -31,10 +30,10 @@ const Main = () => {
   }), [userInfo]);
 
   useEffect(() => {
-    if (!isAuthenticated && location.pathname === '/') {
+    if (!isAuthenticated) {
       navigate('/registration', { replace: true });
     }
-  }, [isAuthenticated, location.pathname, navigate]);
+  }, [isAuthenticated, navigate]);
 
   return (
     <UserContextProvider initialUser={initialUser}>
