@@ -22,7 +22,11 @@
     "types": [
       "node",
       "@testing-library/jest-dom"
-    ]
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"]
+    }
   },
   "include": ["src"],
   "references": [{ "path": "./tsconfig.node.json" }]
