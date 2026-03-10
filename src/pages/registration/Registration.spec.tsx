@@ -28,7 +28,7 @@ describe('Registration', () => {
   test('should render', () => {
     render(<Registration/>);
 
-    expect(screen.getByText('Crée toi un compte')).toBeInTheDocument();
+    expect(screen.getByText('Créer un compte')).toBeInTheDocument();
   });
 
   test.skip('should handle form submission', async () => {
@@ -73,7 +73,7 @@ describe('Registration', () => {
   test('should redirect to server login', () => {
     render(<Registration/>);
 
-    const loginButton = screen.getByRole('button', { name: 'Si vous avez déjà un compte connectez vous' });
+    const loginButton = screen.getByRole('button', { name: /vous avez déjà un compte/i });
     fireEvent.click(loginButton);
 
     expect(redirectToLogin).toHaveBeenCalled();

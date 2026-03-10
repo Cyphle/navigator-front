@@ -6,11 +6,7 @@ import type { UpsertFamilyRequest } from '../../stores/families/families.types';
 import { useFetchFamilies } from '../../stores/families/families.queries';
 import { useCreateFamily, useUpdateFamily } from '../../stores/families/families.commands';
 import { CreateUpdateFamily, type FamilyFormValues, type CreateUpdateFamilyPayload } from './components/CreateUpdateFamily';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
 import { Users, User, Settings, ShieldAlert, Plus } from 'lucide-react';
-import { cn } from '@/lib/utils';
 
 const getMemberCount = (family: Family): number => {
   return family.members.length + 1;
@@ -25,14 +21,8 @@ const FamiliesContent = ({ data }: { data: Family[] }) => {
   const [formValues, setFormValues] = useState<FamilyFormValues>(defaultFormValues);
 
   const ownerEmail = useMemo(() => {
-    if (userState.email) {
-      return userState.email;
-    }
-
-    if (userState.username) {
-      return `${userState.username}@banana.fr`;
-    }
-
+    if (userState.email) return userState.email;
+    if (userState.username) return `${userState.username}@banana.fr`;
     return 'owner@banana.fr';
   }, [userState.email, userState.username]);
 
@@ -46,7 +36,7 @@ const FamiliesContent = ({ data }: { data: Family[] }) => {
     setEditingFamilyId(family.id);
     setFormValues({
       name: family.name,
-      emails: family.members.map((member) => member.email).join(', ')
+      emails: family.members.map((member) => member.email).join(', '),
     });
     setIsFormOpen(true);
   };
@@ -62,15 +52,11 @@ const FamiliesContent = ({ data }: { data: Family[] }) => {
     setPendingStatusFamilyId(null);
   };
 
-  const {
-    mutate: createFamilyMutation,
-    isPending: createFamilyPending,
-  } = useCreateFamily(onMutationError, onMutationSuccess);
+  const { mutate: createFamilyMutation, isPending: createFamilyPending } =
+    useCreateFamily(onMutationError, onMutationSuccess);
 
-  const {
-    mutate: updateFamilyMutation,
-    isPending: updateFamilyPending,
-  } = useUpdateFamily(onMutationError, onMutationSuccess);
+  const { mutate: updateFamilyMutation, isPending: updateFamilyPending } =
+    useUpdateFamily(onMutationError, onMutationSuccess);
 
   const handleDeactivate = (family: Family) => {
     setPendingStatusFamilyId(family.id);
@@ -87,14 +73,16 @@ const FamiliesContent = ({ data }: { data: Family[] }) => {
   const onSubmit = (values: CreateUpdateFamilyPayload) => {
     const memberEmails = values.memberEmails.filter((email) => email !== ownerEmail);
     const ownerName = `${userState.firstName} ${userState.lastName}`.trim() || 'Owner';
-    const editingFamily = editingFamilyId ? data.find((family) => family.id === editingFamilyId) : undefined;
+    const editingFamily = editingFamilyId
+      ? data.find((family) => family.id === editingFamilyId)
+      : undefined;
 
     const payload: UpsertFamilyRequest = {
       id: editingFamilyId ?? undefined,
       name: values.name,
       ownerEmail: editingFamily?.owner.email ?? ownerEmail,
       ownerName: editingFamily?.owner.relation ?? ownerName,
-      memberEmails: memberEmails
+      memberEmails,
     };
 
     if (editingFamilyId) {
@@ -105,81 +93,142 @@ const FamiliesContent = ({ data }: { data: Family[] }) => {
   };
 
   return (
-    <div className="p-8 bg-gray-50 min-h-full">
-      <header className="flex justify-end mb-8">
-        <Button onClick={handleCreateClick} className="rounded-none bg-black hover:bg-gray-800 text-white uppercase tracking-widest font-light text-xs">
-          <Plus className="w-4 h-4 mr-2" />
-          Creer une famille
-        </Button>
-      </header>
+    <div className="p-4 md:p-6 min-h-full" style={{ background: 'var(--sand)' }}>
+      {/* Header */}
+      <div className="flex justify-end mb-6">
+        <button
+          onClick={handleCreateClick}
+          className="flex items-center gap-2 text-white text-sm font-semibold px-5 py-2.5 rounded-[var(--radius-sm)] transition-all duration-150 hover:-translate-y-px"
+          style={{
+            background: 'linear-gradient(135deg, var(--ocean) 0%, var(--ocean-light) 100%)',
+            boxShadow: '0 3px 12px rgba(27,79,138,0.3)',
+          }}
+        >
+          <Plus className="w-4 h-4" />
+          Créer une famille
+        </button>
+      </div>
 
-      <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+      {/* Cards grid */}
+      <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
         {data.map((family) => (
-          <Card key={family.id} className="rounded-none border-gray-200 shadow-none flex flex-col h-full group">
-            <CardHeader className="flex flex-row items-start justify-between pb-6">
-              <div className="flex flex-col gap-1">
-                <CardTitle className="text-lg font-extralight text-black uppercase m-0">{family.name}</CardTitle>
-                <div className="flex items-center gap-1 text-[10px] text-gray-400 font-light uppercase tracking-widest">
-                  <Users className="w-3 h-3" />
-                  {getMemberCount(family)} membres
+          <div
+            key={family.id}
+            className="bg-white rounded-[var(--radius-lg)] overflow-hidden flex flex-col relative"
+            style={{ boxShadow: 'var(--shadow-soft)' }}
+          >
+            {/* Accent bar — gradient ocean → sage */}
+            <div
+              className="absolute top-0 left-0 right-0 h-1"
+              style={{ background: 'linear-gradient(to right, var(--ocean), var(--sage-light))' }}
+              aria-hidden="true"
+            />
+
+            {/* Card body */}
+            <div className="p-6 pt-7 flex flex-col flex-1">
+              {/* Title row */}
+              <div className="flex items-start justify-between mb-4">
+                <div>
+                  <h2
+                    className="font-display text-xl font-bold m-0"
+                    style={{ color: 'var(--stone)' }}
+                  >
+                    {family.name}
+                  </h2>
+                  <div className="flex items-center gap-1 mt-1 text-xs" style={{ color: 'var(--mist)' }}>
+                    <Users className="w-3.5 h-3.5" />
+                    <span>{getMemberCount(family)} membre{getMemberCount(family) > 1 ? 's' : ''}</span>
+                  </div>
                 </div>
+
+                {/* Status badge */}
+                {family.status === 'ACTIVE' ? (
+                  <span
+                    className="text-xs font-bold uppercase tracking-wide px-3 py-1 rounded-full"
+                    style={{ background: 'var(--sage-pale)', color: 'var(--sage)' }}
+                  >
+                    Actif
+                  </span>
+                ) : (
+                  <span
+                    className="text-xs font-bold uppercase tracking-wide px-3 py-1 rounded-full bg-gray-100 text-gray-400"
+                  >
+                    Désactivé
+                  </span>
+                )}
               </div>
-              <Badge variant="outline" className={cn(
-                "rounded-none text-[8px] font-light uppercase tracking-[0.15em] px-1.5 py-0 border-gray-100",
-                family.status === 'ACTIVE' ? "text-blue-500 border-blue-100" : "text-gray-300"
-              )}>
-                {family.status === 'ACTIVE' ? 'Actif' : 'Desactive'}
-              </Badge>
-            </CardHeader>
-            <CardContent className="flex-1 flex flex-col gap-6">
-              <div className="bg-gray-50 p-4 border border-gray-100 flex items-center justify-between group-hover:bg-white transition-colors">
-                <div className="flex flex-col gap-1">
-                  <span className="text-[8px] uppercase tracking-widest font-light text-gray-400">Owner</span>
-                  <span className="text-xs font-light text-black truncate max-w-[150px]">{family.owner.email}</span>
+
+              {/* Owner block */}
+              <div
+                className="rounded-[var(--radius-sm)] p-3 flex items-center justify-between mb-4"
+                style={{ background: 'var(--sand)' }}
+              >
+                <div>
+                  <p className="text-[10px] font-semibold uppercase tracking-wide m-0 mb-0.5" style={{ color: 'var(--mist)' }}>
+                    Owner
+                  </p>
+                  <p className="text-sm font-medium m-0 truncate max-w-[180px]" style={{ color: 'var(--stone)' }}>
+                    {family.owner.email}
+                  </p>
                 </div>
-                <div className="bg-white p-2 border border-gray-100">
-                  <User className="w-4 h-4 text-black" />
+                <div
+                  className="w-8 h-8 rounded-[var(--radius-sm)] flex items-center justify-center shrink-0"
+                  style={{ background: 'var(--ocean-pale)', color: 'var(--ocean)' }}
+                >
+                  <User className="w-4 h-4" />
                 </div>
               </div>
 
-              <div className="flex flex-col gap-3">
-                <span className="text-[8px] uppercase tracking-widest font-light text-gray-400">Membres</span>
-                <ul className="list-none p-0 m-0 space-y-2">
+              {/* Members list */}
+              <div className="flex-1">
+                <p className="text-[10px] font-semibold uppercase tracking-wide mb-2 m-0" style={{ color: 'var(--mist)' }}>
+                  Membres
+                </p>
+                <ul className="list-none p-0 m-0 space-y-1">
                   {family.members.map((member) => (
-                    <li key={member.id} className="flex items-center justify-between text-xs font-light py-1 border-b border-gray-50 last:border-0">
-                      <span className="text-gray-400 uppercase tracking-tighter text-[10px]">{member.relation ?? 'Membre'}</span>
-                      <span className="text-black">{member.email}</span>
+                    <li
+                      key={member.id}
+                      className="flex items-center justify-between text-sm py-1.5 border-b border-black/5 last:border-0"
+                    >
+                      <span className="text-xs font-medium" style={{ color: 'var(--mist)' }}>
+                        {member.relation ?? 'Membre'}
+                      </span>
+                      <span className="text-sm font-medium" style={{ color: 'var(--stone)' }}>
+                        {member.email}
+                      </span>
                     </li>
                   ))}
                   {family.members.length === 0 && (
-                    <li className="text-xs font-light text-gray-300 italic py-2">Aucun autre membre</li>
+                    <li className="text-sm py-2 italic" style={{ color: 'var(--mist)' }}>
+                      Aucun autre membre
+                    </li>
                   )}
                 </ul>
               </div>
-            </CardContent>
-            <CardFooter className="pt-6 border-t border-gray-50 flex gap-2">
-              <Button 
-                variant="outline" 
-                size="sm"
-                className="flex-1 rounded-none border-gray-200 text-[10px] uppercase tracking-widest font-light hover:bg-gray-50"
-                onClick={() => handleEditClick(family)} 
-                disabled={family.status === 'INACTIVE'}
-              >
-                <Settings className="w-3 h-3 mr-2" />
-                Modifier
-              </Button>
-              <Button
-                variant="outline"
-                size="sm"
-                className="flex-1 rounded-none border-gray-200 text-red-400 hover:text-red-500 hover:bg-red-50 text-[10px] uppercase tracking-widest font-light"
-                onClick={() => handleDeactivate(family)}
-                disabled={family.status === 'INACTIVE' || pendingStatusFamilyId === family.id}
-              >
-                <ShieldAlert className="w-3 h-3 mr-2" />
-                Desactiver
-              </Button>
-            </CardFooter>
-          </Card>
+
+              {/* Actions */}
+              <div className="flex gap-2.5 pt-5 mt-5 border-t border-black/5">
+                <button
+                  className="flex-1 flex items-center justify-center gap-2 border text-sm font-semibold px-4 py-2 rounded-[var(--radius-sm)] transition-colors hover:bg-[var(--ocean-pale)] disabled:opacity-40 disabled:cursor-not-allowed"
+                  style={{ borderColor: 'var(--ocean)', color: 'var(--ocean)', background: 'transparent' }}
+                  onClick={() => handleEditClick(family)}
+                  disabled={family.status === 'INACTIVE'}
+                >
+                  <Settings className="w-3.5 h-3.5" />
+                  Modifier
+                </button>
+                <button
+                  className="flex-1 flex items-center justify-center gap-2 border text-sm font-semibold px-4 py-2 rounded-[var(--radius-sm)] transition-colors hover:bg-[var(--coral-pale)] disabled:opacity-40 disabled:cursor-not-allowed"
+                  style={{ borderColor: 'var(--coral)', color: 'var(--coral)', background: 'transparent' }}
+                  onClick={() => handleDeactivate(family)}
+                  disabled={family.status === 'INACTIVE' || pendingStatusFamilyId === family.id}
+                >
+                  <ShieldAlert className="w-3.5 h-3.5" />
+                  Désactiver
+                </button>
+              </div>
+            </div>
+          </div>
         ))}
       </section>
 

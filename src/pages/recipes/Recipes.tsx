@@ -171,7 +171,7 @@ export const Recipes = () => {
 
   if (isPending) {
     return (
-      <div className="flex flex-col items-center justify-center py-24 gap-4 bg-gray-50 min-h-full">
+      <div className="flex flex-col items-center justify-center py-16 md:py-24 gap-4 bg-gray-50 min-h-full">
         <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
         <p className="text-[10px] uppercase tracking-[0.2em] font-light text-gray-400">Chargement des recettes...</p>
       </div>
@@ -190,9 +190,9 @@ export const Recipes = () => {
   }
 
   return (
-    <div className="p-8 bg-gray-50 min-h-full">
-      <header className="flex flex-col md:flex-row gap-6 mb-8 justify-between">
-        <div className="flex flex-1 gap-4 max-w-2xl">
+    <div className="p-4 md:p-8 bg-gray-50 min-h-full">
+      <header className="flex flex-col sm:flex-row gap-3 md:gap-6 mb-6 md:mb-8 justify-between">
+        <div className="flex flex-1 gap-3 md:gap-4 max-w-2xl">
           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
             <Input
@@ -219,7 +219,7 @@ export const Recipes = () => {
               setCategoryFilter(value);
             }}
           >
-            <SelectTrigger className="w-[180px] rounded-none border-gray-200 focus:ring-0 transition-colors bg-white">
+            <SelectTrigger className="w-[140px] md:w-[180px] rounded-none border-gray-200 focus:ring-0 transition-colors bg-white">
               <SelectValue placeholder="Catégorie" />
             </SelectTrigger>
             <SelectContent className="rounded-none">

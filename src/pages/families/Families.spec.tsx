@@ -59,9 +59,9 @@ describe('Families', () => {
 
     expect(screen.getByText('Famille Martin')).toBeInTheDocument();
     expect(screen.getByText('3 membres')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /creer une famille/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /créer une famille/i })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: /modifier/i })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /desactiver/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /désactiver/i })).toBeInTheDocument();
   });
 
   test('disables submit when family form is invalid', async () => {
@@ -77,7 +77,7 @@ describe('Families', () => {
       </UserContextProvider>
     );
 
-    fireEvent.click(screen.getByRole('button', { name: /creer une famille/i }));
+    fireEvent.click(screen.getByRole('button', { name: /créer une famille/i }));
 
     const dialog = await screen.findByRole('dialog');
     const submitButton = within(dialog).getByRole('button', { name: /creer/i });
@@ -103,7 +103,7 @@ describe('Families', () => {
       </UserContextProvider>
     );
 
-    fireEvent.click(screen.getByRole('button', { name: /creer une famille/i }));
+    fireEvent.click(screen.getByRole('button', { name: /créer une famille/i }));
 
     const dialog = await screen.findByRole('dialog');
 

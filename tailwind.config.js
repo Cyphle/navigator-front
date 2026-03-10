@@ -1,3 +1,5 @@
+import { fontFamily } from "tailwindcss/defaultTheme";
+
 /** @type {import('tailwindcss').Config} */
 export default {
   darkMode: ["class"],
@@ -7,6 +9,10 @@ export default {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        display: ["Fraunces", "serif"],
+        sans: ["DM Sans", ...fontFamily.sans],
+      },
       colors: {
         border: 'var(--border)',
         input: 'var(--input)',
@@ -56,9 +62,6 @@ export default {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
-      },
-      fontFamily: {
-        sans: ['Geist Variable', 'sans-serif'],
       },
       keyframes: {
         'accordion-down': {

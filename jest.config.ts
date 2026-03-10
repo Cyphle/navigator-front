@@ -8,7 +8,8 @@ const config: Config = {
     "^@/(.*)$": "<rootDir>/src/$1",
     "assets/images/generated-icons": "identity-obj-proxy",
     "^.+\\.(css|less|scss)$": "identity-obj-proxy",
-    "^.+\\.(png|jpg|jpeg|gif|svg)$": "<rootDir>/test-utils/fileMock.ts"
+    "^.+\\.(png|jpg|jpeg|gif|svg)$": "<rootDir>/test-utils/fileMock.ts",
+    "^@fontsource.*$": "identity-obj-proxy"
   },
   modulePaths: [
     "<rootDir>/src"

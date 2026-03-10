@@ -22,8 +22,8 @@ export const PlannedMenuListsView = ({
   onToggleShoppingList,
 }: PlannedMenuListsViewProps) => {
   return (
-    <div className="p-8 min-h-full">
-      <header className="flex justify-end mb-8">
+    <div className="p-4 md:p-8 min-h-full">
+      <header className="flex justify-end mb-6 md:mb-8">
         <Button onClick={onCreateNew} className="rounded-none bg-black hover:bg-gray-800 text-white uppercase tracking-widest font-light text-xs">
           <Plus className="w-4 h-4 mr-2" />
           Nouvelle liste
@@ -39,7 +39,7 @@ export const PlannedMenuListsView = ({
           </Button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-8">
           {lists.map((list) => {
             const startDate = dayjs(list.startDate);
             const endDate = dayjs(list.endDate);

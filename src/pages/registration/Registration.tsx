@@ -4,7 +4,6 @@ import { useEffect, useState } from 'react';
 import { useToaster } from '../../components/toaster/Toaster.tsx';
 import { redirectToLogin } from '../../helpers/navigation.ts';
 import { Controller, useForm } from 'react-hook-form';
-import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import {
@@ -13,6 +12,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { BarChart3, CalendarDays, Bell } from 'lucide-react';
 
 interface RegistrationFormValues {
   username: string;
@@ -22,33 +22,40 @@ interface RegistrationFormValues {
   password: string;
 }
 
+const FEATURES = [
+  {
+    icon: <BarChart3 className="w-5 h-5" />,
+    iconBg: 'rgba(27,79,138,0.3)',
+    title: 'Pilotage clair',
+    desc: 'Regroupe tes mouvements importants sur un seul tableau de bord familial.',
+  },
+  {
+    icon: <CalendarDays className="w-5 h-5" />,
+    iconBg: 'rgba(61,139,110,0.3)',
+    title: 'Vue hebdomadaire',
+    desc: 'Planifie les prochaines semaines sans perdre le rythme.',
+  },
+  {
+    icon: <Bell className="w-5 h-5" />,
+    iconBg: 'rgba(245,166,35,0.3)',
+    title: 'Alertes utiles',
+    desc: 'Reçois des rappels quand tes objectifs ou tâches évoluent.',
+  },
+];
+
 export const Registration = () => {
   const { notify } = useToaster();
   const [isErrorModalOpen, setIsErrorModalOpen] = useState(false);
 
   useEffect(() => {
-    notify({
-      type: 'info',
-      title: 'Vous allez etre la bienvenue',
-    });
+    notify({ type: 'info', title: 'Vous allez être la bienvenu·e' });
   }, [notify]);
 
-  const handleLoginRedirect = () => {
-    redirectToLogin();
-  };
+  const onCreateProfileError = (_: string) => setIsErrorModalOpen(true);
+  const onCreateProfileSuccess = () => redirectToLogin();
 
-  const onCreateProfileError = (_: string) => {
-    setIsErrorModalOpen(true);
-  };
-
-  const onCreateProfileSuccess = () => {
-    redirectToLogin();
-  };
-
-  const {
-    mutate: createProfileMutation,
-    isPending: createProfileIsPending,
-  } = useCreateProfile(onCreateProfileError, onCreateProfileSuccess);
+  const { mutate: createProfileMutation, isPending: createProfileIsPending } =
+    useCreateProfile(onCreateProfileError, onCreateProfileSuccess);
 
   const {
     control,
@@ -56,14 +63,9 @@ export const Registration = () => {
     formState: { isValid },
   } = useForm<RegistrationFormValues>({
     mode: 'onChange',
-    defaultValues: {
-      username: '',
-      email: '',
-      firstName: '',
-      lastName: '',
-      password: '',
-    },
+    defaultValues: { username: '', email: '', firstName: '', lastName: '', password: '' },
   });
+
   const onSubmit = (value: RegistrationFormValues) => {
     const payload: CreateProfileRequest = {
       username: value.username,
@@ -72,206 +74,245 @@ export const Registration = () => {
       last_name: value.lastName,
       password: value.password,
     };
-
     createProfileMutation(payload);
   };
 
   return (
-    <div className="flex flex-col lg:flex-row min-h-screen bg-gray-50">
-      {/* Hero Section */}
-      <section className="flex-1 p-12 lg:p-24 flex flex-col justify-center bg-white border-b lg:border-b-0 lg:border-r border-gray-100">
-        <div className="max-w-xl">
-          <span className="inline-block px-3 py-1 text-[10px] tracking-[0.2em] uppercase font-light text-blue-500 border border-blue-500 mb-8">
+    <div className="flex flex-col lg:flex-row min-h-screen">
+      {/* ── Left — dark hero ── */}
+      <section
+        className="flex-1 relative overflow-hidden flex flex-col justify-center px-12 py-16 lg:px-16"
+        style={{ background: 'linear-gradient(135deg, var(--stone) 0%, #1A2744 100%)' }}
+      >
+        {/* Decorative blobs */}
+        <div
+          className="absolute top-0 right-0 w-80 h-80 rounded-full opacity-25 pointer-events-none"
+          style={{ background: 'radial-gradient(circle, var(--ocean-light) 0%, transparent 70%)', transform: 'translate(30%, -30%)' }}
+          aria-hidden="true"
+        />
+        <div
+          className="absolute bottom-0 left-0 w-72 h-72 rounded-full opacity-25 pointer-events-none"
+          style={{ background: 'radial-gradient(circle, var(--sage-light) 0%, transparent 70%)', transform: 'translate(-30%, 30%)' }}
+          aria-hidden="true"
+        />
+
+        {/* Content */}
+        <div className="relative z-10 max-w-lg">
+          {/* Brand badge */}
+          <div
+            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full mb-8 text-xs font-semibold text-white"
+            style={{ background: 'rgba(255,255,255,0.1)', border: '1px solid rgba(255,255,255,0.15)' }}
+          >
+            <div
+              className="w-5 h-5 rounded-md flex items-center justify-center"
+              style={{ background: 'linear-gradient(135deg, var(--ocean) 0%, var(--ocean-light) 100%)' }}
+            >
+              <svg viewBox="0 0 24 24" fill="white" className="w-3 h-3" aria-hidden="true">
+                <path d="M12 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6Zm0 2a1 1 0 1 0 0 2 1 1 0 0 0 0-2Zm0 6c.55 0 1 .45 1 1v1.28A7.01 7.01 0 0 1 19 19h-2a5 5 0 0 0-4-4.9V19l3 2-1 1.5-2-1.33L11 22.5 10 21l3-2v-4.9A5 5 0 0 0 9 19H7a7.01 7.01 0 0 1 6-6.72V11c0-.55.45-1 1-1Z" />
+              </svg>
+            </div>
             Navigator
-          </span>
-          <h1 className="text-4xl lg:text-5xl font-extralight tracking-tight text-black mb-6 uppercase">
-            Crée toi un compte
+          </div>
+
+          {/* Headline */}
+          <h1 className="font-display text-3xl lg:text-4xl font-bold text-white leading-tight mb-4">
+            Organise ta{' '}
+            <span style={{ color: 'var(--sage-light)' }}>famille</span>
+            <br />au même endroit
           </h1>
-          <p className="text-gray-400 font-light text-lg leading-relaxed mb-12">
-            Centralise tes comptes, visualise les tendances et garde une vue claire sur
-            tes projets personnels.
+          <p className="text-base leading-relaxed mb-10" style={{ color: 'rgba(255,255,255,0.6)' }}>
+            Centralise agenda, recettes, tâches et listes de courses pour toute la famille.
           </p>
 
-          <ul className="space-y-8 mb-12 list-none p-0">
-            <li className="flex items-start gap-4">
-              <span className="w-2 h-2 rounded-full bg-blue-500 mt-2 shrink-0" />
-              <div>
-                <p className="text-sm font-light tracking-widest uppercase mb-1">Pilotage clair</p>
-                <p className="text-gray-400 font-light text-sm">
-                  Regroupe tes mouvements importants sur un seul tableau.
-                </p>
-              </div>
-            </li>
-            <li className="flex items-start gap-4">
-              <span className="w-2 h-2 rounded-full bg-black mt-2 shrink-0" />
-              <div>
-                <p className="text-sm font-light tracking-widest uppercase mb-1">Vue hebdomadaire</p>
-                <p className="text-gray-400 font-light text-sm">
-                  Planifie les prochaines semaines sans perdre le rythme.
-                </p>
-              </div>
-            </li>
-            <li className="flex items-start gap-4">
-              <span className="w-2 h-2 rounded-full bg-gray-300 mt-2 shrink-0" />
-              <div>
-                <p className="text-sm font-light tracking-widest uppercase mb-1">Alertes utiles</p>
-                <p className="text-gray-400 font-light text-sm">
-                  Recois des rappels quand tes objectifs bougent.
-                </p>
-              </div>
-            </li>
+          {/* Features list */}
+          <ul className="space-y-5 list-none p-0 m-0">
+            {FEATURES.map((feature) => (
+              <li key={feature.title} className="flex items-start gap-4">
+                <div
+                  className="w-9 h-9 rounded-[var(--radius-sm)] flex items-center justify-center text-white shrink-0 mt-0.5"
+                  style={{ background: feature.iconBg }}
+                >
+                  {feature.icon}
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-white m-0 mb-0.5">{feature.title}</p>
+                  <p className="text-sm m-0" style={{ color: 'rgba(255,255,255,0.55)' }}>{feature.desc}</p>
+                </div>
+              </li>
+            ))}
           </ul>
-
-          <div className="flex gap-12 pt-12 border-t border-gray-100">
-            <div>
-              <p className="text-2xl font-extralight text-black mb-1">1 tableau</p>
-              <p className="text-gray-400 text-xs font-light uppercase tracking-widest">Budget, comptes, objectifs</p>
-            </div>
-            <div>
-              <p className="text-2xl font-extralight text-black mb-1">3 vues</p>
-              <p className="text-gray-400 text-xs font-light uppercase tracking-widest">Jour, semaine, mois</p>
-            </div>
-          </div>
         </div>
       </section>
 
-      {/* Form Section */}
-      <section className="flex-1 p-12 lg:p-24 flex flex-col justify-center bg-gray-50">
+      {/* ── Right — form ── */}
+      <section
+        className="flex-1 flex flex-col justify-center px-12 py-16 lg:px-16"
+        style={{ background: 'var(--white)' }}
+      >
         <div className="max-w-md w-full mx-auto">
-          <div className="mb-12">
-            <h2 className="text-xl font-light tracking-widest uppercase mb-2">Informations du compte</h2>
-            <p className="text-gray-400 font-light text-sm">Entre les informations principales pour lancer ton espace.</p>
+          <div className="mb-8">
+            <h2
+              className="font-display text-2xl font-bold mb-1"
+              style={{ color: 'var(--stone)' }}
+            >
+              Créer un compte
+            </h2>
+            <p className="text-sm" style={{ color: 'var(--mist)' }}>
+              Entre tes informations pour lancer ton espace Navigator.
+            </p>
           </div>
 
-          <form
-            className="space-y-6"
-            onSubmit={ handleSubmit(onSubmit) }
-          >
-            <div className="grid grid-cols-2 gap-6">
+          <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
+            <div className="grid grid-cols-2 gap-4">
               <Controller
                 name="username"
-                control={ control }
-                rules={ { required: true } }
-                render={ ({ field }) => (
-                  <div className="col-span-2 space-y-2">
-                    <Label htmlFor={ field.name } className="text-[10px] uppercase tracking-widest font-light text-gray-400">Nom d'utilisateur</Label>
+                control={control}
+                rules={{ required: true }}
+                render={({ field }) => (
+                  <div className="col-span-2 space-y-1.5">
+                    <Label htmlFor={field.name} className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--mist)' }}>
+                      Nom d'utilisateur
+                    </Label>
                     <Input
-                      id={ field.name }
+                      id={field.name}
                       data-testid="username-input"
-                      className="rounded-none border-gray-200 focus:border-blue-500 focus-visible:ring-0 transition-colors"
-                      { ...field }
-                      disabled={ createProfileIsPending }
+                      className="rounded-[var(--radius-sm)] border-black/10 focus:border-[var(--ocean-light)] focus-visible:ring-0 transition-colors"
+                      style={{ background: 'var(--sand)' }}
+                      {...field}
+                      disabled={createProfileIsPending}
                       placeholder="Nom d'utilisateur"
                     />
                   </div>
-                ) }
+                )}
               />
 
               <Controller
                 name="email"
-                control={ control }
-                rules={ { required: true } }
-                render={ ({ field }) => (
-                  <div className="col-span-2 space-y-2">
-                    <Label htmlFor={ field.name } className="text-[10px] uppercase tracking-widest font-light text-gray-400">Email</Label>
+                control={control}
+                rules={{ required: true }}
+                render={({ field }) => (
+                  <div className="col-span-2 space-y-1.5">
+                    <Label htmlFor={field.name} className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--mist)' }}>
+                      Email
+                    </Label>
                     <Input
-                      id={ field.name }
+                      id={field.name}
                       data-testid="email-input"
                       type="email"
-                      className="rounded-none border-gray-200 focus:border-blue-500 focus-visible:ring-0 transition-colors"
-                      { ...field }
-                      disabled={ createProfileIsPending }
+                      className="rounded-[var(--radius-sm)] border-black/10 focus:border-[var(--ocean-light)] focus-visible:ring-0 transition-colors"
+                      style={{ background: 'var(--sand)' }}
+                      {...field}
+                      disabled={createProfileIsPending}
                       placeholder="Email"
                     />
                   </div>
-                ) }
+                )}
               />
 
               <Controller
                 name="firstName"
-                control={ control }
-                rules={ { required: true } }
-                render={ ({ field }) => (
-                  <div className="space-y-2">
-                    <Label htmlFor={ field.name } className="text-[10px] uppercase tracking-widest font-light text-gray-400">Prénom</Label>
+                control={control}
+                rules={{ required: true }}
+                render={({ field }) => (
+                  <div className="space-y-1.5">
+                    <Label htmlFor={field.name} className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--mist)' }}>
+                      Prénom
+                    </Label>
                     <Input
-                      id={ field.name }
+                      id={field.name}
                       data-testid="firstname-input"
-                      className="rounded-none border-gray-200 focus:border-blue-500 focus-visible:ring-0 transition-colors"
-                      { ...field }
-                      disabled={ createProfileIsPending }
+                      className="rounded-[var(--radius-sm)] border-black/10 focus:border-[var(--ocean-light)] focus-visible:ring-0 transition-colors"
+                      style={{ background: 'var(--sand)' }}
+                      {...field}
+                      disabled={createProfileIsPending}
                       placeholder="Prénom"
                     />
                   </div>
-                ) }
+                )}
               />
 
               <Controller
                 name="lastName"
-                control={ control }
-                rules={ { required: true } }
-                render={ ({ field }) => (
-                  <div className="space-y-2">
-                    <Label htmlFor={ field.name } className="text-[10px] uppercase tracking-widest font-light text-gray-400">Nom</Label>
+                control={control}
+                rules={{ required: true }}
+                render={({ field }) => (
+                  <div className="space-y-1.5">
+                    <Label htmlFor={field.name} className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--mist)' }}>
+                      Nom
+                    </Label>
                     <Input
-                      id={ field.name }
+                      id={field.name}
                       data-testid="lastname-input"
-                      className="rounded-none border-gray-200 focus:border-blue-500 focus-visible:ring-0 transition-colors"
-                      { ...field }
-                      disabled={ createProfileIsPending }
+                      className="rounded-[var(--radius-sm)] border-black/10 focus:border-[var(--ocean-light)] focus-visible:ring-0 transition-colors"
+                      style={{ background: 'var(--sand)' }}
+                      {...field}
+                      disabled={createProfileIsPending}
                       placeholder="Nom"
                     />
                   </div>
-                ) }
+                )}
               />
 
               <Controller
                 name="password"
-                control={ control }
-                rules={ { required: true } }
-                render={ ({ field }) => (
-                  <div className="col-span-2 space-y-2">
-                    <Label htmlFor={ field.name } className="text-[10px] uppercase tracking-widest font-light text-gray-400">Mot de passe</Label>
+                control={control}
+                rules={{ required: true }}
+                render={({ field }) => (
+                  <div className="col-span-2 space-y-1.5">
+                    <Label htmlFor={field.name} className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--mist)' }}>
+                      Mot de passe
+                    </Label>
                     <Input
-                      id={ field.name }
+                      id={field.name}
                       data-testid="password-input"
                       type="password"
-                      className="rounded-none border-gray-200 focus:border-blue-500 focus-visible:ring-0 transition-colors"
-                      { ...field }
-                      disabled={ createProfileIsPending }
+                      className="rounded-[var(--radius-sm)] border-black/10 focus:border-[var(--ocean-light)] focus-visible:ring-0 transition-colors"
+                      style={{ background: 'var(--sand)' }}
+                      {...field}
+                      disabled={createProfileIsPending}
                       placeholder="Mot de passe"
                     />
                   </div>
-                ) }
+                )}
               />
             </div>
 
-            <div className="flex flex-col gap-4 pt-4">
-              <Button
+            <div className="flex flex-col gap-3 pt-2">
+              <button
                 type="submit"
-                className="w-full bg-black hover:bg-gray-800 text-white rounded-none py-6 uppercase tracking-widest font-light text-sm transition-all"
-                disabled={ !isValid || createProfileIsPending }
+                disabled={!isValid || createProfileIsPending}
+                className="w-full text-white text-sm font-semibold py-3 rounded-[var(--radius-sm)] transition-all duration-150 hover:-translate-y-px disabled:opacity-50 disabled:cursor-not-allowed disabled:translate-y-0"
+                style={{
+                  background: 'linear-gradient(135deg, var(--ocean) 0%, var(--ocean-light) 100%)',
+                  boxShadow: '0 3px 12px rgba(27,79,138,0.3)',
+                }}
               >
-                {createProfileIsPending ? "Chargement..." : "S'inscrire"}
-              </Button>
-              <Button
-                variant="link"
-                className="text-gray-400 hover:text-black text-xs font-light uppercase tracking-widest no-underline"
-                onClick={ handleLoginRedirect }
+                {createProfileIsPending ? 'Chargement...' : "S'inscrire"}
+              </button>
+              <button
+                type="button"
+                className="text-sm font-medium transition-colors hover:opacity-70"
+                style={{ color: 'var(--mist)' }}
+                onClick={redirectToLogin}
               >
-                Si vous avez déjà un compte connectez vous
-              </Button>
+                Vous avez déjà un compte ? <span style={{ color: 'var(--ocean)' }}>Se connecter</span>
+              </button>
             </div>
           </form>
         </div>
       </section>
 
+      {/* Error modal */}
       <Dialog open={isErrorModalOpen} onOpenChange={setIsErrorModalOpen}>
-        <DialogContent className="rounded-none border-gray-200">
+        <DialogContent className="rounded-[var(--radius-md)] border-none" style={{ boxShadow: 'var(--shadow-card)' }}>
           <DialogHeader>
-            <DialogTitle className="text-xl font-light uppercase tracking-widest">Erreur</DialogTitle>
+            <DialogTitle className="font-display text-xl font-bold" style={{ color: 'var(--coral)' }}>
+              Erreur d'inscription
+            </DialogTitle>
           </DialogHeader>
-          <p className="text-gray-400 font-light text-sm">Something went wrong with your registration. Please contact the support.</p>
+          <p className="text-sm" style={{ color: 'var(--mist)' }}>
+            Une erreur est survenue lors de l'inscription. Veuillez contacter le support.
+          </p>
         </DialogContent>
       </Dialog>
     </div>
