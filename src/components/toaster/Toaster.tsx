@@ -1,6 +1,5 @@
-import './Toaster.scss';
-import { notification } from 'antd';
 import { createContext, PropsWithChildren, useCallback, useContext } from 'react';
+import { useToast } from '@/hooks/use-toast';
 
 type ToasterType = 'info' | 'warning' | 'error';
 
@@ -20,24 +19,22 @@ const ToasterContext = createContext<ToasterContextValue>({
 });
 
 export const Toaster = ({ children }: PropsWithChildren) => {
-  const [api, contextHolder] = notification.useNotification();
+  const { toast } = useToast();
 
   const notify = useCallback(
     ({ type, title, description, duration }: ToastPayload) => {
-      api[type]({
-        message: title,
+      toast({
+        title,
         description,
-        placement: 'bottomRight',
-        duration: duration ?? 4.5,
-        className: 'navigator-toaster',
+        duration: (duration ?? 4.5) * 1000,
+        variant: type === 'error' ? 'destructive' : 'default',
       });
     },
-    [api],
+    [toast],
   );
 
   return (
     <ToasterContext.Provider value={ { notify } }>
-      { contextHolder }
       { children }
     </ToasterContext.Provider>
   );

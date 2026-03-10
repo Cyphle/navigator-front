@@ -1,17 +1,15 @@
-import { NavLink } from 'react-router-dom';
-import { screen } from '../../../test-utils';
+import { screen, userEvent } from '../../../test-utils';
 import { renderWithRouter } from '../../../test-utils/render';
 import { Header } from './Header';
 import { useUser } from '../../contexts/user/user.context';
 import { none, some } from '../../helpers/option';
 import { logout } from '../../services/user.service.ts';
-import { fireEvent, waitFor } from '@testing-library/react';
+import { waitFor } from '@testing-library/react';
 
 jest.mock('react-router-dom', () => {
   const originalModule = jest.requireActual('react-router-dom');
   return {
     ...originalModule,
-    NavLink: jest.fn(({ children, to }) => <a href={to}>{children}</a>),
     useNavigate: jest.fn(),
     useLocation: jest.fn(),
   };
@@ -44,14 +42,8 @@ describe('Header Component', () => {
   test('renders the header with correct elements', () => {
     renderWithRouter(<Header userInfo={someUserInfo}/>);
 
-    // Check if the title is rendered
-    const title = screen.getByText('Dashboard');
-    expect(title).toBeInTheDocument();
-
-    // Check if profile link is rendered
-    const profileLink = screen.getByRole('link', { name: /john doe/i });
-    expect(profileLink).toBeInTheDocument();
-    expect(profileLink).toHaveAttribute('href', '/profile');
+    expect(screen.getByText('Dashboard')).toBeInTheDocument();
+    expect(screen.getByText('John Doe')).toBeInTheDocument();
   });
 
   test('renders families header content', () => {
@@ -94,19 +86,6 @@ describe('Header Component', () => {
     expect(screen.getByText('Moi moi et encore moi. Mais aussi nous')).toBeInTheDocument();
   });
 
-  test('uses NavLink for the profile', () => {
-    (useUser as jest.Mock).mockReturnValue({
-      userState: { firstName: 'Jane', lastName: 'Smith' },
-      setUserState: jest.fn(),
-    });
-
-    renderWithRouter(<Header userInfo={someUserInfo}/>);
-
-    expect(NavLink).toHaveBeenCalled();
-    const navLinkCalls = (NavLink as jest.Mock).mock.calls.map((call) => call[0]);
-    expect(navLinkCalls.some((props) => props?.to === '/profile')).toBe(true);
-  });
-
   test('displays user information from useUser hook', () => {
     (useUser as jest.Mock).mockReturnValue({
       userState: { firstName: 'Jane', lastName: 'Smith' },
@@ -115,29 +94,34 @@ describe('Header Component', () => {
 
     renderWithRouter(<Header userInfo={someUserInfo}/>);
 
-    const userInfo = screen.getByText('Jane Smith');
-    expect(userInfo).toBeInTheDocument();
-
+    expect(screen.getByText('Jane Smith')).toBeInTheDocument();
     expect(useUser).toHaveBeenCalled();
   });
 
-  test('shows logout button when user is logged in', () => {
+  test('shows user section when user is logged in', () => {
     renderWithRouter(<Header userInfo={someUserInfo}/>);
 
-    expect(screen.getByRole('button', { name: 'Logout' })).toBeInTheDocument();
+    expect(screen.getByText('John Doe')).toBeInTheDocument();
+    expect(screen.getByText('JD')).toBeInTheDocument();
   });
 
-  test('does not show logout button when user is not logged in', () => {
+  test('does not show user section when user is not logged in', () => {
     renderWithRouter(<Header userInfo={none}/>);
 
-    expect(screen.queryByRole('button', { name: 'Logout' })).not.toBeInTheDocument();
+    expect(screen.queryByText('John Doe')).not.toBeInTheDocument();
   });
 
   test('logs out and redirects to registration', async () => {
+    const user = userEvent.setup();
     renderWithRouter(<Header userInfo={someUserInfo}/>);
 
-    const logoutButton = screen.getByRole('button', { name: 'Logout' });
-    fireEvent.click(logoutButton);
+    await user.click(screen.getByText('John Doe'));
+
+    await waitFor(() => {
+      expect(screen.getByText('Se déconnecter')).toBeInTheDocument();
+    });
+
+    await user.click(screen.getByText('Se déconnecter'));
 
     await waitFor(() => {
       expect(logout).toHaveBeenCalled();

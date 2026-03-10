@@ -3,8 +3,6 @@ import {
   getAllShoppingLists,
   getShoppingListById,
   createShoppingList,
-  updateShoppingList,
-  deleteShoppingList,
   addItemToShoppingList,
   updateItemInShoppingList,
   deleteItemFromShoppingList,

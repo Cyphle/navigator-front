@@ -1,16 +1,11 @@
 import { Footer } from './Footer.tsx';
-import { render } from '../../../test-utils';
+import { render, screen } from '../../../test-utils';
 
 describe('Footer', () => {
   it('should render the footer', () => {
-    const { container } = render(<Footer />);
+    render(<Footer />);
 
-    expect(container).toMatchInlineSnapshot(`
-      <footer>
-        <p>
-          © 2026 Navigator
-        </p>
-      </footer>
-    `);
+    expect(screen.getByText('© 2026 Navigator')).toBeInTheDocument();
+    expect(document.querySelector('footer')).toBeInTheDocument();
   });
 });

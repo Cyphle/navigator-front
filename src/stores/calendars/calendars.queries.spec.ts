@@ -1,5 +1,5 @@
 import { waitFor } from '@testing-library/react';
-import { renderQueryHook } from '../../../test-utils/render';
+import { renderQueryHook, renderMutateHook } from '../../../test-utils/render';
 import { aCalendar, aCalendarEvent } from '../../../test-utils/factories';
 import * as calendarsService from '../../services/calendars.service';
 import {
@@ -55,7 +55,7 @@ describe('calendars queries', () => {
     const mockCreated = aCalendar({ id: 3, ...input });
     jest.mocked(calendarsService.createCalendar).mockResolvedValue(mockCreated);
 
-    const { result } = renderQueryHook(() => useCreateCalendar());
+    const { result } = renderMutateHook(() => useCreateCalendar());
 
     result.current.mutate(input);
 
@@ -66,7 +66,7 @@ describe('calendars queries', () => {
   test('should delete calendar', async () => {
     jest.mocked(calendarsService.deleteCalendar).mockResolvedValue(undefined);
 
-    const { result } = renderQueryHook(() => useDeleteCalendar());
+    const { result } = renderMutateHook(() => useDeleteCalendar());
 
     result.current.mutate(1);
 
@@ -82,7 +82,7 @@ describe('calendars queries', () => {
     });
     jest.mocked(calendarsService.addEventToCalendar).mockResolvedValue(mockUpdated);
 
-    const { result } = renderQueryHook(() => useAddEventToCalendar());
+    const { result } = renderMutateHook(() => useAddEventToCalendar());
 
     result.current.mutate({ calendarId: 1, input });
 
@@ -98,7 +98,7 @@ describe('calendars queries', () => {
     });
     jest.mocked(calendarsService.updateEventInCalendar).mockResolvedValue(mockUpdated);
 
-    const { result } = renderQueryHook(() => useUpdateEventInCalendar());
+    const { result } = renderMutateHook(() => useUpdateEventInCalendar());
 
     result.current.mutate({ calendarId: 1, eventId: 1, input });
 
@@ -110,7 +110,7 @@ describe('calendars queries', () => {
     const mockUpdated = aCalendar({ id: 1, events: [] });
     jest.mocked(calendarsService.deleteEventFromCalendar).mockResolvedValue(mockUpdated);
 
-    const { result } = renderQueryHook(() => useDeleteEventFromCalendar());
+    const { result } = renderMutateHook(() => useDeleteEventFromCalendar());
 
     result.current.mutate({ calendarId: 1, eventId: 1 });
 

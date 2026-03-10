@@ -1,15 +1,15 @@
-import { ConfigProvider } from 'antd';
 import { Outlet, useLoaderData, useNavigate } from 'react-router-dom';
 import { useEffect, useMemo } from 'react';
 import { UserContextProvider } from './contexts/user/user.context.tsx';
 import { Option } from './helpers/option.ts';
+import '@fontsource-variable/geist';
 import './main.scss';
 import { Footer } from './shared/footer/Footer.tsx';
 import { Header } from './shared/header/Header.tsx';
 import { Sidebar } from './shared/sidebar/Sidebar.tsx';
 import { UserInfo } from './stores/user/user.types.ts';
-import { PRIMARY_COLOR } from './theme-variables.ts';
-import { Toaster } from './components/toaster/Toaster.tsx';
+import { Toaster as UIProvider } from './components/toaster/Toaster.tsx';
+import { Toaster } from './components/ui/toaster.tsx';
 import { getUserInfo } from './services/user.service.ts';
 
 export async function initialDataLoader() {
@@ -37,20 +37,19 @@ const Main = () => {
 
   return (
     <UserContextProvider initialUser={initialUser}>
-      <ConfigProvider theme={ { token: { colorPrimary: PRIMARY_COLOR } } }>
-        <Toaster>
-          <div className="app-shell">
-            <Sidebar />
-            <div className="app-shell__main">
-              <Header userInfo={userInfo}/>
-              <main className="app-shell__content">
-                <Outlet/>
-              </main>
-              <Footer/>
-            </div>
+      <UIProvider>
+        <Toaster />
+        <div className="app-shell">
+          <Sidebar />
+          <div className="app-shell__main">
+            <Header userInfo={userInfo}/>
+            <main className="app-shell__content">
+              <Outlet/>
+            </main>
+            <Footer/>
           </div>
-        </Toaster>
-      </ConfigProvider>
+        </div>
+      </UIProvider>
     </UserContextProvider>
   );
 }

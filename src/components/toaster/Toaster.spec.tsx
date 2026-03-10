@@ -1,18 +1,10 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { Toaster, useToaster } from './Toaster';
 
-const infoMock = jest.fn();
-const warningMock = jest.fn();
-const errorMock = jest.fn();
-const useNotificationMock = jest.fn(() => [
-  { info: infoMock, warning: warningMock, error: errorMock },
-  <div data-testid="notification-holder" key="holder" />,
-]);
+const toastMock = jest.fn();
 
-jest.mock('antd', () => ({
-  notification: {
-    useNotification: () => useNotificationMock(),
-  },
+jest.mock('@/hooks/use-toast', () => ({
+  useToast: () => ({ toast: toastMock }),
 }));
 
 const TestComponent = () => {
@@ -20,13 +12,13 @@ const TestComponent = () => {
 
   return (
     <div>
-      <button onClick={ () => notify({ type: 'info', title: 'Info', description: 'Detail', duration: 3 }) }>
+      <button onClick={() => notify({ type: 'info', title: 'Info', description: 'Detail', duration: 3 })}>
         Info
       </button>
-      <button onClick={ () => notify({ type: 'warning', title: 'Warning' }) }>
+      <button onClick={() => notify({ type: 'warning', title: 'Warning' })}>
         Warning
       </button>
-      <button onClick={ () => notify({ type: 'error', title: 'Error', description: 'Oops' }) }>
+      <button onClick={() => notify({ type: 'error', title: 'Error', description: 'Oops' })}>
         Error
       </button>
     </div>
@@ -35,19 +27,7 @@ const TestComponent = () => {
 
 describe('Toaster', () => {
   beforeEach(() => {
-    infoMock.mockClear();
-    warningMock.mockClear();
-    errorMock.mockClear();
-  });
-
-  test('should render notification holder', () => {
-    render(
-      <Toaster>
-        <TestComponent />
-      </Toaster>
-    );
-
-    expect(screen.getByTestId('notification-holder')).toBeInTheDocument();
+    toastMock.mockClear();
   });
 
   test('should notify info with custom duration', () => {
@@ -59,12 +39,11 @@ describe('Toaster', () => {
 
     fireEvent.click(screen.getByText('Info'));
 
-    expect(infoMock).toHaveBeenCalledWith({
-      message: 'Info',
+    expect(toastMock).toHaveBeenCalledWith({
+      title: 'Info',
       description: 'Detail',
-      placement: 'bottomRight',
-      duration: 3,
-      className: 'navigator-toaster',
+      duration: 3000,
+      variant: 'default',
     });
   });
 
@@ -77,15 +56,15 @@ describe('Toaster', () => {
 
     fireEvent.click(screen.getByText('Warning'));
 
-    expect(warningMock).toHaveBeenCalledWith({
-      message: 'Warning',
-      placement: 'bottomRight',
-      duration: 4.5,
-      className: 'navigator-toaster',
+    expect(toastMock).toHaveBeenCalledWith({
+      title: 'Warning',
+      description: undefined,
+      duration: 4500,
+      variant: 'default',
     });
   });
 
-  test('should notify error', () => {
+  test('should notify error with destructive variant', () => {
     render(
       <Toaster>
         <TestComponent />
@@ -94,12 +73,11 @@ describe('Toaster', () => {
 
     fireEvent.click(screen.getByText('Error'));
 
-    expect(errorMock).toHaveBeenCalledWith({
-      message: 'Error',
+    expect(toastMock).toHaveBeenCalledWith({
+      title: 'Error',
       description: 'Oops',
-      placement: 'bottomRight',
-      duration: 4.5,
-      className: 'navigator-toaster',
+      duration: 4500,
+      variant: 'destructive',
     });
   });
 });

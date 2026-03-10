@@ -1,4 +1,8 @@
 // Skipping these tests due to dayjs/Ant Design DatePicker mocking complexity
+import { render, screen, fireEvent } from '@testing-library/react';
+import { aPlannedMenuList, aPlannedMenuRecipe } from '../../../../test-utils/factories';
+import { PlannedMenuListsView } from './PlannedMenuListsView';
+
 describe.skip('PlannedMenuListsView', () => {
   test('shows empty state when no lists', () => {
     render(

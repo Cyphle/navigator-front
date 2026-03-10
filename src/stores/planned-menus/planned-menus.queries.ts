@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import type { PlannedMenuList, CreatePlannedMenuListInput, UpdatePlannedMenuListInput } from './planned-menus.types';
+import type { CreatePlannedMenuListInput, UpdatePlannedMenuListInput } from './planned-menus.types';
 import * as plannedMenusService from '../../services/planned-menus.service';
 
 const QUERY_KEY = 'planned-menus';

@@ -1,6 +1,6 @@
 import { Button, DatePicker, Form, Input, InputNumber, Modal, Select, TimePicker } from 'antd';
 import dayjs from 'dayjs';
-import type { CreateCalendarEventInput, RecurrenceType, Calendar } from '../../../stores/calendars/calendars.types';
+import type { CreateCalendarEventInput, Calendar } from '../../../stores/calendars/calendars.types';
 
 interface CreateEventFormProps {
   open: boolean;

@@ -23,11 +23,6 @@ const STATUS_LABELS: Record<TodoStatus, string> = {
   DONE: 'Terminé',
 };
 
-const STATUS_COLORS: Record<TodoStatus, string> = {
-  TODO: 'default',
-  IN_PROGRESS: 'processing',
-  DONE: 'success',
-};
 
 export const TodoListDetail = ({
   list,

@@ -3,8 +3,6 @@ import {
   getAllCalendars,
   getCalendarById,
   createCalendar,
-  updateCalendar,
-  deleteCalendar,
   addEventToCalendar,
   updateEventInCalendar,
   deleteEventFromCalendar,

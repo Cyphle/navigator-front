@@ -5,6 +5,7 @@ const config: Config = {
   preset: "ts-jest/presets/js-with-ts",
   testEnvironment: "jest-environment-jsdom",
   moduleNameMapper: {
+    "^@/(.*)$": "<rootDir>/src/$1",
     "assets/images/generated-icons": "identity-obj-proxy",
     "^.+\\.(css|less|scss)$": "identity-obj-proxy",
     "^.+\\.(png|jpg|jpeg|gif|svg)$": "<rootDir>/test-utils/fileMock.ts"

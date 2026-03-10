@@ -1,5 +1,10 @@
 // Skipping these tests due to dayjs/Ant Design Calendar mocking complexity
 // The component uses Ant Design Calendar with dayjs which requires complex mocking setup
+import { render, screen, fireEvent, waitFor, within } from '@testing-library/react';
+import { aPlannedMenuList, aPlannedMenuRecipe } from '../../../../test-utils/factories';
+import { PlannedMenuListDetail } from './PlannedMenuListDetail';
+import { useFetchRecipesPage } from '../../../stores/recipes/recipes.queries';
+
 describe.skip('PlannedMenuListDetail', () => {
   it.skip('placeholder', () => {
     jest.clearAllMocks();

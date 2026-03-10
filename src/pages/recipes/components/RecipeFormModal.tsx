@@ -1,4 +1,9 @@
-import { Modal } from 'antd';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import type { Recipe } from '../../../stores/recipes/recipes.types';
 
 interface RecipeFormModalProps {
@@ -15,13 +20,13 @@ export const RecipeFormModal = ({ open, mode, recipe, onCancel }: RecipeFormModa
     : `La mise à jour de ${recipe?.name ?? 'cette recette'} sera disponible prochainement.`;
 
   return (
-    <Modal
-      open={open}
-      onCancel={onCancel}
-      footer={null}
-      title={title}
-    >
-      <p>{description}</p>
-    </Modal>
+    <Dialog open={open} onOpenChange={(open) => !open && onCancel()}>
+      <DialogContent className="rounded-none border-gray-200">
+        <DialogHeader>
+          <DialogTitle className="text-xl font-light uppercase tracking-widest">{title}</DialogTitle>
+        </DialogHeader>
+        <p className="text-gray-400 font-light text-sm pt-4 italic">{description}</p>
+      </DialogContent>
+    </Dialog>
   );
 };

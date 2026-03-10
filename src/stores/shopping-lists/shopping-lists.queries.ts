@@ -1,6 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type {
-  ShoppingList,
   CreateShoppingListInput,
   UpdateShoppingListInput,
   CreateShoppingListItemInput,

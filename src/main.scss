@@ -1,11 +1,7 @@
-@import "tw-animate-css";
-@import "shadcn/tailwind.css";
-@import "@fontsource-variable/geist";
+@use "variables.scss" as *;
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@use "variables.scss" as *;
 
 html {
   color: $main-text-color;
@@ -134,12 +130,14 @@ body {
     --font-sans: 'Geist Variable', sans-serif;
   }
   * {
-    @apply border-border outline-ring/50;
+    border-color: var(--border);
+    outline-color: color-mix(in oklch, var(--ring) 50%, transparent);
   }
   body {
-    @apply bg-background text-foreground;
+    background-color: var(--background);
+    color: var(--foreground);
   }
   html {
-    @apply font-sans;
+    font-family: 'Geist Variable', sans-serif;
   }
 }

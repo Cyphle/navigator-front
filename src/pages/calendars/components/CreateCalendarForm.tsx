@@ -94,7 +94,7 @@ export const CreateCalendarForm = ({
                     width: '16px',
                     height: '16px',
                     borderRadius: '50%',
-                    backgroundColor: option.value,
+                    backgroundColor: option.value as string,
                   }}
                 />
                 {option.label}

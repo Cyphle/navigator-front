@@ -1,5 +1,5 @@
 import { waitFor } from '@testing-library/react';
-import { renderQueryHook } from '../../../test-utils/render';
+import { renderQueryHook, renderMutateHook } from '../../../test-utils/render';
 import { aShoppingList, aShoppingListItem } from '../../../test-utils/factories';
 import * as shoppingListsService from '../../services/shopping-lists.service';
 import {
@@ -55,7 +55,7 @@ describe('shopping-lists queries', () => {
     const mockCreated = aShoppingList({ id: 3, ...input });
     jest.mocked(shoppingListsService.createShoppingList).mockResolvedValue(mockCreated);
 
-    const { result } = renderQueryHook(() => useCreateShoppingList());
+    const { result } = renderMutateHook(() => useCreateShoppingList());
 
     result.current.mutate(input);
 
@@ -66,7 +66,7 @@ describe('shopping-lists queries', () => {
   test('should delete shopping list', async () => {
     jest.mocked(shoppingListsService.deleteShoppingList).mockResolvedValue(undefined);
 
-    const { result } = renderQueryHook(() => useDeleteShoppingList());
+    const { result } = renderMutateHook(() => useDeleteShoppingList());
 
     result.current.mutate(1);
 
@@ -82,7 +82,7 @@ describe('shopping-lists queries', () => {
     });
     jest.mocked(shoppingListsService.addItemToShoppingList).mockResolvedValue(mockUpdated);
 
-    const { result } = renderQueryHook(() => useAddItemToShoppingList());
+    const { result } = renderMutateHook(() => useAddItemToShoppingList());
 
     result.current.mutate({ listId: 1, input });
 
@@ -98,7 +98,7 @@ describe('shopping-lists queries', () => {
     });
     jest.mocked(shoppingListsService.updateItemInShoppingList).mockResolvedValue(mockUpdated);
 
-    const { result } = renderQueryHook(() => useUpdateItemInShoppingList());
+    const { result } = renderMutateHook(() => useUpdateItemInShoppingList());
 
     result.current.mutate({ listId: 1, itemId: 1, input });
 
@@ -110,7 +110,7 @@ describe('shopping-lists queries', () => {
     const mockUpdated = aShoppingList({ id: 1, items: [] });
     jest.mocked(shoppingListsService.deleteItemFromShoppingList).mockResolvedValue(mockUpdated);
 
-    const { result } = renderQueryHook(() => useDeleteItemFromShoppingList());
+    const { result } = renderMutateHook(() => useDeleteItemFromShoppingList());
 
     result.current.mutate({ listId: 1, itemId: 1 });
 

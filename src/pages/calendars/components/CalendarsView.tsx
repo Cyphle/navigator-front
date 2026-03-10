@@ -1,5 +1,5 @@
-import { Button, Calendar as AntCalendar, Badge, Card, List, Modal, Popconfirm, Radio, Select, Space, Tag } from 'antd';
-import { PlusOutlined, DeleteOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
+import { Button, Calendar as AntCalendar, Badge, Card, Modal, Popconfirm, Radio, Select, Tag } from 'antd';
+import { PlusOutlined, LeftOutlined, RightOutlined } from '@ant-design/icons';
 import type { Dayjs } from 'dayjs';
 import dayjs from 'dayjs';
 import { useState } from 'react';
@@ -20,8 +20,6 @@ interface CalendarsViewProps {
 export const CalendarsView = ({
   calendars,
   onCreateCalendar,
-  onDeleteCalendar,
-  onCreateEvent,
   onDeleteEvent,
 }: CalendarsViewProps) => {
   const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs());
@@ -40,11 +38,6 @@ export const CalendarsView = ({
         calendar: cal,
       }))
     );
-
-  // Get events for selected date
-  const eventsForSelectedDate = allEvents.filter((event) =>
-    dayjs(event.date).isSame(selectedDate, 'day')
-  );
 
   // Get events grouped by date
   const getEventsForDate = (date: Dayjs) => {
@@ -69,16 +62,6 @@ export const CalendarsView = ({
         )}
       </ul>
     );
-  };
-
-  const toggleCalendarVisibility = (calendarId: number) => {
-    const newVisible = new Set(visibleCalendars);
-    if (newVisible.has(calendarId)) {
-      newVisible.delete(calendarId);
-    } else {
-      newVisible.add(calendarId);
-    }
-    setVisibleCalendars(newVisible);
   };
 
   const goToPrevious = () => {

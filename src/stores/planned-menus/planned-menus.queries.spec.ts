@@ -1,5 +1,5 @@
 import { waitFor } from '@testing-library/react';
-import { renderQueryHook } from '../../../test-utils/render';
+import { renderQueryHook, renderMutateHook } from '../../../test-utils/render';
 import { aPlannedMenuList } from '../../../test-utils/factories';
 import * as plannedMenusService from '../../services/planned-menus.service';
 import {
@@ -63,7 +63,7 @@ describe('planned-menus queries', () => {
     const mockCreated = aPlannedMenuList({ id: 3, ...input });
     jest.mocked(plannedMenusService.createPlannedMenuList).mockResolvedValue(mockCreated);
 
-    const { result } = renderQueryHook(() => useCreatePlannedMenuList());
+    const { result } = renderMutateHook(() => useCreatePlannedMenuList());
 
     result.current.mutate(input);
 
@@ -77,7 +77,7 @@ describe('planned-menus queries', () => {
     const mockUpdated = aPlannedMenuList({ id: 1, isActiveShoppingList: true });
     jest.mocked(plannedMenusService.updatePlannedMenuList).mockResolvedValue(mockUpdated);
 
-    const { result } = renderQueryHook(() => useUpdatePlannedMenuList());
+    const { result } = renderMutateHook(() => useUpdatePlannedMenuList());
 
     result.current.mutate({ id: 1, input });
 
@@ -89,7 +89,7 @@ describe('planned-menus queries', () => {
   test('should delete planned menu list', async () => {
     jest.mocked(plannedMenusService.deletePlannedMenuList).mockResolvedValue(undefined);
 
-    const { result } = renderQueryHook(() => useDeletePlannedMenuList());
+    const { result } = renderMutateHook(() => useDeletePlannedMenuList());
 
     result.current.mutate(1);
 
@@ -104,7 +104,7 @@ describe('planned-menus queries', () => {
     });
     jest.mocked(plannedMenusService.addRecipeToPlannedMenuList).mockResolvedValue(mockUpdated);
 
-    const { result } = renderQueryHook(() => useAddRecipeToPlannedMenuList());
+    const { result } = renderMutateHook(() => useAddRecipeToPlannedMenuList());
 
     result.current.mutate({ listId: 1, recipeId: 5, recipeName: 'Tarte', assignedDays: ['2026-03-02'] });
 
@@ -122,7 +122,7 @@ describe('planned-menus queries', () => {
     const mockUpdated = aPlannedMenuList({ id: 1, recipes: [] });
     jest.mocked(plannedMenusService.removeRecipeFromPlannedMenuList).mockResolvedValue(mockUpdated);
 
-    const { result } = renderQueryHook(() => useRemoveRecipeFromPlannedMenuList());
+    const { result } = renderMutateHook(() => useRemoveRecipeFromPlannedMenuList());
 
     result.current.mutate({ listId: 1, recipeId: 5 });
 

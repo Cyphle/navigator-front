@@ -1,5 +1,5 @@
 import { Button, DatePicker, Form, Input, Modal, Select } from 'antd';
-import dayjs, { type Dayjs } from 'dayjs';
+import { type Dayjs } from 'dayjs';
 import { useEffect, useState } from 'react';
 import type { CreatePlannedMenuListInput } from '../../../stores/planned-menus/planned-menus.types';
 

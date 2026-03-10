@@ -63,7 +63,7 @@ describe('http helpers', () => {
         json: jest.fn(),
       });
 
-      const mapper = (data: any) => ({ success: true });
+      const mapper = (_data: unknown) => ({ success: true });
       const result = await deleteOne('test/1', mapper);
 
       expect(result).toEqual({ success: true });

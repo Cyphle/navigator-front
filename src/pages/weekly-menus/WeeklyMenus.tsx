@@ -1,6 +1,5 @@
-import './WeeklyMenus.scss';
 import { useState } from 'react';
-import { message } from 'antd';
+import { useToast } from '@/hooks/use-toast';
 import {
   useFetchAllPlannedMenuLists,
   useFetchPlannedMenuListById,
@@ -14,12 +13,15 @@ import { PlannedMenuListsView } from './components/PlannedMenuListsView';
 import { PlannedMenuListForm } from './components/PlannedMenuListForm';
 import { PlannedMenuListDetail } from './components/PlannedMenuListDetail';
 import type { CreatePlannedMenuListInput } from '../../stores/planned-menus/planned-menus.types';
+import { Loader2 } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 export const WeeklyMenus = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedListId, setSelectedListId] = useState<number | null>(null);
+  const { toast } = useToast();
 
-  const { data: lists, isPending, isError, error } = useFetchAllPlannedMenuLists();
+  const { data: lists, isPending, isError } = useFetchAllPlannedMenuLists();
   const { data: selectedList } = useFetchPlannedMenuListById(selectedListId || 0);
   const createMutation = useCreatePlannedMenuList();
   const updateMutation = useUpdatePlannedMenuList();
@@ -30,11 +32,11 @@ export const WeeklyMenus = () => {
   const handleCreateList = (input: CreatePlannedMenuListInput) => {
     createMutation.mutate(input, {
       onSuccess: () => {
-        message.success('Liste créée avec succès');
+        toast({ title: 'Liste créée avec succès' });
         setIsFormOpen(false);
       },
       onError: () => {
-        message.error('Erreur lors de la création de la liste');
+        toast({ title: 'Erreur lors de la création de la liste', variant: 'destructive' });
       },
     });
   };
@@ -42,10 +44,10 @@ export const WeeklyMenus = () => {
   const handleDeleteList = (id: number) => {
     deleteMutation.mutate(id, {
       onSuccess: () => {
-        message.success('Liste supprimée');
+        toast({ title: 'Liste supprimée' });
       },
       onError: () => {
-        message.error('Erreur lors de la suppression');
+        toast({ title: 'Erreur lors de la suppression', variant: 'destructive' });
       },
     });
   };
@@ -55,10 +57,10 @@ export const WeeklyMenus = () => {
       { id, input: { isActiveShoppingList: isActive } },
       {
         onSuccess: () => {
-          message.success(isActive ? 'Liste de courses activée' : 'Liste de courses désactivée');
+          toast({ title: isActive ? 'Liste de courses activée' : 'Liste de courses désactivée' });
         },
         onError: () => {
-          message.error('Erreur lors de la mise à jour');
+          toast({ title: 'Erreur lors de la mise à jour', variant: 'destructive' });
         },
       }
     );
@@ -71,10 +73,10 @@ export const WeeklyMenus = () => {
       { listId: selectedListId, recipeId, recipeName, assignedDays },
       {
         onSuccess: () => {
-          message.success('Recette ajoutée');
+          toast({ title: 'Recette ajoutée' });
         },
         onError: () => {
-          message.error("Erreur lors de l'ajout de la recette");
+          toast({ title: "Erreur lors de l'ajout de la recette", variant: 'destructive' });
         },
       }
     );
@@ -87,10 +89,10 @@ export const WeeklyMenus = () => {
       { listId: selectedListId, recipeId },
       {
         onSuccess: () => {
-          message.success('Recette retirée');
+          toast({ title: 'Recette retirée' });
         },
         onError: () => {
-          message.error('Erreur lors du retrait de la recette');
+          toast({ title: 'Erreur lors du retrait de la recette', variant: 'destructive' });
         },
       }
     );
@@ -103,21 +105,33 @@ export const WeeklyMenus = () => {
       { listId: selectedListId, recipeId, recipeName, assignedDays },
       {
         onSuccess: () => {
-          message.success('Jours mis à jour');
+          toast({ title: 'Jours mis à jour' });
         },
         onError: () => {
-          message.error('Erreur lors de la mise à jour');
+          toast({ title: 'Erreur lors de la mise à jour', variant: 'destructive' });
         },
       }
     );
   };
 
   if (isPending) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex flex-col items-center justify-center py-24 gap-4 bg-gray-50 min-h-full">
+        <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
+        <p className="text-[10px] uppercase tracking-[0.2em] font-light text-gray-400">Chargement des menus...</p>
+      </div>
+    );
   }
 
   if (isError) {
-    return <div>Error: {error.message}</div>;
+    return (
+      <div className="p-8 bg-gray-50 min-h-full">
+        <div className="bg-red-50 p-8 border border-red-100 flex flex-col items-center gap-4">
+          <p className="text-red-500 font-light text-sm">Une erreur est survenue lors du chargement des menus.</p>
+          <Button variant="outline" className="rounded-none">Réessayer</Button>
+        </div>
+      </div>
+    );
   }
 
   // Show detail view if a list is selected
@@ -135,7 +149,7 @@ export const WeeklyMenus = () => {
 
   // Show list view
   return (
-    <>
+    <div className="min-h-full bg-gray-50">
       <PlannedMenuListsView
         lists={lists || []}
         onCreateNew={() => setIsFormOpen(true)}
@@ -150,6 +164,6 @@ export const WeeklyMenus = () => {
         onSubmit={handleCreateList}
         isLoading={createMutation.isPending}
       />
-    </>
+    </div>
   );
 };

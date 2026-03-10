@@ -1,6 +1,4 @@
-import './Families.scss';
 import { useMemo, useState } from 'react';
-import { Button } from 'antd';
 import { useUser } from '../../contexts/user/user.context';
 import { withFetchTemplate } from '../../hoc/fetch-template/use-fetch-template';
 import type { Family } from '../../stores/families/families.types';
@@ -8,6 +6,11 @@ import type { UpsertFamilyRequest } from '../../stores/families/families.types';
 import { useFetchFamilies } from '../../stores/families/families.queries';
 import { useCreateFamily, useUpdateFamily } from '../../stores/families/families.commands';
 import { CreateUpdateFamily, type FamilyFormValues, type CreateUpdateFamilyPayload } from './components/CreateUpdateFamily';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Users, User, Settings, ShieldAlert, Plus } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 const getMemberCount = (family: Family): number => {
   return family.members.length + 1;
@@ -102,50 +105,81 @@ const FamiliesContent = ({ data }: { data: Family[] }) => {
   };
 
   return (
-    <div className="families-page">
-      <header className="families-header">
-        <Button type="primary" onClick={handleCreateClick}>
+    <div className="p-8 bg-gray-50 min-h-full">
+      <header className="flex justify-end mb-8">
+        <Button onClick={handleCreateClick} className="rounded-none bg-black hover:bg-gray-800 text-white uppercase tracking-widest font-light text-xs">
+          <Plus className="w-4 h-4 mr-2" />
           Creer une famille
         </Button>
       </header>
 
-      <section className="families-grid">
+      <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
         {data.map((family) => (
-          <article key={family.id} className="family-card">
-            <div className="family-card__header">
-              <div>
-                <h2>{family.name}</h2>
-                <p>{getMemberCount(family)} membres</p>
+          <Card key={family.id} className="rounded-none border-gray-200 shadow-none flex flex-col h-full group">
+            <CardHeader className="flex flex-row items-start justify-between pb-6">
+              <div className="flex flex-col gap-1">
+                <CardTitle className="text-lg font-extralight text-black uppercase m-0">{family.name}</CardTitle>
+                <div className="flex items-center gap-1 text-[10px] text-gray-400 font-light uppercase tracking-widest">
+                  <Users className="w-3 h-3" />
+                  {getMemberCount(family)} membres
+                </div>
               </div>
-              <span className={`family-card__status family-card__status--${family.status.toLowerCase()}`}>
+              <Badge variant="outline" className={cn(
+                "rounded-none text-[8px] font-light uppercase tracking-[0.15em] px-1.5 py-0 border-gray-100",
+                family.status === 'ACTIVE' ? "text-blue-500 border-blue-100" : "text-gray-300"
+              )}>
                 {family.status === 'ACTIVE' ? 'Actif' : 'Desactive'}
-              </span>
-            </div>
-            <div className="family-card__owner">
-              <span>Owner</span>
-              <strong>{family.owner.email}</strong>
-            </div>
-            <ul className="family-card__members">
-              {family.members.map((member) => (
-                <li key={member.id}>
-                  <span>{member.relation ?? 'Membre'}</span>
-                  <span>{member.email}</span>
-                </li>
-              ))}
-            </ul>
-            <div className="family-card__actions">
-              <Button onClick={() => handleEditClick(family)} disabled={family.status === 'INACTIVE'}>
+              </Badge>
+            </CardHeader>
+            <CardContent className="flex-1 flex flex-col gap-6">
+              <div className="bg-gray-50 p-4 border border-gray-100 flex items-center justify-between group-hover:bg-white transition-colors">
+                <div className="flex flex-col gap-1">
+                  <span className="text-[8px] uppercase tracking-widest font-light text-gray-400">Owner</span>
+                  <span className="text-xs font-light text-black truncate max-w-[150px]">{family.owner.email}</span>
+                </div>
+                <div className="bg-white p-2 border border-gray-100">
+                  <User className="w-4 h-4 text-black" />
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-3">
+                <span className="text-[8px] uppercase tracking-widest font-light text-gray-400">Membres</span>
+                <ul className="list-none p-0 m-0 space-y-2">
+                  {family.members.map((member) => (
+                    <li key={member.id} className="flex items-center justify-between text-xs font-light py-1 border-b border-gray-50 last:border-0">
+                      <span className="text-gray-400 uppercase tracking-tighter text-[10px]">{member.relation ?? 'Membre'}</span>
+                      <span className="text-black">{member.email}</span>
+                    </li>
+                  ))}
+                  {family.members.length === 0 && (
+                    <li className="text-xs font-light text-gray-300 italic py-2">Aucun autre membre</li>
+                  )}
+                </ul>
+              </div>
+            </CardContent>
+            <CardFooter className="pt-6 border-t border-gray-50 flex gap-2">
+              <Button 
+                variant="outline" 
+                size="sm"
+                className="flex-1 rounded-none border-gray-200 text-[10px] uppercase tracking-widest font-light hover:bg-gray-50"
+                onClick={() => handleEditClick(family)} 
+                disabled={family.status === 'INACTIVE'}
+              >
+                <Settings className="w-3 h-3 mr-2" />
                 Modifier
               </Button>
               <Button
-                danger
+                variant="outline"
+                size="sm"
+                className="flex-1 rounded-none border-gray-200 text-red-400 hover:text-red-500 hover:bg-red-50 text-[10px] uppercase tracking-widest font-light"
                 onClick={() => handleDeactivate(family)}
                 disabled={family.status === 'INACTIVE' || pendingStatusFamilyId === family.id}
               >
+                <ShieldAlert className="w-3 h-3 mr-2" />
                 Desactiver
               </Button>
-            </div>
-          </article>
+            </CardFooter>
+          </Card>
         ))}
       </section>
 

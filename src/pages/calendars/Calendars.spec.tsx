@@ -5,11 +5,13 @@ import * as calendarsService from '../../services/calendars.service';
 import { Calendars } from './Calendars';
 
 jest.mock('dayjs', () => {
-  const mockDayjs = jest.fn(() => ({
-    format: jest.fn(() => '01/01/2026'),
-    isSame: jest.fn(() => false),
-  }));
-  mockDayjs.extend = jest.fn();
+  const mockDayjs = Object.assign(
+    jest.fn(() => ({
+      format: jest.fn(() => '01/01/2026'),
+      isSame: jest.fn(() => false),
+    })),
+    { extend: jest.fn() }
+  );
   return {
     __esModule: true,
     default: mockDayjs,

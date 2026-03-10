@@ -1,4 +1,14 @@
-import { Button, Input, Modal } from 'antd';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Label } from '@/components/ui/label';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { Controller, useForm } from 'react-hook-form';
 import { useEffect } from 'react';
 
@@ -68,65 +78,71 @@ export const CreateUpdateFamily = ({
   };
 
   return (
-    <Modal
-      title={isEditing ? 'Modifier la famille' : 'Creer une famille'}
-      open={isOpen}
-      onCancel={onCancel}
-      footer={null}
-      className="family-form-modal"
-    >
-      <form onSubmit={handleSubmit(handleFormSubmit)} className="family-form">
-        <label htmlFor="family-name">Nom de la famille</label>
-        <Controller
-          name="name"
-          control={control}
-          rules={{ required: true, validate: (value) => value.trim().length > 0 }}
-          render={({ field }) => (
-            <Input
-              id="family-name"
-              value={field.value}
-              onBlur={field.onBlur}
-              onChange={field.onChange}
-              name={field.name}
-              placeholder="Nom de la famille"
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onCancel()}>
+      <DialogContent className="sm:max-w-[425px] rounded-none">
+        <DialogHeader>
+          <DialogTitle className="text-xl font-light uppercase tracking-widest">
+            {isEditing ? 'Modifier la famille' : 'Creer une famille'}
+          </DialogTitle>
+        </DialogHeader>
+        <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6 pt-4">
+          <div className="space-y-2">
+            <Label htmlFor="family-name" className="text-[10px] uppercase tracking-widest font-light text-gray-400">Nom de la famille</Label>
+            <Controller
+              name="name"
+              control={control}
+              rules={{ required: true, validate: (value) => value.trim().length > 0 }}
+              render={({ field }) => (
+                <Input
+                  id="family-name"
+                  className="rounded-none border-gray-200 focus:border-blue-500 focus-visible:ring-0 transition-colors"
+                  placeholder="Nom de la famille"
+                  {...field}
+                />
+              )}
             />
-          )}
-        />
+          </div>
 
-        <label htmlFor="family-emails">Emails des membres</label>
-        <Controller
-          name="emails"
-          control={control}
-          rules={{
-            required: true,
-            validate: (value) => value.trim().length > 0 && parseEmails(value).length > 0,
-          }}
-          render={({ field }) => (
-            <Input.TextArea
-              id="family-emails"
-              value={field.value}
-              onBlur={field.onBlur}
-              onChange={field.onChange}
-              name={field.name}
-              placeholder="email1@exemple.fr, email2@exemple.fr"
-              rows={3}
+          <div className="space-y-2">
+            <Label htmlFor="family-emails" className="text-[10px] uppercase tracking-widest font-light text-gray-400">Emails des membres</Label>
+            <Controller
+              name="emails"
+              control={control}
+              rules={{
+                required: true,
+                validate: (value) => value.trim().length > 0 && parseEmails(value).length > 0,
+              }}
+              render={({ field }) => (
+                <Textarea
+                  id="family-emails"
+                  className="rounded-none border-gray-200 focus:border-blue-500 focus-visible:ring-0 transition-colors"
+                  placeholder="email1@exemple.fr, email2@exemple.fr"
+                  rows={3}
+                  {...field}
+                />
+              )}
             />
-          )}
-        />
+          </div>
 
-        <div className="family-form__actions">
-          <Button
-            htmlType="submit"
-            type="primary"
-            disabled={!isValid || isSubmitting}
-          >
-            {isEditing ? 'Mettre a jour' : 'Creer'}
-          </Button>
-          <Button type="default" onClick={onCancel}>
-            Annuler
-          </Button>
-        </div>
-      </form>
-    </Modal>
+          <DialogFooter className="flex flex-row sm:justify-end gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              className="rounded-none uppercase tracking-widest font-light text-xs"
+              onClick={onCancel}
+            >
+              Annuler
+            </Button>
+            <Button
+              type="submit"
+              className="rounded-none bg-black hover:bg-gray-800 text-white uppercase tracking-widest font-light text-xs"
+              disabled={!isValid || isSubmitting}
+            >
+              {isEditing ? 'Mettre a jour' : 'Creer'}
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 };
