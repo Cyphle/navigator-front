@@ -10,7 +10,7 @@ const AnchorLogo = () => (
 export const Sidebar = () => {
   return (
     <aside
-      className="hidden md:flex text-white flex-col gap-10 shrink-0 md:w-[60px] lg:w-[260px] transition-all duration-300 min-h-screen sticky top-0 h-screen"
+      className="hidden md:flex text-white flex-col gap-10 shrink-0 md:w-[60px] lg:w-[260px] transition-all duration-300 h-full overflow-y-auto"
       style={{ background: 'var(--stone)' }}
     >
       {/* Logo */}

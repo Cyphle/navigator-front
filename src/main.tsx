@@ -40,11 +40,11 @@ const Main = () => {
     <UserContextProvider initialUser={initialUser}>
       <UIProvider>
         <Toaster />
-        <div className="app-shell">
+        <div className="app-shell h-screen overflow-hidden">
           <Sidebar />
-          <div className="app-shell__main">
+          <div className="app-shell__main overflow-hidden">
             <Header userInfo={userInfo} />
-            <main className="app-shell__content pb-[72px] md:pb-0">
+            <main className="app-shell__content overflow-y-auto pb-[72px] md:pb-0">
               <Outlet/>
             </main>
             <Footer/>
