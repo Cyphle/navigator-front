@@ -1,6 +1,5 @@
-import './FamilyTodos.scss';
 import { useState } from 'react';
-import { message } from 'antd';
+import { useToast } from '@/hooks/use-toast';
 import {
   useFetchAllTodoLists,
   useFetchTodoListById,
@@ -16,12 +15,14 @@ import { TodoListsView } from './components/TodoListsView';
 import { CreateTodoListForm } from './components/CreateTodoListForm';
 import { TodoListDetail } from './components/TodoListDetail';
 import type { CreateTodoListInput, CreateTodoItemInput, TodoStatus } from '../../stores/family-todos/family-todos.types';
+import { Loader2 } from 'lucide-react';
 
 export const FamilyTodos = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedListId, setSelectedListId] = useState<number | null>(null);
+  const { toast } = useToast();
 
-  const { data: lists, isPending, isError, error } = useFetchAllTodoLists();
+  const { data: lists, isPending, isError } = useFetchAllTodoLists();
   const { data: families } = useFetchFamilies();
   const { data: selectedList } = useFetchTodoListById(selectedListId || 0);
   const createMutation = useCreateTodoList();
@@ -34,11 +35,11 @@ export const FamilyTodos = () => {
   const handleCreateList = (input: CreateTodoListInput) => {
     createMutation.mutate(input, {
       onSuccess: () => {
-        message.success('Liste créée avec succès');
+        toast({ title: 'Liste créée avec succès' });
         setIsFormOpen(false);
       },
       onError: () => {
-        message.error('Erreur lors de la création de la liste');
+        toast({ title: 'Erreur lors de la création de la liste', variant: 'destructive' });
       },
     });
   };
@@ -46,81 +47,77 @@ export const FamilyTodos = () => {
   const handleDeleteList = (id: number) => {
     deleteMutation.mutate(id, {
       onSuccess: () => {
-        message.success('Liste supprimée');
+        toast({ title: 'Liste supprimée' });
       },
       onError: () => {
-        message.error('Erreur lors de la suppression');
+        toast({ title: 'Erreur lors de la suppression', variant: 'destructive' });
       },
     });
   };
 
   const handleAddItem = (input: CreateTodoItemInput) => {
     if (!selectedListId) return;
-
     addItemMutation.mutate(
       { listId: selectedListId, input },
       {
-        onSuccess: () => {
-          message.success('Tâche ajoutée');
-        },
-        onError: () => {
-          message.error("Erreur lors de l'ajout de la tâche");
-        },
+        onSuccess: () => toast({ title: 'Tâche ajoutée' }),
+        onError: () => toast({ title: "Erreur lors de l'ajout de la tâche", variant: 'destructive' }),
       }
     );
   };
 
   const handleUpdateItem = (itemId: number, status: TodoStatus) => {
     if (!selectedListId) return;
-
     updateItemMutation.mutate(
       { listId: selectedListId, itemId, input: { status } },
       {
-        onSuccess: () => {
-          message.success('Tâche mise à jour');
-        },
-        onError: () => {
-          message.error('Erreur lors de la mise à jour de la tâche');
-        },
+        onSuccess: () => toast({ title: 'Tâche mise à jour' }),
+        onError: () => toast({ title: 'Erreur lors de la mise à jour', variant: 'destructive' }),
       }
     );
   };
 
   const handleDeleteItem = (itemId: number) => {
     if (!selectedListId) return;
-
     deleteItemMutation.mutate(
       { listId: selectedListId, itemId },
       {
-        onSuccess: () => {
-          message.success('Tâche supprimée');
-        },
-        onError: () => {
-          message.error('Erreur lors de la suppression de la tâche');
-        },
+        onSuccess: () => toast({ title: 'Tâche supprimée' }),
+        onError: () => toast({ title: 'Erreur lors de la suppression', variant: 'destructive' }),
       }
     );
   };
 
   const handleClearCompleted = () => {
     if (!selectedListId) return;
-
     clearCompletedMutation.mutate(selectedListId, {
-      onSuccess: () => {
-        message.success('Tâches terminées supprimées');
-      },
-      onError: () => {
-        message.error('Erreur lors de la suppression');
-      },
+      onSuccess: () => toast({ title: 'Tâches terminées supprimées' }),
+      onError: () => toast({ title: 'Erreur lors de la suppression', variant: 'destructive' }),
     });
   };
 
   if (isPending) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex flex-col items-center justify-center py-24 gap-4 min-h-full" style={{ background: 'var(--sand)' }}>
+        <Loader2 className="w-8 h-8 animate-spin" style={{ color: 'var(--ocean)' }} />
+        <p className="text-xs uppercase tracking-widest font-medium" style={{ color: 'var(--mist)' }}>
+          Chargement des listes...
+        </p>
+      </div>
+    );
   }
 
   if (isError) {
-    return <div>Error: {error.message}</div>;
+    return (
+      <div className="flex items-center justify-center p-12 min-h-full" style={{ background: 'var(--sand)' }}>
+        <div
+          className="rounded-[var(--radius-lg)] p-8 flex flex-col items-center gap-4"
+          style={{ background: 'var(--coral-pale)', color: 'var(--coral)' }}
+        >
+          <p className="text-sm font-medium">Une erreur est survenue lors du chargement.</p>
+        </div>
+      </div>
+    );
   }
 
   if (selectedListId && selectedList) {
@@ -144,7 +141,6 @@ export const FamilyTodos = () => {
         onSelectList={setSelectedListId}
         onDelete={handleDeleteList}
       />
-
       <CreateTodoListForm
         open={isFormOpen}
         onCancel={() => setIsFormOpen(false)}

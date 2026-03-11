@@ -37,8 +37,8 @@ describe('CreateShoppingListForm', () => {
       <CreateShoppingListForm open={true} onCancel={onCancel} onSubmit={onSubmit} families={[]} />
     );
 
-    const personalRadio = screen.getByRole('radio', { name: /personnelle/i });
-    expect(personalRadio).toBeChecked();
+    expect(screen.getByRole('button', { name: /personnelle/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /partagée/i })).toBeInTheDocument();
   });
 
   test('shows shared option', () => {
@@ -51,7 +51,7 @@ describe('CreateShoppingListForm', () => {
       />
     );
 
-    expect(screen.getByText(/partagée avec une famille/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /partagée/i })).toBeInTheDocument();
   });
 
   test('shows family selector when shared type selected', () => {
@@ -59,8 +59,7 @@ describe('CreateShoppingListForm', () => {
       <CreateShoppingListForm open={true} onCancel={onCancel} onSubmit={onSubmit} families={mockFamilies} />
     );
 
-    const sharedRadio = screen.getByRole('radio', { name: /partagée avec une famille/i });
-    fireEvent.click(sharedRadio);
+    fireEvent.click(screen.getByRole('button', { name: /partagée/i }));
 
     expect(screen.getByText('Famille')).toBeInTheDocument();
   });
@@ -86,7 +85,6 @@ describe('CreateShoppingListForm', () => {
       />
     );
 
-    const submitButton = screen.getByRole('button', { name: /créer/i });
-    expect(submitButton).toHaveClass('ant-btn-loading');
+    expect(screen.getByText('Création...')).toBeInTheDocument();
   });
 });

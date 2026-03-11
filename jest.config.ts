@@ -31,7 +31,14 @@ const config: Config = {
   modulePathIgnorePatterns: ["server"],
   transformIgnorePatterns: [
     "node_modules/(?!(dayjs)/)"
-  ]
+  ],
+  transform: {
+    "^.+\\.(ts|tsx|js|jsx)$": ["ts-jest", {
+      tsconfig: {
+        esModuleInterop: true,
+      }
+    }]
+  }
 };
 
 export default config;

@@ -10,7 +10,7 @@ jest.mock('dayjs', () => {
       format: jest.fn(() => '01/01/2026'),
       isSame: jest.fn(() => false),
     })),
-    { extend: jest.fn() }
+    { extend: jest.fn(), locale: jest.fn() }
   );
   return {
     __esModule: true,

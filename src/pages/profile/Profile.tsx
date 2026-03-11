@@ -1,4 +1,3 @@
-import './Profile.scss';
 import { useMemo } from 'react';
 import { withFetchTemplate } from '../../hoc/fetch-template/use-fetch-template';
 import { useFetchFamilies } from '../../stores/families/families.queries';
@@ -41,6 +40,43 @@ const getMemberships = (families: Family[], userEmail: string): FamilyMembership
     .filter((item): item is FamilyMembership => item !== null);
 };
 
+interface InfoRowProps {
+  label: string;
+  value: string;
+}
+
+const InfoRow = ({ label, value }: InfoRowProps) => (
+  <div className="flex items-center justify-between py-3" style={{ borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
+    <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--mist)' }}>
+      {label}
+    </span>
+    <span className="text-sm font-semibold" style={{ color: 'var(--stone)' }}>
+      {value || '-'}
+    </span>
+  </div>
+);
+
+interface SectionCardProps {
+  title: string;
+  children: React.ReactNode;
+}
+
+const SectionCard = ({ title, children }: SectionCardProps) => (
+  <section
+    className="bg-white rounded-[var(--radius-lg)] overflow-hidden"
+    style={{ boxShadow: 'var(--shadow-soft)' }}
+  >
+    <div className="px-6 py-4" style={{ borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
+      <h2 className="text-xs font-semibold uppercase tracking-widest" style={{ color: 'var(--mist)' }}>
+        {title}
+      </h2>
+    </div>
+    <div className="px-6 pb-4">
+      {children}
+    </div>
+  </section>
+);
+
 const ProfileContent = ({ data }: { data: Family[] }) => {
   const { userState } = useUser();
   const userEmail = useMemo(
@@ -55,60 +91,97 @@ const ProfileContent = ({ data }: { data: Family[] }) => {
   );
 
   return (
-    <div className="profile-page">
-      <section className="profile-card">
-        <h2>Informations</h2>
-        <div className="profile-info">
-          <div>
-            <span>Username</span>
-            <strong>{userState.username || '-'}</strong>
+    <div className="p-4 md:p-8 max-w-2xl" style={{ background: 'var(--sand)', minHeight: '100%' }}>
+      {/* Page title */}
+      <div className="mb-8">
+        <h1 className="font-display text-2xl md:text-3xl font-bold" style={{ color: 'var(--stone)' }}>
+          Mon profil
+        </h1>
+        <p className="text-sm mt-1" style={{ color: 'var(--mist)' }}>
+          Vos informations personnelles et vos familles
+        </p>
+      </div>
+
+      <div className="space-y-4">
+        {/* Avatar + name hero */}
+        <div
+          className="bg-white rounded-[var(--radius-lg)] px-6 py-6 flex items-center gap-5"
+          style={{ boxShadow: 'var(--shadow-soft)' }}
+        >
+          <div
+            className="w-16 h-16 rounded-full flex items-center justify-center text-2xl font-bold font-display text-white flex-none"
+            style={{ background: 'linear-gradient(135deg, var(--ocean) 0%, var(--ocean-light) 100%)' }}
+          >
+            {(userState.firstName?.[0] || userState.username?.[0] || '?').toUpperCase()}
           </div>
           <div>
-            <span>Prénom</span>
-            <strong>{userState.firstName || '-'}</strong>
-          </div>
-          <div>
-            <span>Nom</span>
-            <strong>{userState.lastName || '-'}</strong>
-          </div>
-          <div>
-            <span>Email</span>
-            <strong>{userEmail || '-'}</strong>
+            <p className="font-display text-xl font-bold" style={{ color: 'var(--stone)' }}>
+              {userState.firstName && userState.lastName
+                ? `${userState.firstName} ${userState.lastName}`
+                : userState.username || 'Utilisateur'}
+            </p>
           </div>
         </div>
-      </section>
 
-      <section className="profile-card">
-        <h2>Mon rôle</h2>
-        {roles.length > 0 ? (
-          <div className="profile-tags">
-            {roles.map((role) => (
-              <span key={role} className="profile-tag">{role}</span>
-            ))}
-          </div>
-        ) : (
-          <p className="profile-empty">Aucun rôle rattaché pour le moment.</p>
-        )}
-      </section>
+        {/* Informations */}
+        <SectionCard title="Informations">
+          <InfoRow label="Username" value={userState.username} />
+          <InfoRow label="Prénom" value={userState.firstName} />
+          <InfoRow label="Nom" value={userState.lastName} />
+          <InfoRow label="Email" value={userEmail} />
+        </SectionCard>
 
-      <section className="profile-card">
-        <h2>Familles</h2>
-        {memberships.length > 0 ? (
-          <ul className="profile-families">
-            {memberships.map(({ family, role }) => (
-              <li key={family.id}>
-                <div>
-                  <strong>{family.name}</strong>
-                  <span>{getMemberCount(family)} membres</span>
+        {/* Rôles */}
+        <SectionCard title="Mon rôle">
+          {roles.length > 0 ? (
+            <div className="flex flex-wrap gap-2 pt-3">
+              {roles.map((role) => (
+                <span
+                  key={role}
+                  className="px-3 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wide"
+                  style={{ background: 'var(--ocean-pale)', color: 'var(--ocean)' }}
+                >
+                  {role}
+                </span>
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm py-3" style={{ color: 'var(--mist)' }}>
+              Aucun rôle rattaché pour le moment.
+            </p>
+          )}
+        </SectionCard>
+
+        {/* Familles */}
+        <SectionCard title="Familles">
+          {memberships.length > 0 ? (
+            <div className="divide-y divide-black/[0.04]">
+              {memberships.map(({ family, role }) => (
+                <div key={family.id} className="flex items-center justify-between py-3">
+                  <div>
+                    <p className="text-sm font-semibold" style={{ color: 'var(--stone)' }}>
+                      {family.name}
+                    </p>
+                    <p className="text-xs mt-0.5" style={{ color: 'var(--mist)' }}>
+                      {getMemberCount(family)} membre{getMemberCount(family) !== 1 ? 's' : ''}
+                    </p>
+                  </div>
+                  <span
+                    className="px-2.5 py-1 rounded-full text-[10px] font-semibold uppercase tracking-wide"
+                    style={{ background: 'var(--sage-pale)', color: 'var(--sage)' }}
+                  >
+                    {role}
+                  </span>
                 </div>
-                <span className="profile-family-role">{role}</span>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <p className="profile-empty">Aucune famille associée pour le moment.</p>
-        )}
-      </section>
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm py-3" style={{ color: 'var(--mist)' }}>
+              Aucune famille associée pour le moment.
+            </p>
+          )}
+        </SectionCard>
+      </div>
     </div>
   );
 };

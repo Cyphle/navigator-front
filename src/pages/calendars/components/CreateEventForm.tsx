@@ -1,5 +1,14 @@
-import { Button, DatePicker, Form, Input, InputNumber, Modal, Select, TimePicker } from 'antd';
+import { Controller, useForm } from 'react-hook-form';
 import dayjs from 'dayjs';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import type { CreateCalendarEventInput, Calendar } from '../../../stores/calendars/calendars.types';
 
 interface CreateEventFormProps {
@@ -20,6 +29,16 @@ const RECURRENCE_OPTIONS = [
   { value: 'YEARLY', label: 'Annuelle' },
 ];
 
+interface FormValues {
+  title: string;
+  description: string;
+  invites: string;
+  date: string;
+  time: string;
+  duration: number;
+  recurrence: string;
+}
+
 export const CreateEventForm = ({
   open,
   onCancel,
@@ -28,126 +47,190 @@ export const CreateEventForm = ({
   calendars,
   selectedCalendarId,
 }: CreateEventFormProps) => {
-  const [form] = Form.useForm();
+  const { control, handleSubmit, reset, formState: { isValid } } = useForm<FormValues>({
+    mode: 'onChange',
+    defaultValues: {
+      title: '',
+      description: '',
+      invites: '',
+      date: dayjs().format('YYYY-MM-DD'),
+      time: '09:00',
+      duration: 60,
+      recurrence: 'NONE',
+    },
+  });
 
-  const handleSubmit = () => {
-    form.validateFields().then((values) => {
-      const input: CreateCalendarEventInput = {
-        title: values.title,
-        description: values.description,
-        invites: values.invites?.split(',').map((email: string) => email.trim()).filter(Boolean),
-        date: values.date.format('YYYY-MM-DD'),
-        time: values.time.format('HH:mm'),
-        duration: values.duration,
-        recurrence: values.recurrence,
-      };
-      onSubmit(input);
-      form.resetFields();
+  const selectedCalendar = calendars.find((c) => c.id === selectedCalendarId);
+
+  const handleFormSubmit = (values: FormValues) => {
+    onSubmit({
+      title: values.title,
+      description: values.description || undefined,
+      invites: values.invites ? values.invites.split(',').map((e) => e.trim()).filter(Boolean) : undefined,
+      date: values.date,
+      time: values.time,
+      duration: Number(values.duration),
+      recurrence: values.recurrence as CreateCalendarEventInput['recurrence'],
     });
+    reset();
   };
 
   const handleCancel = () => {
-    form.resetFields();
+    reset();
     onCancel();
   };
 
   return (
-    <Modal
-      title="Nouvel événement"
-      open={open}
-      onCancel={handleCancel}
-      footer={[
-        <Button key="cancel" onClick={handleCancel}>
-          Annuler
-        </Button>,
-        <Button key="submit" type="primary" loading={isLoading} onClick={handleSubmit}>
-          Créer
-        </Button>,
-      ]}
-    >
-      <Form
-        form={form}
-        layout="vertical"
-        initialValues={{
-          recurrence: 'NONE',
-          duration: 60,
-          date: dayjs(),
-          time: dayjs(),
-        }}
-      >
-        <Form.Item
-          label="Calendrier"
-          name="calendarId"
-          initialValue={selectedCalendarId}
-        >
-          <Select
-            disabled
-            options={calendars.map((calendar) => ({
-              value: calendar.id,
-              label: (
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <div
-                    style={{
-                      width: '12px',
-                      height: '12px',
-                      borderRadius: '50%',
-                      backgroundColor: calendar.color,
-                    }}
-                  />
-                  {calendar.name}
-                </div>
-              ),
-            }))}
+    <Dialog open={open} onOpenChange={(o) => !o && handleCancel()}>
+      <DialogContent className="rounded-[var(--radius-md)] border-none sm:max-w-[480px]" style={{ boxShadow: 'var(--shadow-card)' }}>
+        <DialogHeader>
+          <DialogTitle className="font-display text-xl font-bold" style={{ color: 'var(--stone)' }}>
+            Nouvel événement
+          </DialogTitle>
+        </DialogHeader>
+
+        <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4 pt-2">
+          {/* Calendar indicator */}
+          {selectedCalendar && (
+            <div
+              className="flex items-center gap-2 px-3 py-2 rounded-[var(--radius-sm)]"
+              style={{ background: `${selectedCalendar.color}18` }}
+            >
+              <span className="w-2.5 h-2.5 rounded-full" style={{ background: selectedCalendar.color }} />
+              <span className="text-xs font-semibold" style={{ color: selectedCalendar.color }}>
+                {selectedCalendar.name}
+              </span>
+            </div>
+          )}
+
+          <Controller
+            name="title"
+            control={control}
+            rules={{ required: true, validate: (v) => v.trim().length > 0 }}
+            render={({ field }) => (
+              <div className="space-y-1.5">
+                <Label className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--mist)' }}>
+                  Titre *
+                </Label>
+                <Input {...field} placeholder="Ex : Réunion d'équipe" className="rounded-[var(--radius-sm)] border-black/10 focus-visible:ring-0" style={{ background: 'var(--sand)' }} />
+              </div>
+            )}
           />
-        </Form.Item>
 
-        <Form.Item
-          label="Titre"
-          name="title"
-          rules={[{ required: true, message: 'Le titre est requis' }]}
-        >
-          <Input placeholder="Ex: Réunion d'équipe" />
-        </Form.Item>
+          <Controller
+            name="description"
+            control={control}
+            render={({ field }) => (
+              <div className="space-y-1.5">
+                <Label className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--mist)' }}>
+                  Description
+                </Label>
+                <Input {...field} placeholder="Description de l'événement" className="rounded-[var(--radius-sm)] border-black/10 focus-visible:ring-0" style={{ background: 'var(--sand)' }} />
+              </div>
+            )}
+          />
 
-        <Form.Item label="Description" name="description">
-          <Input.TextArea placeholder="Description de l'événement" rows={3} />
-        </Form.Item>
+          <div className="grid grid-cols-2 gap-4">
+            <Controller
+              name="date"
+              control={control}
+              rules={{ required: true }}
+              render={({ field }) => (
+                <div className="space-y-1.5">
+                  <Label className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--mist)' }}>
+                    Date *
+                  </Label>
+                  <Input {...field} type="date" className="rounded-[var(--radius-sm)] border-black/10 focus-visible:ring-0" style={{ background: 'var(--sand)' }} />
+                </div>
+              )}
+            />
+            <Controller
+              name="time"
+              control={control}
+              rules={{ required: true }}
+              render={({ field }) => (
+                <div className="space-y-1.5">
+                  <Label className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--mist)' }}>
+                    Heure *
+                  </Label>
+                  <Input {...field} type="time" className="rounded-[var(--radius-sm)] border-black/10 focus-visible:ring-0" style={{ background: 'var(--sand)' }} />
+                </div>
+              )}
+            />
+          </div>
 
-        <Form.Item
-          label="Date"
-          name="date"
-          rules={[{ required: true, message: 'La date est requise' }]}
-        >
-          <DatePicker style={{ width: '100%' }} format="DD/MM/YYYY" />
-        </Form.Item>
+          <div className="grid grid-cols-2 gap-4">
+            <Controller
+              name="duration"
+              control={control}
+              rules={{ required: true, min: 15 }}
+              render={({ field }) => (
+                <div className="space-y-1.5">
+                  <Label className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--mist)' }}>
+                    Durée (min)
+                  </Label>
+                  <Input {...field} type="number" min={15} step={15} className="rounded-[var(--radius-sm)] border-black/10 focus-visible:ring-0" style={{ background: 'var(--sand)' }} />
+                </div>
+              )}
+            />
+            <Controller
+              name="recurrence"
+              control={control}
+              render={({ field }) => (
+                <div className="space-y-1.5">
+                  <Label className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--mist)' }}>
+                    Récurrence
+                  </Label>
+                  <select
+                    {...field}
+                    className="w-full h-10 px-3 text-sm rounded-[var(--radius-sm)] border border-black/10 focus:outline-none"
+                    style={{ background: 'var(--sand)', color: 'var(--stone)' }}
+                  >
+                    {RECURRENCE_OPTIONS.map((o) => (
+                      <option key={o.value} value={o.value}>{o.label}</option>
+                    ))}
+                  </select>
+                </div>
+              )}
+            />
+          </div>
 
-        <Form.Item
-          label="Heure"
-          name="time"
-          rules={[{ required: true, message: "L'heure est requise" }]}
-        >
-          <TimePicker style={{ width: '100%' }} format="HH:mm" minuteStep={15} />
-        </Form.Item>
+          <Controller
+            name="invites"
+            control={control}
+            render={({ field }) => (
+              <div className="space-y-1.5">
+                <Label className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--mist)' }}>
+                  Invités (emails séparés par des virgules)
+                </Label>
+                <Input {...field} placeholder="email1@example.com, email2@example.com" className="rounded-[var(--radius-sm)] border-black/10 focus-visible:ring-0" style={{ background: 'var(--sand)' }} />
+              </div>
+            )}
+          />
 
-        <Form.Item
-          label="Durée (minutes)"
-          name="duration"
-          rules={[{ required: true, message: 'La durée est requise' }]}
-        >
-          <InputNumber min={15} max={1440} step={15} style={{ width: '100%' }} />
-        </Form.Item>
-
-        <Form.Item label="Récurrence" name="recurrence">
-          <Select options={RECURRENCE_OPTIONS} />
-        </Form.Item>
-
-        <Form.Item
-          label="Invités (emails séparés par des virgules)"
-          name="invites"
-        >
-          <Input placeholder="email1@example.com, email2@example.com" />
-        </Form.Item>
-      </Form>
-    </Modal>
+          <DialogFooter className="pt-2">
+            <button
+              type="button"
+              className="text-sm font-medium px-4 py-2 rounded-[var(--radius-sm)] border border-black/10 transition-colors hover:bg-black/5"
+              style={{ color: 'var(--stone)' }}
+              onClick={handleCancel}
+            >
+              Annuler
+            </button>
+            <button
+              type="submit"
+              disabled={!isValid || isLoading}
+              className="text-sm font-semibold text-white px-5 py-2 rounded-[var(--radius-sm)] transition-all hover:-translate-y-px disabled:opacity-50 disabled:translate-y-0"
+              style={{
+                background: 'linear-gradient(135deg, var(--ocean) 0%, var(--ocean-light) 100%)',
+                boxShadow: '0 3px 12px rgba(27,79,138,0.3)',
+              }}
+            >
+              {isLoading ? 'Création...' : 'Créer'}
+            </button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 };

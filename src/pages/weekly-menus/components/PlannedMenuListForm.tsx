@@ -1,6 +1,14 @@
-import { Button, DatePicker, Form, Input, Modal, Select } from 'antd';
-import { type Dayjs } from 'dayjs';
-import { useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import dayjs, { type Dayjs } from 'dayjs';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import type { CreatePlannedMenuListInput } from '../../../stores/planned-menus/planned-menus.types';
 
 interface PlannedMenuListFormProps {
@@ -17,82 +25,156 @@ const RANGE_OPTIONS = [
   { value: 30, label: '1 mois' },
 ];
 
+interface FormValues {
+  name: string;
+  startDate: string;
+  range: number;
+}
+
 export const PlannedMenuListForm = ({ open, onCancel, onSubmit, isLoading }: PlannedMenuListFormProps) => {
-  const [form] = Form.useForm();
-  const [startDate, setStartDate] = useState<Dayjs | null>(null);
-  const [range, setRange] = useState<number>(7);
+  const { control, handleSubmit, reset, watch, formState: { isValid } } = useForm<FormValues>({
+    mode: 'onChange',
+    defaultValues: { name: '', startDate: dayjs().format('YYYY-MM-DD'), range: 7 },
+  });
 
-  useEffect(() => {
-    if (startDate) {
-      const endDate = startDate.add(range, 'day');
-      form.setFieldValue('endDate', endDate);
-    }
-  }, [startDate, range, form]);
+  const startDate = watch('startDate');
+  const range = watch('range');
 
-  const handleSubmit = () => {
-    form.validateFields().then((values) => {
-      const input: CreatePlannedMenuListInput = {
-        name: values.name,
-        startDate: values.startDate.format('YYYY-MM-DD'),
-        endDate: values.endDate.format('YYYY-MM-DD'),
-      };
-      onSubmit(input);
-      form.resetFields();
-      setStartDate(null);
-      setRange(7);
+  const endDate: Dayjs | null = startDate ? dayjs(startDate).add(Number(range), 'day') : null;
+
+  const handleFormSubmit = (values: FormValues) => {
+    const end = dayjs(values.startDate).add(Number(values.range), 'day');
+    onSubmit({
+      name: values.name,
+      startDate: values.startDate,
+      endDate: end.format('YYYY-MM-DD'),
     });
+    reset();
   };
 
   const handleCancel = () => {
-    form.resetFields();
-    setStartDate(null);
-    setRange(7);
+    reset();
     onCancel();
   };
 
   return (
-    <Modal
-      title="Nouvelle liste de menus planifiés"
-      open={open}
-      onCancel={handleCancel}
-      footer={[
-        <Button key="cancel" onClick={handleCancel}>
-          Annuler
-        </Button>,
-        <Button key="submit" type="primary" loading={isLoading} onClick={handleSubmit}>
-          Créer
-        </Button>,
-      ]}
-    >
-      <Form form={form} layout="vertical">
-        <Form.Item
-          label="Nom de la liste"
-          name="name"
-          rules={[{ required: true, message: 'Le nom est requis' }]}
-        >
-          <Input placeholder="Ex: Menu de la semaine" />
-        </Form.Item>
+    <Dialog open={open} onOpenChange={(o) => !o && handleCancel()}>
+      <DialogContent className="rounded-[var(--radius-md)] border-none sm:max-w-[440px]" style={{ boxShadow: 'var(--shadow-card)' }}>
+        <DialogHeader>
+          <DialogTitle className="font-display text-xl font-bold" style={{ color: 'var(--stone)' }}>
+            Nouvelle liste de menus planifiés
+          </DialogTitle>
+        </DialogHeader>
 
-        <Form.Item
-          label="Date de début"
-          name="startDate"
-          rules={[{ required: true, message: 'La date de début est requise' }]}
-        >
-          <DatePicker
-            style={{ width: '100%' }}
-            format="DD/MM/YYYY"
-            onChange={(date) => setStartDate(date)}
+        <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-5 pt-2">
+          <Controller
+            name="name"
+            control={control}
+            rules={{ required: true, validate: (v) => v.trim().length > 0 }}
+            render={({ field }) => (
+              <div className="space-y-1.5">
+                <Label htmlFor="planned-menu-name" className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--mist)' }}>
+                  Nom de la liste *
+                </Label>
+                <Input
+                  {...field}
+                  id="planned-menu-name"
+                  placeholder="Ex : Menu de la semaine"
+                  className="rounded-[var(--radius-sm)] border-black/10 focus-visible:ring-0"
+                  style={{ background: 'var(--sand)' }}
+                />
+              </div>
+            )}
           />
-        </Form.Item>
 
-        <Form.Item label="Durée">
-          <Select value={range} onChange={setRange} options={RANGE_OPTIONS} />
-        </Form.Item>
+          <Controller
+            name="startDate"
+            control={control}
+            rules={{ required: true }}
+            render={({ field }) => (
+              <div className="space-y-1.5">
+                <Label htmlFor="planned-menu-start-date" className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--mist)' }}>
+                  Date de début *
+                </Label>
+                <Input
+                  {...field}
+                  id="planned-menu-start-date"
+                  type="date"
+                  className="rounded-[var(--radius-sm)] border-black/10 focus-visible:ring-0"
+                  style={{ background: 'var(--sand)' }}
+                />
+              </div>
+            )}
+          />
 
-        <Form.Item label="Date de fin" name="endDate">
-          <DatePicker style={{ width: '100%' }} format="DD/MM/YYYY" disabled />
-        </Form.Item>
-      </Form>
-    </Modal>
+          <Controller
+            name="range"
+            control={control}
+            render={({ field }) => (
+              <div className="space-y-2">
+                <Label className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--mist)' }}>
+                  Durée
+                </Label>
+                <div className="grid grid-cols-4 gap-2">
+                  {RANGE_OPTIONS.map((opt) => (
+                    <button
+                      key={opt.value}
+                      type="button"
+                      className="py-2 text-xs font-semibold rounded-[var(--radius-sm)] border transition-all"
+                      style={
+                        Number(field.value) === opt.value
+                          ? { background: 'var(--ocean-pale)', borderColor: 'var(--ocean)', color: 'var(--ocean)' }
+                          : { borderColor: 'rgba(0,0,0,0.1)', color: 'var(--mist)' }
+                      }
+                      onClick={() => field.onChange(opt.value)}
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+          />
+
+          {/* End date preview as disabled input */}
+          <div className="space-y-1.5">
+            <Label htmlFor="planned-menu-end-date" className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--mist)' }}>
+              Date de fin
+            </Label>
+            <Input
+              id="planned-menu-end-date"
+              type="text"
+              disabled
+              readOnly
+              value={endDate ? endDate.format('DD/MM/YYYY') : ''}
+              className="rounded-[var(--radius-sm)] border-black/10 focus-visible:ring-0 opacity-70"
+              style={{ background: 'var(--ocean-pale)', color: 'var(--ocean)' }}
+            />
+          </div>
+
+          <DialogFooter className="pt-2">
+            <button
+              type="button"
+              className="text-sm font-medium px-4 py-2 rounded-[var(--radius-sm)] border border-black/10 transition-colors hover:bg-black/5"
+              style={{ color: 'var(--stone)' }}
+              onClick={handleCancel}
+            >
+              Annuler
+            </button>
+            <button
+              type="submit"
+              disabled={!isValid || isLoading}
+              className="text-sm font-semibold text-white px-5 py-2 rounded-[var(--radius-sm)] transition-all hover:-translate-y-px disabled:opacity-50 disabled:translate-y-0"
+              style={{
+                background: 'linear-gradient(135deg, var(--ocean) 0%, var(--ocean-light) 100%)',
+                boxShadow: '0 3px 12px rgba(27,79,138,0.3)',
+              }}
+            >
+              {isLoading ? 'Création...' : 'Créer'}
+            </button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 };

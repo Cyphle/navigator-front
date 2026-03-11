@@ -1,6 +1,5 @@
-import './ShoppingLists.scss';
 import { useState } from 'react';
-import { message } from 'antd';
+import { useToast } from '@/hooks/use-toast';
 import {
   useFetchAllShoppingLists,
   useFetchShoppingListById,
@@ -16,10 +15,12 @@ import { ShoppingListsView } from './components/ShoppingListsView';
 import { CreateShoppingListForm } from './components/CreateShoppingListForm';
 import { ShoppingListDetail } from './components/ShoppingListDetail';
 import type { CreateShoppingListInput, CreateShoppingListItemInput } from '../../stores/shopping-lists/shopping-lists.types';
+import { Loader2 } from 'lucide-react';
 
 export const ShoppingLists = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedListId, setSelectedListId] = useState<number | null>(null);
+  const { toast } = useToast();
 
   const { data: lists, isPending, isError, error } = useFetchAllShoppingLists();
   const { data: families } = useFetchFamilies();
@@ -34,11 +35,11 @@ export const ShoppingLists = () => {
   const handleCreateList = (input: CreateShoppingListInput) => {
     createMutation.mutate(input, {
       onSuccess: () => {
-        message.success('Liste créée avec succès');
+        toast({ title: 'Liste créée avec succès' });
         setIsFormOpen(false);
       },
       onError: () => {
-        message.error('Erreur lors de la création de la liste');
+        toast({ title: 'Erreur lors de la création de la liste', variant: 'destructive' });
       },
     });
   };
@@ -46,25 +47,24 @@ export const ShoppingLists = () => {
   const handleDeleteList = (id: number) => {
     deleteMutation.mutate(id, {
       onSuccess: () => {
-        message.success('Liste supprimée');
+        toast({ title: 'Liste supprimée' });
       },
       onError: () => {
-        message.error('Erreur lors de la suppression');
+        toast({ title: 'Erreur lors de la suppression', variant: 'destructive' });
       },
     });
   };
 
   const handleAddItem = (input: CreateShoppingListItemInput) => {
     if (!selectedListId) return;
-
     addItemMutation.mutate(
       { listId: selectedListId, input },
       {
         onSuccess: () => {
-          message.success('Article ajouté');
+          toast({ title: 'Article ajouté' });
         },
         onError: () => {
-          message.error("Erreur lors de l'ajout de l'article");
+          toast({ title: "Erreur lors de l'ajout de l'article", variant: 'destructive' });
         },
       }
     );
@@ -72,15 +72,14 @@ export const ShoppingLists = () => {
 
   const handleToggleItem = (itemId: number, completed: boolean) => {
     if (!selectedListId) return;
-
     updateItemMutation.mutate(
       { listId: selectedListId, itemId, input: { completed } },
       {
         onSuccess: () => {
-          message.success(completed ? 'Article marqué comme acheté' : 'Article marqué comme non acheté');
+          toast({ title: completed ? 'Article marqué comme acheté' : 'Article marqué comme non acheté' });
         },
         onError: () => {
-          message.error("Erreur lors de la mise à jour de l'article");
+          toast({ title: "Erreur lors de la mise à jour de l'article", variant: 'destructive' });
         },
       }
     );
@@ -88,15 +87,14 @@ export const ShoppingLists = () => {
 
   const handleDeleteItem = (itemId: number) => {
     if (!selectedListId) return;
-
     deleteItemMutation.mutate(
       { listId: selectedListId, itemId },
       {
         onSuccess: () => {
-          message.success('Article supprimé');
+          toast({ title: 'Article supprimé' });
         },
         onError: () => {
-          message.error("Erreur lors de la suppression de l'article");
+          toast({ title: "Erreur lors de la suppression de l'article", variant: 'destructive' });
         },
       }
     );
@@ -104,26 +102,33 @@ export const ShoppingLists = () => {
 
   const handleClearCompleted = () => {
     if (!selectedListId) return;
-
     clearCompletedMutation.mutate(selectedListId, {
       onSuccess: () => {
-        message.success('Articles achetés supprimés');
+        toast({ title: 'Articles achetés supprimés' });
       },
       onError: () => {
-        message.error('Erreur lors de la suppression');
+        toast({ title: 'Erreur lors de la suppression', variant: 'destructive' });
       },
     });
   };
 
   if (isPending) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="w-8 h-8 animate-spin" style={{ color: 'var(--ocean)' }} />
+        <p className="text-xs uppercase tracking-widest font-medium mt-2" style={{ color: 'var(--mist)' }}>Loading...</p>
+      </div>
+    );
   }
 
   if (isError) {
-    return <div>Error: {error.message}</div>;
+    return (
+      <div className="flex items-center justify-center h-64">
+        <p className="text-sm" style={{ color: 'var(--coral)' }}>{error.message}</p>
+      </div>
+    );
   }
 
-  // Show detail view if a list is selected
   if (selectedListId && selectedList) {
     return (
       <ShoppingListDetail
@@ -137,7 +142,6 @@ export const ShoppingLists = () => {
     );
   }
 
-  // Show list view
   return (
     <>
       <ShoppingListsView

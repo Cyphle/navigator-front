@@ -37,8 +37,8 @@ describe('CreateCalendarForm', () => {
       <CreateCalendarForm open={true} onCancel={onCancel} onSubmit={onSubmit} families={[]} />
     );
 
-    const personalRadio = screen.getByRole('radio', { name: /personnel/i });
-    expect(personalRadio).toBeChecked();
+    expect(screen.getByRole('button', { name: /personnel/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /partagé/i })).toBeInTheDocument();
   });
 
   test('shows shared option', () => {
@@ -51,7 +51,7 @@ describe('CreateCalendarForm', () => {
       />
     );
 
-    expect(screen.getByText(/partagé avec une famille/i)).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /partagé/i })).toBeInTheDocument();
   });
 
   test('shows family selector when shared type selected', () => {
@@ -59,8 +59,7 @@ describe('CreateCalendarForm', () => {
       <CreateCalendarForm open={true} onCancel={onCancel} onSubmit={onSubmit} families={mockFamilies} />
     );
 
-    const sharedRadio = screen.getByRole('radio', { name: /partagé avec une famille/i });
-    fireEvent.click(sharedRadio);
+    fireEvent.click(screen.getByRole('button', { name: /partagé/i }));
 
     expect(screen.getByText('Famille')).toBeInTheDocument();
   });
@@ -86,8 +85,7 @@ describe('CreateCalendarForm', () => {
       />
     );
 
-    const submitButton = screen.getByRole('button', { name: /créer/i });
-    expect(submitButton).toHaveClass('ant-btn-loading');
+    expect(screen.getByText('Création...')).toBeInTheDocument();
   });
 
   test('shows color selector', () => {

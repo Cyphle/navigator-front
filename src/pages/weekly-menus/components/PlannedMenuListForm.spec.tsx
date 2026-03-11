@@ -28,8 +28,8 @@ describe('PlannedMenuListForm', () => {
       expect(screen.getByText('Nouvelle liste de menus planifiés')).toBeInTheDocument();
     });
 
-    expect(screen.getByLabelText('Nom de la liste')).toBeInTheDocument();
-    expect(screen.getByLabelText('Date de début')).toBeInTheDocument();
+    expect(screen.getByLabelText('Nom de la liste *')).toBeInTheDocument();
+    expect(screen.getByLabelText('Date de début *')).toBeInTheDocument();
   });
 
   test('calls onCancel when cancel button clicked', async () => {
@@ -82,12 +82,7 @@ describe('PlannedMenuListForm', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: /créer/i })).toBeInTheDocument();
+      expect(screen.getByText('Création...')).toBeInTheDocument();
     });
-
-    const submitButton = screen.getByRole('button', { name: /créer/i });
-
-    // Ant Design loading button has the loading class
-    expect(submitButton.className).toContain('ant-btn-loading');
   });
 });

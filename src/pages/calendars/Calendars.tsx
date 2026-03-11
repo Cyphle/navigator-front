@@ -1,6 +1,5 @@
-import './Calendars.scss';
 import { useState } from 'react';
-import { message } from 'antd';
+import { useToast } from '@/hooks/use-toast';
 import {
   useFetchAllCalendars,
   useCreateCalendar,
@@ -14,14 +13,16 @@ import { CalendarsView } from './components/CalendarsView';
 import { CreateCalendarForm } from './components/CreateCalendarForm';
 import { CreateEventForm } from './components/CreateEventForm';
 import type { CreateCalendarInput, CreateCalendarEventInput, UpdateCalendarEventInput } from '../../stores/calendars/calendars.types';
+import { Loader2 } from 'lucide-react';
 
 export const Calendars = () => {
   const [isCalendarFormOpen, setIsCalendarFormOpen] = useState(false);
   const [isEventFormOpen, setIsEventFormOpen] = useState(false);
   const [selectedCalendarId, setSelectedCalendarId] = useState<number | null>(null);
   const [selectedEventId, setSelectedEventId] = useState<number | null>(null);
+  const { toast } = useToast();
 
-  const { data: calendars, isPending, isError, error } = useFetchAllCalendars();
+  const { data: calendars, isPending, isError } = useFetchAllCalendars();
   const { data: families } = useFetchFamilies();
   const createCalendarMutation = useCreateCalendar();
   const deleteCalendarMutation = useDeleteCalendar();
@@ -32,41 +33,32 @@ export const Calendars = () => {
   const handleCreateCalendar = (input: CreateCalendarInput) => {
     createCalendarMutation.mutate(input, {
       onSuccess: () => {
-        message.success('Calendrier créé avec succès');
+        toast({ title: 'Calendrier créé avec succès' });
         setIsCalendarFormOpen(false);
       },
-      onError: () => {
-        message.error('Erreur lors de la création du calendrier');
-      },
+      onError: () => toast({ title: 'Erreur lors de la création du calendrier', variant: 'destructive' }),
     });
   };
 
   const handleDeleteCalendar = (id: number) => {
     deleteCalendarMutation.mutate(id, {
-      onSuccess: () => {
-        message.success('Calendrier supprimé');
-      },
-      onError: () => {
-        message.error('Erreur lors de la suppression');
-      },
+      onSuccess: () => toast({ title: 'Calendrier supprimé' }),
+      onError: () => toast({ title: 'Erreur lors de la suppression', variant: 'destructive' }),
     });
   };
 
   const handleCreateEvent = (input: CreateCalendarEventInput) => {
     if (!selectedCalendarId) return;
-
     addEventMutation.mutate(
       { calendarId: selectedCalendarId, input },
       {
         onSuccess: () => {
-          message.success('Événement ajouté');
+          toast({ title: 'Événement ajouté' });
           setIsEventFormOpen(false);
           setSelectedCalendarId(null);
           setSelectedEventId(null);
         },
-        onError: () => {
-          message.error("Erreur lors de l'ajout de l'événement");
-        },
+        onError: () => toast({ title: "Erreur lors de l'ajout de l'événement", variant: 'destructive' }),
       }
     );
   };
@@ -75,12 +67,8 @@ export const Calendars = () => {
     updateEventMutation.mutate(
       { calendarId, eventId, input },
       {
-        onSuccess: () => {
-          message.success('Événement mis à jour');
-        },
-        onError: () => {
-          message.error("Erreur lors de la mise à jour de l'événement");
-        },
+        onSuccess: () => toast({ title: 'Événement mis à jour' }),
+        onError: () => toast({ title: "Erreur lors de la mise à jour de l'événement", variant: 'destructive' }),
       }
     );
   };
@@ -89,12 +77,8 @@ export const Calendars = () => {
     deleteEventMutation.mutate(
       { calendarId, eventId },
       {
-        onSuccess: () => {
-          message.success('Événement supprimé');
-        },
-        onError: () => {
-          message.error("Erreur lors de la suppression de l'événement");
-        },
+        onSuccess: () => toast({ title: 'Événement supprimé' }),
+        onError: () => toast({ title: "Erreur lors de la suppression de l'événement", variant: 'destructive' }),
       }
     );
   };
@@ -112,11 +96,27 @@ export const Calendars = () => {
   };
 
   if (isPending) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex flex-col items-center justify-center py-24 gap-4 min-h-full" style={{ background: 'var(--sand)' }}>
+        <Loader2 className="w-8 h-8 animate-spin" style={{ color: 'var(--ocean)' }} />
+        <p className="text-xs uppercase tracking-widest font-medium" style={{ color: 'var(--mist)' }}>
+          Loading...
+        </p>
+      </div>
+    );
   }
 
   if (isError) {
-    return <div>Error: {error.message}</div>;
+    return (
+      <div className="flex items-center justify-center p-12 min-h-full" style={{ background: 'var(--sand)' }}>
+        <div
+          className="rounded-[var(--radius-lg)] p-8 flex flex-col items-center gap-4"
+          style={{ background: 'var(--coral-pale)', color: 'var(--coral)' }}
+        >
+          <p className="text-sm font-medium">Une erreur est survenue (error loading calendars).</p>
+        </div>
+      </div>
+    );
   }
 
   return (
@@ -129,7 +129,6 @@ export const Calendars = () => {
         onUpdateEvent={handleUpdateEvent}
         onDeleteEvent={handleDeleteEvent}
       />
-
       <CreateCalendarForm
         open={isCalendarFormOpen}
         onCancel={() => setIsCalendarFormOpen(false)}
@@ -137,7 +136,6 @@ export const Calendars = () => {
         isLoading={createCalendarMutation.isPending}
         families={families || []}
       />
-
       <CreateEventForm
         open={isEventFormOpen}
         onCancel={handleCloseEventForm}
