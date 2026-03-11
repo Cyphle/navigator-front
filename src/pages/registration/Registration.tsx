@@ -78,10 +78,10 @@ export const Registration = () => {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row min-h-screen">
+    <div className="flex flex-col md:flex-row min-h-screen">
       {/* ── Left — dark hero ── */}
       <section
-        className="flex-1 relative overflow-hidden flex flex-col justify-center px-12 py-16 lg:px-16"
+        className="flex-1 relative overflow-hidden flex flex-col justify-center px-6 py-10 md:px-12 md:py-16 lg:px-16"
         style={{ background: 'linear-gradient(135deg, var(--stone) 0%, #1A2744 100%)' }}
       >
         {/* Decorative blobs */}
@@ -124,8 +124,8 @@ export const Registration = () => {
             Centralise agenda, recettes, tâches et listes de courses pour toute la famille.
           </p>
 
-          {/* Features list */}
-          <ul className="space-y-5 list-none p-0 m-0">
+          {/* Features list — tablet+ only */}
+          <ul className="hidden md:flex flex-col space-y-5 list-none p-0 m-0">
             {FEATURES.map((feature) => (
               <li key={feature.title} className="flex items-start gap-4">
                 <div
@@ -146,7 +146,7 @@ export const Registration = () => {
 
       {/* ── Right — form ── */}
       <section
-        className="flex-1 flex flex-col justify-center px-12 py-16 lg:px-16"
+        className="flex-1 flex flex-col justify-center px-6 py-10 md:px-12 md:py-16 lg:px-16 rounded-t-3xl md:rounded-none"
         style={{ background: 'var(--white)' }}
       >
         <div className="max-w-md w-full mx-auto">

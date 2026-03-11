@@ -46,11 +46,11 @@ interface InfoRowProps {
 }
 
 const InfoRow = ({ label, value }: InfoRowProps) => (
-  <div className="flex items-center justify-between py-3" style={{ borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
+  <div className="grid grid-cols-2 items-center py-3" style={{ borderBottom: '1px solid rgba(0,0,0,0.06)' }}>
     <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--mist)' }}>
       {label}
     </span>
-    <span className="text-sm font-semibold" style={{ color: 'var(--stone)' }}>
+    <span className="text-sm font-semibold text-right md:text-left" style={{ color: 'var(--stone)' }}>
       {value || '-'}
     </span>
   </div>
@@ -91,7 +91,7 @@ const ProfileContent = ({ data }: { data: Family[] }) => {
   );
 
   return (
-    <div className="p-4 md:p-8 max-w-2xl" style={{ background: 'var(--sand)', minHeight: '100%' }}>
+    <div className="p-4 md:p-8 w-full md:max-w-2xl" style={{ background: 'var(--sand)', minHeight: '100%' }}>
       {/* Page title */}
       <div className="mb-8">
         <h1 className="font-display text-2xl md:text-3xl font-bold" style={{ color: 'var(--stone)' }}>

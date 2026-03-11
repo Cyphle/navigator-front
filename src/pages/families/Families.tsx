@@ -110,7 +110,7 @@ const FamiliesContent = ({ data }: { data: Family[] }) => {
       </div>
 
       {/* Cards grid */}
-      <section className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+      <section className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-5">
         {data.map((family) => (
           <div
             key={family.id}

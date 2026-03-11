@@ -46,7 +46,7 @@ export const TodoListsView = ({ lists, onCreateNew, onSelectList, onDelete }: To
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
           {lists.map((list) => (
             <article
               key={list.id}

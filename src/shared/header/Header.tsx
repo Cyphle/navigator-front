@@ -4,7 +4,7 @@ import { Option } from '../../helpers/option.ts';
 import { UserInfo } from '../../stores/user/user.types.ts';
 import { logout } from '../../services/user.service.ts';
 import { redirectToLogin } from '../../helpers/navigation.ts';
-import { Bell, LogOut, User, Menu as MenuIcon } from 'lucide-react';
+import { Bell, LogOut, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -14,6 +14,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+
+const AnchorLogo = () => (
+  <svg viewBox="0 0 24 24" fill="white" aria-hidden="true" className="w-4 h-4">
+    <path d="M12 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6Zm0 2a1 1 0 1 0 0 2 1 1 0 0 0 0-2Zm0 6c.55 0 1 .45 1 1v1.28A7.01 7.01 0 0 1 19 19h-2a5 5 0 0 0-4-4.9V19l3 2-1 1.5-2-1.33L11 22.5 10 21l3-2v-4.9A5 5 0 0 0 9 19H7a7.01 7.01 0 0 1 6-6.72V11c0-.55.45-1 1-1Z" />
+  </svg>
+);
 
 const PAGE_CONTENT: Record<string, { title: string; subtitle: string }> = {
   '/families':      { title: 'Familles',                     subtitle: 'Mes familles, pour vivre ensemble' },
@@ -27,7 +33,7 @@ const PAGE_CONTENT: Record<string, { title: string; subtitle: string }> = {
 
 const DEFAULT_CONTENT = { title: 'Dashboard', subtitle: 'Gérer la famille au même endroit' };
 
-export const Header = ({ userInfo, onMenuOpen }: { userInfo: Option<UserInfo>; onMenuOpen?: () => void }) => {
+export const Header = ({ userInfo }: { userInfo: Option<UserInfo> }) => {
   const { userState } = useUser();
   const navigate = useNavigate();
   const location = useLocation();
@@ -51,26 +57,30 @@ export const Header = ({ userInfo, onMenuOpen }: { userInfo: Option<UserInfo>; o
       className="bg-white px-4 md:px-7 py-3 md:py-4 flex items-center justify-between sticky top-0 z-20"
       style={{ boxShadow: 'var(--shadow-soft)' }}
     >
-      {/* Left: hamburger (mobile) + page title */}
+      {/* Left: mobile logo OR page title on tablet+ */}
       <div className="flex items-center gap-3 min-w-0">
-        {/* Hamburger button — mobile/tablet only */}
-        <button
-          className="lg:hidden w-9 h-9 rounded-lg flex items-center justify-center shrink-0 transition-colors hover:bg-[var(--ocean-pale)]"
-          style={{ background: 'var(--sand)' }}
-          onClick={onMenuOpen}
-          aria-label="Ouvrir le menu"
-        >
-          <MenuIcon className="w-5 h-5" style={{ color: 'var(--stone)' }} />
-        </button>
+        {/* Navigator logo — mobile only (sidebar hidden on mobile) */}
+        <div className="flex items-center gap-2 md:hidden shrink-0">
+          <div
+            className="w-8 h-8 rounded-[10px] flex items-center justify-center"
+            style={{ background: 'linear-gradient(135deg, var(--ocean) 0%, var(--ocean-light) 100%)' }}
+          >
+            <AnchorLogo />
+          </div>
+          <span className="font-display font-semibold text-base" style={{ color: 'var(--stone)' }}>
+            Navigator
+          </span>
+        </div>
 
-        <div className="min-w-0">
+        {/* Page title — tablet+ */}
+        <div className="hidden md:block min-w-0">
           <h1
-            className="font-display text-lg md:text-2xl font-bold m-0 truncate"
+            className="font-display text-2xl font-bold m-0 truncate"
             style={{ color: 'var(--stone)' }}
           >
             {title}
           </h1>
-          <p className="text-xs md:text-sm mt-0.5 m-0 truncate hidden sm:block" style={{ color: 'var(--mist)' }}>
+          <p className="text-sm mt-0.5 m-0 truncate hidden lg:block" style={{ color: 'var(--mist)' }}>
             {subtitle}
           </p>
         </div>
@@ -103,7 +113,7 @@ export const Header = ({ userInfo, onMenuOpen }: { userInfo: Option<UserInfo>; o
                     {initials}
                   </div>
                   <span
-                    className="text-sm font-semibold hidden md:inline group-hover:opacity-80 transition-opacity"
+                    className="text-sm font-semibold hidden lg:inline group-hover:opacity-80 transition-opacity"
                     style={{ color: 'var(--stone)' }}
                   >
                     {fullName}

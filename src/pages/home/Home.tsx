@@ -59,7 +59,7 @@ const HomeContent = ({ data }: { data: DashboardData }) => {
   return (
     <div className="p-4 md:p-6 min-h-full" style={{ background: 'var(--sand)' }}>
       {/* Stats grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4 mb-6 md:mb-8">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-6 md:mb-8">
         {statCards.map((stat, i) => (
           <div
             key={i}

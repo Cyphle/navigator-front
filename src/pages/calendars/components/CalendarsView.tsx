@@ -128,7 +128,7 @@ export const CalendarsView = ({
     const events = getEventsForDate(day);
     const isToday = day.isSame(today, 'day');
     return (
-      <div className={cn('min-h-[80px] p-1.5 border-b border-r border-black/5', !isCurrentMonth && 'opacity-40')}>
+      <div className={cn('min-h-[52px] md:min-h-[80px] p-1 md:p-1.5 border-b border-r border-black/5', !isCurrentMonth && 'opacity-40')}>
         <div className="flex items-center justify-between mb-1">
           <span
             className={cn(
@@ -196,7 +196,7 @@ export const CalendarsView = ({
       {/* Calendar card */}
       <div className="bg-white rounded-[var(--radius-lg)] overflow-hidden" style={{ boxShadow: 'var(--shadow-soft)' }}>
         {/* Controls bar */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 px-5 py-4 border-b border-black/5">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 px-4 md:px-5 py-3 md:py-4 border-b border-black/5">
           {/* Navigation */}
           <div className="flex items-center gap-2">
             <button
@@ -206,7 +206,7 @@ export const CalendarsView = ({
             >
               <ChevronLeft className="w-4 h-4" style={{ color: 'var(--stone)' }} />
             </button>
-            <h3 className="font-display text-base font-semibold min-w-[160px] text-center capitalize" style={{ color: 'var(--stone)' }}>
+            <h3 className="font-display text-sm md:text-base font-semibold min-w-[120px] md:min-w-[160px] text-center capitalize" style={{ color: 'var(--stone)' }}>
               {currentLabel}
             </h3>
             <button
@@ -217,7 +217,7 @@ export const CalendarsView = ({
               <ChevronRight className="w-4 h-4" style={{ color: 'var(--stone)' }} />
             </button>
             <button
-              className="text-xs font-semibold px-3 py-1.5 rounded-[var(--radius-sm)] border border-black/10 transition-colors hover:bg-[var(--ocean-pale)] ml-1"
+              className="hidden md:block text-xs font-semibold px-3 py-1.5 rounded-[var(--radius-sm)] border border-black/10 transition-colors hover:bg-[var(--ocean-pale)] ml-1"
               style={{ color: 'var(--ocean)' }}
               onClick={() => setSelectedDate(dayjs())}
             >
@@ -227,19 +227,36 @@ export const CalendarsView = ({
 
           {/* View mode */}
           <div className="flex rounded-[var(--radius-sm)] border border-black/10 overflow-hidden">
-            {(['month', 'week', 'year'] as ViewMode[]).map((mode) => (
-              <button
-                key={mode}
-                className={cn(
-                  'px-3 py-1.5 text-xs font-semibold transition-colors',
-                  viewMode === mode ? 'text-white' : 'hover:bg-[var(--sand)]'
-                )}
-                style={viewMode === mode ? { background: 'var(--ocean)', color: 'white' } : { color: 'var(--stone)' }}
-                onClick={() => setViewMode(mode)}
-              >
-                {mode === 'month' ? 'Mois' : mode === 'week' ? 'Semaine' : 'Année'}
-              </button>
-            ))}
+            <button
+              className={cn(
+                'px-3 py-1.5 text-xs font-semibold transition-colors',
+                viewMode === 'month' ? 'text-white' : 'hover:bg-[var(--sand)]'
+              )}
+              style={viewMode === 'month' ? { background: 'var(--ocean)', color: 'white' } : { color: 'var(--stone)' }}
+              onClick={() => setViewMode('month')}
+            >
+              Mois
+            </button>
+            <button
+              className={cn(
+                'hidden md:block px-3 py-1.5 text-xs font-semibold transition-colors',
+                viewMode === 'week' ? 'text-white' : 'hover:bg-[var(--sand)]'
+              )}
+              style={viewMode === 'week' ? { background: 'var(--ocean)', color: 'white' } : { color: 'var(--stone)' }}
+              onClick={() => setViewMode('week')}
+            >
+              Semaine
+            </button>
+            <button
+              className={cn(
+                'hidden md:block px-3 py-1.5 text-xs font-semibold transition-colors',
+                viewMode === 'year' ? 'text-white' : 'hover:bg-[var(--sand)]'
+              )}
+              style={viewMode === 'year' ? { background: 'var(--ocean)', color: 'white' } : { color: 'var(--stone)' }}
+              onClick={() => setViewMode('year')}
+            >
+              Année
+            </button>
           </div>
         </div>
 
@@ -249,7 +266,8 @@ export const CalendarsView = ({
             <div className="grid grid-cols-7 border-b border-black/5">
               {WEEK_DAYS.map((d) => (
                 <div key={d} className="py-2 text-center text-[10px] font-semibold uppercase tracking-wider" style={{ color: 'var(--mist)' }}>
-                  {d}
+                  <span className="md:hidden">{d[0]}</span>
+                  <span className="hidden md:inline">{d}</span>
                 </div>
               ))}
             </div>

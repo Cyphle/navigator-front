@@ -14,7 +14,6 @@ import { PlannedMenuListForm } from './components/PlannedMenuListForm';
 import { PlannedMenuListDetail } from './components/PlannedMenuListDetail';
 import type { CreatePlannedMenuListInput } from '../../stores/planned-menus/planned-menus.types';
 import { Loader2 } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 
 export const WeeklyMenus = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -116,19 +115,23 @@ export const WeeklyMenus = () => {
 
   if (isPending) {
     return (
-      <div className="flex flex-col items-center justify-center py-24 gap-4 bg-gray-50 min-h-full">
-        <Loader2 className="w-8 h-8 text-blue-500 animate-spin" />
-        <p className="text-[10px] uppercase tracking-[0.2em] font-light text-gray-400">Chargement des menus...</p>
+      <div className="flex flex-col items-center justify-center py-24 gap-4 min-h-full" style={{ background: 'var(--sand)' }}>
+        <Loader2 className="w-8 h-8 animate-spin" style={{ color: 'var(--ocean)' }} />
+        <p className="text-xs uppercase tracking-widest font-medium" style={{ color: 'var(--mist)' }}>
+          Loading...
+        </p>
       </div>
     );
   }
 
   if (isError) {
     return (
-      <div className="p-8 bg-gray-50 min-h-full">
-        <div className="bg-red-50 p-8 border border-red-100 flex flex-col items-center gap-4">
-          <p className="text-red-500 font-light text-sm">Une erreur est survenue lors du chargement des menus.</p>
-          <Button variant="outline" className="rounded-none">Réessayer</Button>
+      <div className="flex items-center justify-center p-12 min-h-full" style={{ background: 'var(--sand)' }}>
+        <div
+          className="rounded-[var(--radius-lg)] p-8 flex flex-col items-center gap-4"
+          style={{ background: 'var(--coral-pale)', color: 'var(--coral)' }}
+        >
+          <p className="text-sm font-medium">Une erreur est survenue (error loading menus).</p>
         </div>
       </div>
     );
@@ -149,7 +152,7 @@ export const WeeklyMenus = () => {
 
   // Show list view
   return (
-    <div className="min-h-full bg-gray-50">
+    <div className="min-h-full" style={{ background: 'var(--sand)' }}>
       <PlannedMenuListsView
         lists={lists || []}
         onCreateNew={() => setIsFormOpen(true)}

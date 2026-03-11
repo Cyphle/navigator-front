@@ -22,11 +22,7 @@ const resolvePath = (item: RouteDefinitionConfig): string | undefined => {
   return item.path.startsWith('/') ? item.path : `/${item.path}`;
 };
 
-interface MenuProps {
-  isCollapsed?: boolean;
-}
-
-export const Menu = ({ isCollapsed }: MenuProps) => {
+export const Menu = () => {
   const { userState } = useUser();
   const isAuthenticated = userState.username !== '';
 
@@ -51,10 +47,10 @@ export const Menu = ({ isCollapsed }: MenuProps) => {
 
           const content = (isActive: boolean) => (
             <>
-              {/* Active left border */}
+              {/* Active left border — desktop only */}
               {isActive && (
                 <span
-                  className="absolute left-0 top-1.5 bottom-1.5 w-[3px] rounded-r-sm"
+                  className="absolute left-0 top-1.5 bottom-1.5 w-[3px] rounded-r-sm hidden lg:block"
                   style={{ background: 'var(--sage-light)' }}
                   aria-hidden="true"
                 />
@@ -65,13 +61,8 @@ export const Menu = ({ isCollapsed }: MenuProps) => {
                 style={{ background: dotColor }}
                 aria-hidden="true"
               />
-              {/* Label */}
-              <span
-                className={cn(
-                  "transition-all duration-300 whitespace-nowrap overflow-hidden text-sm font-medium",
-                  isCollapsed ? "opacity-0 w-0" : "opacity-100"
-                )}
-              >
+              {/* Label — desktop only */}
+              <span className="hidden lg:block text-sm font-medium whitespace-nowrap overflow-hidden">
                 {item.name}
               </span>
             </>
@@ -83,11 +74,11 @@ export const Menu = ({ isCollapsed }: MenuProps) => {
                 <NavLink
                   to={path}
                   className={({ isActive }) => cn(
-                    "relative flex items-center gap-3 px-4 py-2.5 no-underline transition-all duration-150 rounded-sm",
+                    'relative flex items-center gap-3 py-2.5 no-underline transition-all duration-150 rounded-sm',
+                    'md:justify-center md:px-0 md:py-3 lg:justify-start lg:px-4',
                     isActive
-                      ? "bg-white/[0.08] text-white"
-                      : "text-white/55 hover:text-white hover:bg-white/[0.05]",
-                    isCollapsed && "justify-center px-3"
+                      ? 'bg-white/[0.08] text-white'
+                      : 'text-white/55 hover:text-white hover:bg-white/[0.05]',
                   )}
                 >
                   {({ isActive }) => content(isActive)}
@@ -95,8 +86,8 @@ export const Menu = ({ isCollapsed }: MenuProps) => {
               ) : (
                 <button
                   className={cn(
-                    "relative flex items-center gap-3 px-4 py-2.5 text-white/30 cursor-not-allowed opacity-50 w-full text-left rounded-sm",
-                    isCollapsed && "justify-center px-3"
+                    'relative flex items-center gap-3 py-2.5 text-white/30 cursor-not-allowed opacity-50 w-full text-left rounded-sm',
+                    'md:justify-center md:px-0 md:py-3 lg:justify-start lg:px-4',
                   )}
                   type="button"
                   aria-disabled="true"
