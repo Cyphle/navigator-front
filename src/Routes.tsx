@@ -143,14 +143,21 @@ export const ROUTES_PATHS: RouteDefinitionConfig[] = [
 export const ROUTES_WITH_COMPONENT = ROUTES_PATHS
   .filter((route): route is RouteDefinitionWithComponent => !!route.element);
 
-const ROUTE_OBJECTS: RouteObject[] = ROUTES_WITH_COMPONENT.map((route) => ({
-  index: route.index,
-  path: route.path,
-  element: route.element,
-  loader: route.loader
-}));
+/** Routes rendered inside the authenticated AppLayout (Main) */
+const PRIVATE_ROUTE_OBJECTS: RouteObject[] = ROUTES_WITH_COMPONENT
+  .filter((route) => route.isAuth)
+  .map((route) => ({
+    index: route.index,
+    path: route.path,
+    element: route.element,
+    loader: route.loader,
+  }));
 
 export const APP_ROUTES: RouteObject[] = [
+  {
+    path: '/registration',
+    element: <Registration />,
+  },
   {
     path: '/',
     element: <Main />,
@@ -159,7 +166,7 @@ export const APP_ROUTES: RouteObject[] = [
     children: [
       {
         errorElement: <ErrorPage />,
-        children: ROUTE_OBJECTS
+        children: PRIVATE_ROUTE_OBJECTS,
       }
     ]
   },

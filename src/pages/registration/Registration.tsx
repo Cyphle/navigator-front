@@ -78,10 +78,10 @@ export const Registration = () => {
   };
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen">
-      {/* ── Left — dark hero ── */}
+    <div className="flex h-screen overflow-hidden">
+      {/* ── Left — dark hero — tablet+ only ── */}
       <section
-        className="flex-1 relative overflow-hidden flex flex-col justify-center px-6 py-10 md:px-12 md:py-16 lg:px-16"
+        className="hidden md:flex flex-1 relative overflow-hidden flex-col justify-center px-12 py-16 lg:px-16"
         style={{ background: 'linear-gradient(135deg, var(--stone) 0%, #1A2744 100%)' }}
       >
         {/* Decorative blobs */}
@@ -124,8 +124,8 @@ export const Registration = () => {
             Centralise agenda, recettes, tâches et listes de courses pour toute la famille.
           </p>
 
-          {/* Features list — tablet+ only */}
-          <ul className="hidden md:flex flex-col space-y-5 list-none p-0 m-0">
+          {/* Features list */}
+          <ul className="flex flex-col space-y-5 list-none p-0 m-0">
             {FEATURES.map((feature) => (
               <li key={feature.title} className="flex items-start gap-4">
                 <div
@@ -146,11 +146,25 @@ export const Registration = () => {
 
       {/* ── Right — form ── */}
       <section
-        className="flex-1 flex flex-col justify-center px-6 py-10 md:px-12 md:py-16 lg:px-16 rounded-t-3xl md:rounded-none"
-        style={{ background: 'var(--white)' }}
+        className="flex flex-col w-full md:w-[440px] md:flex-none bg-white overflow-y-auto px-8 py-8"
       >
-        <div className="max-w-md w-full mx-auto">
-          <div className="mb-8">
+        <div className="w-full max-w-sm mx-auto flex flex-col justify-center min-h-full">
+          {/* Mobile logo — visible only when left panel is hidden */}
+          <div className="flex items-center gap-2 mb-6 md:hidden">
+            <div
+              className="w-8 h-8 rounded-[10px] flex items-center justify-center shrink-0"
+              style={{ background: 'linear-gradient(135deg, var(--ocean) 0%, var(--ocean-light) 100%)' }}
+            >
+              <svg viewBox="0 0 24 24" fill="white" className="w-4 h-4" aria-hidden="true">
+                <path d="M12 2a3 3 0 1 1 0 6 3 3 0 0 1 0-6Zm0 2a1 1 0 1 0 0 2 1 1 0 0 0 0-2Zm0 6c.55 0 1 .45 1 1v1.28A7.01 7.01 0 0 1 19 19h-2a5 5 0 0 0-4-4.9V19l3 2-1 1.5-2-1.33L11 22.5 10 21l3-2v-4.9A5 5 0 0 0 9 19H7a7.01 7.01 0 0 1 6-6.72V11c0-.55.45-1 1-1Z" />
+              </svg>
+            </div>
+            <span className="font-display font-semibold text-base" style={{ color: 'var(--stone)' }}>
+              Navigator
+            </span>
+          </div>
+
+          <div className="mb-5">
             <h2
               className="font-display text-2xl font-bold mb-1"
               style={{ color: 'var(--stone)' }}
@@ -162,21 +176,21 @@ export const Registration = () => {
             </p>
           </div>
 
-          <form className="space-y-5" onSubmit={handleSubmit(onSubmit)}>
-            <div className="grid grid-cols-2 gap-4">
+          <form className="space-y-3" onSubmit={handleSubmit(onSubmit)}>
+            <div className="grid grid-cols-2 gap-3">
               <Controller
                 name="username"
                 control={control}
                 rules={{ required: true }}
                 render={({ field }) => (
-                  <div className="col-span-2 space-y-1.5">
+                  <div className="col-span-2 space-y-1">
                     <Label htmlFor={field.name} className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--mist)' }}>
                       Nom d'utilisateur
                     </Label>
                     <Input
                       id={field.name}
                       data-testid="username-input"
-                      className="rounded-[var(--radius-sm)] border-black/10 focus:border-[var(--ocean-light)] focus-visible:ring-0 transition-colors"
+                      className="h-9 rounded-[var(--radius-sm)] border-black/10 focus:border-[var(--ocean-light)] focus-visible:ring-0 transition-colors"
                       style={{ background: 'var(--sand)' }}
                       {...field}
                       disabled={createProfileIsPending}
@@ -191,7 +205,7 @@ export const Registration = () => {
                 control={control}
                 rules={{ required: true }}
                 render={({ field }) => (
-                  <div className="col-span-2 space-y-1.5">
+                  <div className="col-span-2 space-y-1">
                     <Label htmlFor={field.name} className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--mist)' }}>
                       Email
                     </Label>
@@ -199,7 +213,7 @@ export const Registration = () => {
                       id={field.name}
                       data-testid="email-input"
                       type="email"
-                      className="rounded-[var(--radius-sm)] border-black/10 focus:border-[var(--ocean-light)] focus-visible:ring-0 transition-colors"
+                      className="h-9 rounded-[var(--radius-sm)] border-black/10 focus:border-[var(--ocean-light)] focus-visible:ring-0 transition-colors"
                       style={{ background: 'var(--sand)' }}
                       {...field}
                       disabled={createProfileIsPending}
@@ -214,14 +228,14 @@ export const Registration = () => {
                 control={control}
                 rules={{ required: true }}
                 render={({ field }) => (
-                  <div className="space-y-1.5">
+                  <div className="space-y-1">
                     <Label htmlFor={field.name} className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--mist)' }}>
                       Prénom
                     </Label>
                     <Input
                       id={field.name}
                       data-testid="firstname-input"
-                      className="rounded-[var(--radius-sm)] border-black/10 focus:border-[var(--ocean-light)] focus-visible:ring-0 transition-colors"
+                      className="h-9 rounded-[var(--radius-sm)] border-black/10 focus:border-[var(--ocean-light)] focus-visible:ring-0 transition-colors"
                       style={{ background: 'var(--sand)' }}
                       {...field}
                       disabled={createProfileIsPending}
@@ -236,14 +250,14 @@ export const Registration = () => {
                 control={control}
                 rules={{ required: true }}
                 render={({ field }) => (
-                  <div className="space-y-1.5">
+                  <div className="space-y-1">
                     <Label htmlFor={field.name} className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--mist)' }}>
                       Nom
                     </Label>
                     <Input
                       id={field.name}
                       data-testid="lastname-input"
-                      className="rounded-[var(--radius-sm)] border-black/10 focus:border-[var(--ocean-light)] focus-visible:ring-0 transition-colors"
+                      className="h-9 rounded-[var(--radius-sm)] border-black/10 focus:border-[var(--ocean-light)] focus-visible:ring-0 transition-colors"
                       style={{ background: 'var(--sand)' }}
                       {...field}
                       disabled={createProfileIsPending}
@@ -258,7 +272,7 @@ export const Registration = () => {
                 control={control}
                 rules={{ required: true }}
                 render={({ field }) => (
-                  <div className="col-span-2 space-y-1.5">
+                  <div className="col-span-2 space-y-1">
                     <Label htmlFor={field.name} className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--mist)' }}>
                       Mot de passe
                     </Label>
@@ -266,7 +280,7 @@ export const Registration = () => {
                       id={field.name}
                       data-testid="password-input"
                       type="password"
-                      className="rounded-[var(--radius-sm)] border-black/10 focus:border-[var(--ocean-light)] focus-visible:ring-0 transition-colors"
+                      className="h-9 rounded-[var(--radius-sm)] border-black/10 focus:border-[var(--ocean-light)] focus-visible:ring-0 transition-colors"
                       style={{ background: 'var(--sand)' }}
                       {...field}
                       disabled={createProfileIsPending}
@@ -277,11 +291,11 @@ export const Registration = () => {
               />
             </div>
 
-            <div className="flex flex-col gap-3 pt-2">
+            <div className="flex flex-col gap-3 pt-1">
               <button
                 type="submit"
                 disabled={!isValid || createProfileIsPending}
-                className="w-full text-white text-sm font-semibold py-3 rounded-[var(--radius-sm)] transition-all duration-150 hover:-translate-y-px disabled:opacity-50 disabled:cursor-not-allowed disabled:translate-y-0"
+                className="w-full text-white text-sm font-semibold py-2.5 rounded-[var(--radius-sm)] transition-all duration-150 hover:-translate-y-px disabled:opacity-50 disabled:cursor-not-allowed disabled:translate-y-0"
                 style={{
                   background: 'linear-gradient(135deg, var(--ocean) 0%, var(--ocean-light) 100%)',
                   boxShadow: '0 3px 12px rgba(27,79,138,0.3)',

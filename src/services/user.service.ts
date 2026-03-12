@@ -4,7 +4,7 @@ import { none, Option, some } from '../helpers/option';
 import { HttpError, JsonError } from '../helpers/error';
 
 export const getUserInfo = (): Promise<Option<UserInfo>> => {
-  return getOne(`user/info`, responseToUserInfo)
+  return getOne(`users/info`, responseToUserInfo)
     .catch((_: JsonError<HttpError>) => {
       return none;
     });

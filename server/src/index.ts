@@ -20,7 +20,7 @@ const fastify = initFastify(
     { plugin: profilePlugin, routesPrefix: '/profiles' },
     { plugin: accountPlugin, routesPrefix: '/accounts' },
     { plugin: loginPlugin, routesPrefix: '/login' },
-    { plugin: userPlugin, routesPrefix: '/user' },
+    { plugin: userPlugin, routesPrefix: '/users' },
     { plugin: securityPlugin, routesPrefix: '' },
     { plugin: dashboardPlugin, routesPrefix: '/dashboard' },
     { plugin: familiesPlugin, routesPrefix: '/families' },
