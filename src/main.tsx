@@ -1,5 +1,5 @@
-import { Outlet, useLoaderData, useNavigate } from 'react-router-dom';
-import { useEffect, useMemo } from 'react';
+import { Outlet, redirect, useLoaderData } from 'react-router-dom';
+import { useMemo } from 'react';
 import { UserContextProvider } from './contexts/user/user.context.tsx';
 import { Option } from './helpers/option.ts';
 import '@fontsource-variable/geist';
@@ -15,26 +15,21 @@ import { getUserInfo } from './services/user.service.ts';
 
 export async function initialDataLoader() {
   const userInfo = await getUserInfo();
+  if (!userInfo.isSome()) {
+    return redirect('/registration');
+  }
   return { userInfo };
 }
 
 const Main = () => {
   const { userInfo } = useLoaderData() as { userInfo: Option<UserInfo> };
-  const navigate = useNavigate();
 
-  const isAuthenticated = userInfo.isSome();
   const initialUser = useMemo(() => userInfo.getOrElse({
     username: '',
     email: '',
     firstName: '',
     lastName: '',
   }), [userInfo]);
-
-  useEffect(() => {
-    if (!isAuthenticated) {
-      navigate('/registration', { replace: true });
-    }
-  }, [isAuthenticated, navigate]);
 
   return (
     <UserContextProvider initialUser={initialUser}>
