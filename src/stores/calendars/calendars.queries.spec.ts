@@ -1,5 +1,5 @@
 import { waitFor } from '@testing-library/react';
-import { renderQueryHook, renderMutateHook } from '../../../test-utils/render';
+import { renderQueryHook, renderMutateHook, TEST_FAMILY_ID } from '../../../test-utils/render';
 import { aCalendar, aCalendarEvent } from '../../../test-utils/factories';
 import * as calendarsService from '../../services/calendars.service';
 import {
@@ -34,7 +34,7 @@ describe('calendars queries', () => {
 
     const { result } = renderQueryHook(() => useFetchAllCalendars());
 
-    expect(calendarsService.getAllCalendars).toHaveBeenCalled();
+    expect(calendarsService.getAllCalendars).toHaveBeenCalledWith(TEST_FAMILY_ID);
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(result.current.data).toEqual(mockCalendars);
   });
@@ -45,7 +45,7 @@ describe('calendars queries', () => {
 
     const { result } = renderQueryHook(() => useFetchCalendarById(1));
 
-    expect(calendarsService.getCalendarById).toHaveBeenCalledWith(1);
+    expect(calendarsService.getCalendarById).toHaveBeenCalledWith(TEST_FAMILY_ID, 1);
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(result.current.data).toEqual(mockCalendar);
   });
@@ -60,7 +60,7 @@ describe('calendars queries', () => {
     result.current.mutate(input);
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(calendarsService.createCalendar).toHaveBeenCalledWith(input);
+    expect(calendarsService.createCalendar).toHaveBeenCalledWith(TEST_FAMILY_ID, input);
   });
 
   test('should delete calendar', async () => {
@@ -71,7 +71,7 @@ describe('calendars queries', () => {
     result.current.mutate(1);
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(calendarsService.deleteCalendar).toHaveBeenCalledWith(1);
+    expect(calendarsService.deleteCalendar).toHaveBeenCalledWith(TEST_FAMILY_ID, 1);
   });
 
   test('should add event to calendar', async () => {
@@ -87,7 +87,7 @@ describe('calendars queries', () => {
     result.current.mutate({ calendarId: 1, input });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(calendarsService.addEventToCalendar).toHaveBeenCalledWith(1, input);
+    expect(calendarsService.addEventToCalendar).toHaveBeenCalledWith(TEST_FAMILY_ID, 1, input);
   });
 
   test('should update event in calendar', async () => {
@@ -103,7 +103,7 @@ describe('calendars queries', () => {
     result.current.mutate({ calendarId: 1, eventId: 1, input });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(calendarsService.updateEventInCalendar).toHaveBeenCalledWith(1, 1, input);
+    expect(calendarsService.updateEventInCalendar).toHaveBeenCalledWith(TEST_FAMILY_ID, 1, 1, input);
   });
 
   test('should delete event from calendar', async () => {
@@ -115,6 +115,6 @@ describe('calendars queries', () => {
     result.current.mutate({ calendarId: 1, eventId: 1 });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(calendarsService.deleteEventFromCalendar).toHaveBeenCalledWith(1, 1);
+    expect(calendarsService.deleteEventFromCalendar).toHaveBeenCalledWith(TEST_FAMILY_ID, 1, 1);
   });
 });

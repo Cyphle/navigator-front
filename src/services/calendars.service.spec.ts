@@ -15,6 +15,8 @@ jest.mock('../helpers/http', () => ({
   deleteOne: jest.fn(),
 }));
 
+const TEST_FAMILY_ID = '1';
+
 describe('Calendars service', () => {
   afterEach(() => {
     jest.clearAllMocks();
@@ -37,9 +39,9 @@ describe('Calendars service', () => {
       return Promise.resolve(mapper(apiResponse));
     });
 
-    const response = await getAllCalendars();
+    const response = await getAllCalendars(TEST_FAMILY_ID);
 
-    expect(getOne).toHaveBeenCalledWith('calendars', expect.any(Function));
+    expect(getOne).toHaveBeenCalledWith('calendars?familyId=1', expect.any(Function));
     expect(response).toHaveLength(1);
     expect(response[0].name).toBe('Mon calendrier');
   });
@@ -72,9 +74,9 @@ describe('Calendars service', () => {
       return Promise.resolve(mapper(apiResponse));
     });
 
-    const response = await getCalendarById(1);
+    const response = await getCalendarById(TEST_FAMILY_ID, 1);
 
-    expect(getOne).toHaveBeenCalledWith('calendars/1', expect.any(Function));
+    expect(getOne).toHaveBeenCalledWith('calendars/1?familyId=1', expect.any(Function));
     expect(response.id).toBe(1);
     expect(response.events).toHaveLength(1);
   });
@@ -98,9 +100,9 @@ describe('Calendars service', () => {
       return Promise.resolve(mapper(apiResponse));
     });
 
-    const response = await createCalendar(input);
+    const response = await createCalendar(TEST_FAMILY_ID, input);
 
-    expect(post).toHaveBeenCalledWith('calendars', input, expect.any(Function));
+    expect(post).toHaveBeenCalledWith('calendars?familyId=1', input, expect.any(Function));
     expect(response.id).toBe(2);
     expect(response.name).toBe('Nouveau calendrier');
   });
@@ -141,9 +143,9 @@ describe('Calendars service', () => {
       return Promise.resolve(mapper(apiResponse));
     });
 
-    const response = await addEventToCalendar(1, input);
+    const response = await addEventToCalendar(TEST_FAMILY_ID, 1, input);
 
-    expect(post).toHaveBeenCalledWith('calendars/1/events', input, expect.any(Function));
+    expect(post).toHaveBeenCalledWith('calendars/1/events?familyId=1', input, expect.any(Function));
     expect(response.events).toHaveLength(1);
     expect(response.events[0].title).toBe('Rendez-vous');
   });
@@ -179,9 +181,9 @@ describe('Calendars service', () => {
       return Promise.resolve(mapper(apiResponse));
     });
 
-    const response = await updateEventInCalendar(1, 1, input);
+    const response = await updateEventInCalendar(TEST_FAMILY_ID, 1, 1, input);
 
-    expect(put).toHaveBeenCalledWith('calendars/1/events/1', input, expect.any(Function));
+    expect(put).toHaveBeenCalledWith('calendars/1/events/1?familyId=1', input, expect.any(Function));
     expect(response.events[0].title).toBe('Réunion mise à jour');
   });
 
@@ -200,9 +202,9 @@ describe('Calendars service', () => {
       return Promise.resolve(mapper(apiResponse));
     });
 
-    const response = await deleteEventFromCalendar(1, 1);
+    const response = await deleteEventFromCalendar(TEST_FAMILY_ID, 1, 1);
 
-    expect(deleteOne).toHaveBeenCalledWith('calendars/1/events/1', expect.any(Function));
+    expect(deleteOne).toHaveBeenCalledWith('calendars/1/events/1?familyId=1', expect.any(Function));
     expect(response.events).toHaveLength(0);
   });
 
@@ -211,7 +213,7 @@ describe('Calendars service', () => {
       return Promise.resolve(mapper(null));
     });
 
-    const response = await getAllCalendars();
+    const response = await getAllCalendars(TEST_FAMILY_ID);
 
     expect(response).toEqual([]);
   });

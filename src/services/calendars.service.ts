@@ -7,46 +7,51 @@ import type {
 } from '../stores/calendars/calendars.types';
 import { getOne, post, put, deleteOne } from '../helpers/http';
 
-export const getAllCalendars = (): Promise<Calendar[]> => {
-  return getOne('calendars', (data: any) => {
+const withFamily = (path: string, familyId: string) =>
+  `${path}${path.includes('?') ? '&' : '?'}familyId=${encodeURIComponent(familyId)}`;
+
+export const getAllCalendars = (familyId: string): Promise<Calendar[]> => {
+  return getOne(withFamily('calendars', familyId), (data: any) => {
     if (!Array.isArray(data)) return [];
     return data.map(responseToCalendar);
   });
 };
 
-export const getCalendarById = (id: number): Promise<Calendar> => {
-  return getOne(`calendars/${id}`, responseToCalendar);
+export const getCalendarById = (familyId: string, id: number): Promise<Calendar> => {
+  return getOne(withFamily(`calendars/${id}`, familyId), responseToCalendar);
 };
 
-export const createCalendar = (input: CreateCalendarInput): Promise<Calendar> => {
-  return post('calendars', input, responseToCalendar);
+export const createCalendar = (familyId: string, input: CreateCalendarInput): Promise<Calendar> => {
+  return post(withFamily('calendars', familyId), input, responseToCalendar);
 };
 
-export const updateCalendar = (id: number, input: UpdateCalendarInput): Promise<Calendar> => {
-  return put(`calendars/${id}`, input, responseToCalendar);
+export const updateCalendar = (familyId: string, id: number, input: UpdateCalendarInput): Promise<Calendar> => {
+  return put(withFamily(`calendars/${id}`, familyId), input, responseToCalendar);
 };
 
-export const deleteCalendar = (id: number): Promise<void> => {
-  return deleteOne(`calendars/${id}`);
+export const deleteCalendar = (familyId: string, id: number): Promise<void> => {
+  return deleteOne(withFamily(`calendars/${id}`, familyId));
 };
 
 export const addEventToCalendar = (
+  familyId: string,
   calendarId: number,
   input: CreateCalendarEventInput
 ): Promise<Calendar> => {
-  return post(`calendars/${calendarId}/events`, input, responseToCalendar);
+  return post(withFamily(`calendars/${calendarId}/events`, familyId), input, responseToCalendar);
 };
 
 export const updateEventInCalendar = (
+  familyId: string,
   calendarId: number,
   eventId: number,
   input: UpdateCalendarEventInput
 ): Promise<Calendar> => {
-  return put(`calendars/${calendarId}/events/${eventId}`, input, responseToCalendar);
+  return put(withFamily(`calendars/${calendarId}/events/${eventId}`, familyId), input, responseToCalendar);
 };
 
-export const deleteEventFromCalendar = (calendarId: number, eventId: number): Promise<Calendar> => {
-  return deleteOne(`calendars/${calendarId}/events/${eventId}`, responseToCalendar);
+export const deleteEventFromCalendar = (familyId: string, calendarId: number, eventId: number): Promise<Calendar> => {
+  return deleteOne(withFamily(`calendars/${calendarId}/events/${eventId}`, familyId), responseToCalendar);
 };
 
 const responseToCalendar = (data: any): Calendar => ({

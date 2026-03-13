@@ -13,6 +13,10 @@ import {
   UseQueryResult
 } from '@tanstack/react-query';
 import { MemoryRouter } from 'react-router-dom';
+import { FamilyContextProvider } from '../src/contexts/family/family.context.tsx';
+
+export const TEST_FAMILY_ID = '1';
+const testFamilies = [{ id: TEST_FAMILY_ID, name: 'Test Family' }];
 
 export const render = (ui: React.ReactNode) => {
   const queryClient = new QueryClient({ defaultOptions: { queries: { retry: false } } });
@@ -20,7 +24,9 @@ export const render = (ui: React.ReactNode) => {
   const wrapper = ({ children }: PropsWithChildren) => {
     return (
       <QueryClientProvider client={ queryClient }>
-        <div data-testid="test-container">{ children }</div>
+        <FamilyContextProvider initialFamilies={testFamilies}>
+          <div data-testid="test-container">{ children }</div>
+        </FamilyContextProvider>
       </QueryClientProvider>
     );
   };
@@ -35,24 +41,39 @@ export const render = (ui: React.ReactNode) => {
 
 export const renderQueryHook = (hook: () => UseQueryResult) => {
   const queryClient = new QueryClient();
-  const wrapper = ({ children }: PropsWithChildren) => <QueryClientProvider
-    client={ queryClient }>{ children }</QueryClientProvider>;
+  const wrapper = ({ children }: PropsWithChildren) => (
+    <QueryClientProvider client={queryClient}>
+      <FamilyContextProvider initialFamilies={testFamilies}>
+        {children}
+      </FamilyContextProvider>
+    </QueryClientProvider>
+  );
 
   return testingLibraryRenderHook(hook, { wrapper });
 };
 
 export const renderInfiniteQueryHook = (hook: () => UseInfiniteQueryResult) => {
   const queryClient = new QueryClient();
-  const wrapper = ({ children }: PropsWithChildren) => <QueryClientProvider
-    client={ queryClient }>{ children }</QueryClientProvider>;
+  const wrapper = ({ children }: PropsWithChildren) => (
+    <QueryClientProvider client={queryClient}>
+      <FamilyContextProvider initialFamilies={testFamilies}>
+        {children}
+      </FamilyContextProvider>
+    </QueryClientProvider>
+  );
 
   return testingLibraryRenderHook(hook, { wrapper });
 };
 
 export const renderMutateHook = <TData, TError, TVariables, TContext>(hook: () => UseMutationResult<TData, TError, TVariables, TContext>) => {
   const queryClient = new QueryClient();
-  const wrapper = ({ children }: PropsWithChildren) => <QueryClientProvider
-    client={ queryClient }>{ children }</QueryClientProvider>;
+  const wrapper = ({ children }: PropsWithChildren) => (
+    <QueryClientProvider client={queryClient}>
+      <FamilyContextProvider initialFamilies={testFamilies}>
+        {children}
+      </FamilyContextProvider>
+    </QueryClientProvider>
+  );
 
   return testingLibraryRenderHook(hook, { wrapper });
 };

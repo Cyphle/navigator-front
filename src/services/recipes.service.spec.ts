@@ -6,6 +6,8 @@ jest.mock('../helpers/http.ts', () => ({
   post: jest.fn(),
 }));
 
+const TEST_FAMILY_ID = '1';
+
 describe('Recipes service', () => {
   test('should get recipes page data', async () => {
     const apiResponse = {
@@ -27,9 +29,9 @@ describe('Recipes service', () => {
       return Promise.resolve(mapper(apiResponse));
     });
 
-    const response = await getRecipesPage(1, 6);
+    const response = await getRecipesPage(TEST_FAMILY_ID, 1, 6);
 
-    expect(getOne).toHaveBeenCalledWith('recipes?page=1&pageSize=6', expect.any(Function));
+    expect(getOne).toHaveBeenCalledWith('recipes?page=1&pageSize=6&familyId=1', expect.any(Function));
     expect(response.items).toHaveLength(1);
     expect(response.items[0].name).toBe('Salade de quinoa');
   });
@@ -55,7 +57,7 @@ describe('Recipes service', () => {
       return Promise.resolve(mapper(apiResponse));
     });
 
-    const response = await getRecipesPage(1, 6);
+    const response = await getRecipesPage(TEST_FAMILY_ID, 1, 6);
 
     expect(response.items[0].parts?.[0].name).toBe('Pâte');
   });
@@ -75,7 +77,7 @@ describe('Recipes service', () => {
       return Promise.resolve(mapper(apiResponse));
     });
 
-    const response = await getRecipesPage(1, 6);
+    const response = await getRecipesPage(TEST_FAMILY_ID, 1, 6);
 
     expect(response.items).toHaveLength(1);
     expect(response.items[0].name).toBe('Soupe de carottes');
@@ -94,9 +96,9 @@ describe('Recipes service', () => {
       return Promise.resolve(mapper(apiResponse));
     });
 
-    await getRecipesPage(1, 10, 'DESSERT');
+    await getRecipesPage(TEST_FAMILY_ID, 1, 10, 'DESSERT');
 
-    expect(getOne).toHaveBeenCalledWith('recipes?page=1&pageSize=10&category=DESSERT', expect.any(Function));
+    expect(getOne).toHaveBeenCalledWith('recipes?page=1&pageSize=10&familyId=1&category=DESSERT', expect.any(Function));
   });
 
   test('should pass search query param when provided', async () => {
@@ -111,9 +113,9 @@ describe('Recipes service', () => {
       return Promise.resolve(mapper(apiResponse));
     });
 
-    await getRecipesPage(1, 10, 'ENTREE', 'quinoa');
+    await getRecipesPage(TEST_FAMILY_ID, 1, 10, 'ENTREE', 'quinoa');
 
-    expect(getOne).toHaveBeenCalledWith('recipes?page=1&pageSize=10&category=ENTREE&search=quinoa', expect.any(Function));
+    expect(getOne).toHaveBeenCalledWith('recipes?page=1&pageSize=10&familyId=1&category=ENTREE&search=quinoa', expect.any(Function));
   });
 
   test('should pass rating and sort query params when provided', async () => {
@@ -128,9 +130,9 @@ describe('Recipes service', () => {
       return Promise.resolve(mapper(apiResponse));
     });
 
-    await getRecipesPage(1, 10, undefined, undefined, 4, 'RATING_DESC');
+    await getRecipesPage(TEST_FAMILY_ID, 1, 10, undefined, undefined, 4, 'RATING_DESC');
 
-    expect(getOne).toHaveBeenCalledWith('recipes?page=1&pageSize=10&minRating=4&sort=RATING_DESC', expect.any(Function));
+    expect(getOne).toHaveBeenCalledWith('recipes?page=1&pageSize=10&familyId=1&minRating=4&sort=RATING_DESC', expect.any(Function));
   });
 
   test('should delete a recipe', async () => {
@@ -138,9 +140,9 @@ describe('Recipes service', () => {
       return Promise.resolve(mapper({ success: true }));
     });
 
-    const response = await deleteRecipe(2);
+    const response = await deleteRecipe(TEST_FAMILY_ID, 2);
 
-    expect(post).toHaveBeenCalledWith('recipes/2/delete', {}, expect.any(Function));
+    expect(post).toHaveBeenCalledWith('recipes/2/delete?familyId=1', {}, expect.any(Function));
     expect(response).toBe(true);
   });
 
@@ -149,9 +151,9 @@ describe('Recipes service', () => {
       return Promise.resolve(mapper({ id: 1, name: 'Salade', category: 'ENTREE', rating: 5 }));
     });
 
-    const response = await updateRecipeRating(1, 5);
+    const response = await updateRecipeRating(TEST_FAMILY_ID, 1, 5);
 
-    expect(post).toHaveBeenCalledWith('recipes/1/rating', { rating: 5 }, expect.any(Function));
+    expect(post).toHaveBeenCalledWith('recipes/1/rating?familyId=1', { rating: 5 }, expect.any(Function));
     expect(response.rating).toBe(5);
   });
 });

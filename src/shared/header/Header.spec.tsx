@@ -2,6 +2,7 @@ import { screen, userEvent } from '../../../test-utils';
 import { renderWithRouter } from '../../../test-utils/render';
 import { Header } from './Header';
 import { useUser } from '../../contexts/user/user.context';
+import { useFamily } from '../../contexts/family/family.context';
 import { none, some } from '../../helpers/option';
 import { logout } from '../../services/user.service.ts';
 import { waitFor } from '@testing-library/react';
@@ -19,6 +20,11 @@ jest.mock('../../contexts/user/user.context.tsx', () => ({
   useUser: jest.fn(),
 }));
 
+jest.mock('../../contexts/family/family.context.tsx', () => ({
+  useFamily: jest.fn(),
+  FamilyContextProvider: ({ children }: { children: React.ReactNode }) => children,
+}));
+
 jest.mock('../../services/user.service.ts', () => ({
   logout: jest.fn(),
 }));
@@ -34,6 +40,11 @@ describe('Header Component', () => {
     (useUser as jest.Mock).mockReturnValue({
       userState: { firstName: 'John', lastName: 'Doe' },
       setUserState: jest.fn(),
+    });
+    (useFamily as jest.Mock).mockReturnValue({
+      currentFamily: { id: '1', name: 'Test Family' },
+      families: [{ id: '1', name: 'Test Family' }],
+      setCurrentFamily: jest.fn(),
     });
     mockNavigate.mockClear();
     (logout as jest.Mock).mockResolvedValue(undefined);

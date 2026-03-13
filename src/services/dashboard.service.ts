@@ -8,8 +8,8 @@ import {
   DashboardTodoItem
 } from '../stores/dashboard/dashboard.types.ts';
 
-export const getDashboard = (): Promise<DashboardData> => {
-  return getOne('dashboard', responseToDashboard);
+export const getDashboard = (familyId: string): Promise<DashboardData> => {
+  return getOne(`dashboard?familyId=${encodeURIComponent(familyId)}`, responseToDashboard);
 }
 
 export const responseToDashboard = (data: any): DashboardData => {

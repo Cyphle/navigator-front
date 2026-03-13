@@ -1,10 +1,11 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useUser } from '../../contexts/user/user.context.tsx';
+import { useFamily } from '../../contexts/family/family.context.tsx';
 import { Option } from '../../helpers/option.ts';
 import { UserInfo } from '../../stores/user/user.types.ts';
 import { logout } from '../../services/user.service.ts';
 import { redirectToLogin } from '../../helpers/navigation.ts';
-import { Bell, LogOut, User } from 'lucide-react';
+import { Bell, ChevronDown, LogOut, User, Users } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -35,6 +36,7 @@ const DEFAULT_CONTENT = { title: 'Dashboard', subtitle: 'G√©rer la famille au m√
 
 export const Header = ({ userInfo }: { userInfo: Option<UserInfo> }) => {
   const { userState } = useUser();
+  const { currentFamily, families, setCurrentFamily } = useFamily();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -90,6 +92,35 @@ export const Header = ({ userInfo }: { userInfo: Option<UserInfo> }) => {
       <div className="flex items-center gap-3">
         {isLoggedIn ? (
           <>
+            {/* Family selector */}
+            {families.length > 0 && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button
+                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors hover:bg-[var(--ocean-pale)]"
+                    style={{ background: 'var(--sand)', color: 'var(--stone)' }}
+                  >
+                    <Users className="w-4 h-4 shrink-0" style={{ color: 'var(--ocean)' }} />
+                    <span className="max-w-[120px] truncate hidden sm:inline">{currentFamily?.name}</span>
+                    <ChevronDown className="w-3.5 h-3.5 shrink-0" style={{ color: 'var(--mist)' }} />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-52 rounded-[var(--radius-md)]">
+                  <DropdownMenuLabel style={{ color: 'var(--stone)' }}>Ma famille</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  {families.map(family => (
+                    <DropdownMenuItem
+                      key={family.id}
+                      onClick={() => setCurrentFamily(family)}
+                      style={currentFamily?.id === family.id ? { fontWeight: 600 } : undefined}
+                    >
+                      {family.name}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+
             {/* Bell button */}
             <button
               className="w-9 h-9 rounded-lg flex items-center justify-center relative transition-colors hover:bg-[var(--ocean-pale)]"

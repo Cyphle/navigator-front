@@ -1,5 +1,5 @@
 import { waitFor } from '@testing-library/react';
-import { renderQueryHook } from '../../../test-utils/render';
+import { renderQueryHook, TEST_FAMILY_ID } from '../../../test-utils/render';
 import { getRecipesPage } from '../../services/recipes.service';
 import { useFetchRecipesPage } from './recipes.queries';
 
@@ -18,7 +18,7 @@ describe('recipes queries', () => {
 
     const { result } = renderQueryHook(() => useFetchRecipesPage(1, 6, 'DESSERT', 'tarte'));
 
-    expect(getRecipesPage).toHaveBeenCalledWith(1, 6, 'DESSERT', 'tarte', undefined, undefined);
+    expect(getRecipesPage).toHaveBeenCalledWith(TEST_FAMILY_ID, 1, 6, 'DESSERT', 'tarte', undefined, undefined);
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
   });
 });

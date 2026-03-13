@@ -15,7 +15,7 @@ describe('Dashboard service', () => {
       shopping: { items: 0 }
     });
 
-    const response = await getDashboard();
+    const response = await getDashboard('1');
 
     expect(response).toEqual({
       agenda: [],

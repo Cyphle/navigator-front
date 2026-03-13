@@ -1,5 +1,5 @@
 import { waitFor } from '@testing-library/react';
-import { renderQueryHook, renderMutateHook } from '../../../test-utils/render';
+import { renderQueryHook, renderMutateHook, TEST_FAMILY_ID } from '../../../test-utils/render';
 import { aPlannedMenuList } from '../../../test-utils/factories';
 import * as plannedMenusService from '../../services/planned-menus.service';
 import {
@@ -33,7 +33,7 @@ describe('planned-menus queries', () => {
 
     const { result } = renderQueryHook(() => useFetchAllPlannedMenuLists());
 
-    expect(plannedMenusService.getAllPlannedMenuLists).toHaveBeenCalled();
+    expect(plannedMenusService.getAllPlannedMenuLists).toHaveBeenCalledWith(TEST_FAMILY_ID);
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(result.current.data).toEqual(mockLists);
   });
@@ -44,7 +44,7 @@ describe('planned-menus queries', () => {
 
     const { result } = renderQueryHook(() => useFetchPlannedMenuListById(1));
 
-    expect(plannedMenusService.getPlannedMenuListById).toHaveBeenCalledWith(1);
+    expect(plannedMenusService.getPlannedMenuListById).toHaveBeenCalledWith(TEST_FAMILY_ID, 1);
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(result.current.data).toEqual(mockList);
   });
@@ -68,7 +68,7 @@ describe('planned-menus queries', () => {
     result.current.mutate(input);
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(plannedMenusService.createPlannedMenuList).toHaveBeenCalledWith(input);
+    expect(plannedMenusService.createPlannedMenuList).toHaveBeenCalledWith(TEST_FAMILY_ID, input);
     expect(result.current.data).toEqual(mockCreated);
   });
 
@@ -82,7 +82,7 @@ describe('planned-menus queries', () => {
     result.current.mutate({ id: 1, input });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(plannedMenusService.updatePlannedMenuList).toHaveBeenCalledWith(1, input);
+    expect(plannedMenusService.updatePlannedMenuList).toHaveBeenCalledWith(TEST_FAMILY_ID, 1, input);
     expect(result.current.data).toEqual(mockUpdated);
   });
 
@@ -94,7 +94,7 @@ describe('planned-menus queries', () => {
     result.current.mutate(1);
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(plannedMenusService.deletePlannedMenuList).toHaveBeenCalledWith(1);
+    expect(plannedMenusService.deletePlannedMenuList).toHaveBeenCalledWith(TEST_FAMILY_ID, 1);
   });
 
   test('should add recipe to planned menu list', async () => {
@@ -110,6 +110,7 @@ describe('planned-menus queries', () => {
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(plannedMenusService.addRecipeToPlannedMenuList).toHaveBeenCalledWith(
+      TEST_FAMILY_ID,
       1,
       5,
       'Tarte',
@@ -127,7 +128,7 @@ describe('planned-menus queries', () => {
     result.current.mutate({ listId: 1, recipeId: 5 });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(plannedMenusService.removeRecipeFromPlannedMenuList).toHaveBeenCalledWith(1, 5);
+    expect(plannedMenusService.removeRecipeFromPlannedMenuList).toHaveBeenCalledWith(TEST_FAMILY_ID, 1, 5);
     expect(result.current.data?.recipes).toHaveLength(0);
   });
 });

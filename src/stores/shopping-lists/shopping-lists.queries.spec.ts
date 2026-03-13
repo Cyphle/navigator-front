@@ -1,5 +1,5 @@
 import { waitFor } from '@testing-library/react';
-import { renderQueryHook, renderMutateHook } from '../../../test-utils/render';
+import { renderQueryHook, renderMutateHook, TEST_FAMILY_ID } from '../../../test-utils/render';
 import { aShoppingList, aShoppingListItem } from '../../../test-utils/factories';
 import * as shoppingListsService from '../../services/shopping-lists.service';
 import {
@@ -34,7 +34,7 @@ describe('shopping-lists queries', () => {
 
     const { result } = renderQueryHook(() => useFetchAllShoppingLists());
 
-    expect(shoppingListsService.getAllShoppingLists).toHaveBeenCalled();
+    expect(shoppingListsService.getAllShoppingLists).toHaveBeenCalledWith(TEST_FAMILY_ID);
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(result.current.data).toEqual(mockLists);
   });
@@ -45,7 +45,7 @@ describe('shopping-lists queries', () => {
 
     const { result } = renderQueryHook(() => useFetchShoppingListById(1));
 
-    expect(shoppingListsService.getShoppingListById).toHaveBeenCalledWith(1);
+    expect(shoppingListsService.getShoppingListById).toHaveBeenCalledWith(TEST_FAMILY_ID, 1);
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(result.current.data).toEqual(mockList);
   });
@@ -60,7 +60,7 @@ describe('shopping-lists queries', () => {
     result.current.mutate(input);
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(shoppingListsService.createShoppingList).toHaveBeenCalledWith(input);
+    expect(shoppingListsService.createShoppingList).toHaveBeenCalledWith(TEST_FAMILY_ID, input);
   });
 
   test('should delete shopping list', async () => {
@@ -71,7 +71,7 @@ describe('shopping-lists queries', () => {
     result.current.mutate(1);
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(shoppingListsService.deleteShoppingList).toHaveBeenCalledWith(1);
+    expect(shoppingListsService.deleteShoppingList).toHaveBeenCalledWith(TEST_FAMILY_ID, 1);
   });
 
   test('should add item to shopping list', async () => {
@@ -87,7 +87,7 @@ describe('shopping-lists queries', () => {
     result.current.mutate({ listId: 1, input });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(shoppingListsService.addItemToShoppingList).toHaveBeenCalledWith(1, input);
+    expect(shoppingListsService.addItemToShoppingList).toHaveBeenCalledWith(TEST_FAMILY_ID, 1, input);
   });
 
   test('should update item in shopping list', async () => {
@@ -103,7 +103,7 @@ describe('shopping-lists queries', () => {
     result.current.mutate({ listId: 1, itemId: 1, input });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(shoppingListsService.updateItemInShoppingList).toHaveBeenCalledWith(1, 1, input);
+    expect(shoppingListsService.updateItemInShoppingList).toHaveBeenCalledWith(TEST_FAMILY_ID, 1, 1, input);
   });
 
   test('should delete item from shopping list', async () => {
@@ -115,6 +115,6 @@ describe('shopping-lists queries', () => {
     result.current.mutate({ listId: 1, itemId: 1 });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(shoppingListsService.deleteItemFromShoppingList).toHaveBeenCalledWith(1, 1);
+    expect(shoppingListsService.deleteItemFromShoppingList).toHaveBeenCalledWith(TEST_FAMILY_ID, 1, 1);
   });
 });

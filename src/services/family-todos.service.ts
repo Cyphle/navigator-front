@@ -7,50 +7,55 @@ import type {
 } from '../stores/family-todos/family-todos.types';
 import { getOne, post, put, deleteOne } from '../helpers/http';
 
-export const getAllTodoLists = (): Promise<TodoList[]> => {
-  return getOne('family-todos', (data: any) => {
+const withFamily = (path: string, familyId: string) =>
+  `${path}${path.includes('?') ? '&' : '?'}familyId=${encodeURIComponent(familyId)}`;
+
+export const getAllTodoLists = (familyId: string): Promise<TodoList[]> => {
+  return getOne(withFamily('family-todos', familyId), (data: any) => {
     if (!Array.isArray(data)) return [];
     return data.map(responseToTodoList);
   });
 };
 
-export const getTodoListById = (id: number): Promise<TodoList> => {
-  return getOne(`family-todos/${id}`, responseToTodoList);
+export const getTodoListById = (familyId: string, id: number): Promise<TodoList> => {
+  return getOne(withFamily(`family-todos/${id}`, familyId), responseToTodoList);
 };
 
-export const createTodoList = (input: CreateTodoListInput): Promise<TodoList> => {
-  return post('family-todos', input, responseToTodoList);
+export const createTodoList = (familyId: string, input: CreateTodoListInput): Promise<TodoList> => {
+  return post(withFamily('family-todos', familyId), input, responseToTodoList);
 };
 
-export const updateTodoList = (id: number, input: UpdateTodoListInput): Promise<TodoList> => {
-  return put(`family-todos/${id}`, input, responseToTodoList);
+export const updateTodoList = (familyId: string, id: number, input: UpdateTodoListInput): Promise<TodoList> => {
+  return put(withFamily(`family-todos/${id}`, familyId), input, responseToTodoList);
 };
 
-export const deleteTodoList = (id: number): Promise<void> => {
-  return deleteOne(`family-todos/${id}`);
+export const deleteTodoList = (familyId: string, id: number): Promise<void> => {
+  return deleteOne(withFamily(`family-todos/${id}`, familyId));
 };
 
 export const addItemToTodoList = (
+  familyId: string,
   listId: number,
   input: CreateTodoItemInput
 ): Promise<TodoList> => {
-  return post(`family-todos/${listId}/items`, input, responseToTodoList);
+  return post(withFamily(`family-todos/${listId}/items`, familyId), input, responseToTodoList);
 };
 
 export const updateItemInTodoList = (
+  familyId: string,
   listId: number,
   itemId: number,
   input: UpdateTodoItemInput
 ): Promise<TodoList> => {
-  return put(`family-todos/${listId}/items/${itemId}`, input, responseToTodoList);
+  return put(withFamily(`family-todos/${listId}/items/${itemId}`, familyId), input, responseToTodoList);
 };
 
-export const deleteItemFromTodoList = (listId: number, itemId: number): Promise<TodoList> => {
-  return deleteOne(`family-todos/${listId}/items/${itemId}`, responseToTodoList);
+export const deleteItemFromTodoList = (familyId: string, listId: number, itemId: number): Promise<TodoList> => {
+  return deleteOne(withFamily(`family-todos/${listId}/items/${itemId}`, familyId), responseToTodoList);
 };
 
-export const clearCompletedTodos = (listId: number): Promise<TodoList> => {
-  return deleteOne(`family-todos/${listId}/items/completed`, responseToTodoList);
+export const clearCompletedTodos = (familyId: string, listId: number): Promise<TodoList> => {
+  return deleteOne(withFamily(`family-todos/${listId}/items/completed`, familyId), responseToTodoList);
 };
 
 const responseToTodoList = (data: any): TodoList => ({

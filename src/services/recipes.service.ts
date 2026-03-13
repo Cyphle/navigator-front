@@ -2,6 +2,7 @@ import type { Recipe, RecipeCategory, RecipesPage } from '../stores/recipes/reci
 import { getOne, post } from '../helpers/http';
 
 export const getRecipesPage = (
+  familyId: string,
   page: number,
   pageSize: number,
   category?: RecipeCategory | string,
@@ -12,6 +13,7 @@ export const getRecipesPage = (
   const params = new URLSearchParams({
     page: page.toString(),
     pageSize: pageSize.toString(),
+    familyId,
   });
 
   if (category) {
@@ -33,12 +35,12 @@ export const getRecipesPage = (
   return getOne(`recipes?${params.toString()}`, responseToRecipesPage);
 };
 
-export const deleteRecipe = (id: number): Promise<boolean> => {
-  return post(`recipes/${id}/delete`, {}, (data: any) => Boolean(data?.success));
+export const deleteRecipe = (familyId: string, id: number): Promise<boolean> => {
+  return post(`recipes/${id}/delete?familyId=${encodeURIComponent(familyId)}`, {}, (data: any) => Boolean(data?.success));
 };
 
-export const updateRecipeRating = (id: number, rating: number): Promise<Recipe> => {
-  return post(`recipes/${id}/rating`, { rating }, responseToRecipe);
+export const updateRecipeRating = (familyId: string, id: number, rating: number): Promise<Recipe> => {
+  return post(`recipes/${id}/rating?familyId=${encodeURIComponent(familyId)}`, { rating }, responseToRecipe);
 };
 
 const responseToRecipesPage = (data: any): RecipesPage => {

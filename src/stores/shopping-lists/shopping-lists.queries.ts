@@ -6,29 +6,34 @@ import type {
   UpdateShoppingListItemInput,
 } from './shopping-lists.types';
 import * as shoppingListsService from '../../services/shopping-lists.service';
+import { useFamily } from '../../contexts/family/family.context.tsx';
 
 const QUERY_KEY = 'shopping-lists';
 
 export const useFetchAllShoppingLists = () => {
+  const { currentFamily } = useFamily();
   return useQuery({
-    queryKey: [QUERY_KEY],
-    queryFn: shoppingListsService.getAllShoppingLists,
+    queryKey: [QUERY_KEY, currentFamily?.id],
+    queryFn: () => shoppingListsService.getAllShoppingLists(currentFamily?.id ?? ''),
+    enabled: Boolean(currentFamily?.id),
   });
 };
 
 export const useFetchShoppingListById = (id: number) => {
+  const { currentFamily } = useFamily();
   return useQuery({
-    queryKey: [QUERY_KEY, id],
-    queryFn: () => shoppingListsService.getShoppingListById(id),
-    enabled: id > 0,
+    queryKey: [QUERY_KEY, currentFamily?.id, id],
+    queryFn: () => shoppingListsService.getShoppingListById(currentFamily?.id ?? '', id),
+    enabled: id > 0 && Boolean(currentFamily?.id),
   });
 };
 
 export const useCreateShoppingList = () => {
   const queryClient = useQueryClient();
+  const { currentFamily } = useFamily();
 
   return useMutation({
-    mutationFn: (input: CreateShoppingListInput) => shoppingListsService.createShoppingList(input),
+    mutationFn: (input: CreateShoppingListInput) => shoppingListsService.createShoppingList(currentFamily?.id ?? '', input),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY] });
     },
@@ -37,12 +42,13 @@ export const useCreateShoppingList = () => {
 
 export const useUpdateShoppingList = () => {
   const queryClient = useQueryClient();
+  const { currentFamily } = useFamily();
 
   return useMutation({
     mutationFn: ({ id, input }: { id: number; input: UpdateShoppingListInput }) =>
-      shoppingListsService.updateShoppingList(id, input),
+      shoppingListsService.updateShoppingList(currentFamily?.id ?? '', id, input),
     onSuccess: (data) => {
-      queryClient.setQueryData([QUERY_KEY, data.id], data);
+      queryClient.setQueryData([QUERY_KEY, currentFamily?.id, data.id], data);
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY], exact: true });
     },
   });
@@ -50,9 +56,10 @@ export const useUpdateShoppingList = () => {
 
 export const useDeleteShoppingList = () => {
   const queryClient = useQueryClient();
+  const { currentFamily } = useFamily();
 
   return useMutation({
-    mutationFn: (id: number) => shoppingListsService.deleteShoppingList(id),
+    mutationFn: (id: number) => shoppingListsService.deleteShoppingList(currentFamily?.id ?? '', id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY] });
     },
@@ -61,12 +68,13 @@ export const useDeleteShoppingList = () => {
 
 export const useAddItemToShoppingList = () => {
   const queryClient = useQueryClient();
+  const { currentFamily } = useFamily();
 
   return useMutation({
     mutationFn: ({ listId, input }: { listId: number; input: CreateShoppingListItemInput }) =>
-      shoppingListsService.addItemToShoppingList(listId, input),
+      shoppingListsService.addItemToShoppingList(currentFamily?.id ?? '', listId, input),
     onSuccess: (data) => {
-      queryClient.setQueryData([QUERY_KEY, data.id], data);
+      queryClient.setQueryData([QUERY_KEY, currentFamily?.id, data.id], data);
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY], exact: true });
     },
   });
@@ -74,24 +82,26 @@ export const useAddItemToShoppingList = () => {
 
 export const useUpdateItemInShoppingList = () => {
   const queryClient = useQueryClient();
+  const { currentFamily } = useFamily();
 
   return useMutation({
     mutationFn: ({ listId, itemId, input }: { listId: number; itemId: number; input: UpdateShoppingListItemInput }) =>
-      shoppingListsService.updateItemInShoppingList(listId, itemId, input),
+      shoppingListsService.updateItemInShoppingList(currentFamily?.id ?? '', listId, itemId, input),
     onSuccess: (data) => {
-      queryClient.setQueryData([QUERY_KEY, data.id], data);
+      queryClient.setQueryData([QUERY_KEY, currentFamily?.id, data.id], data);
     },
   });
 };
 
 export const useDeleteItemFromShoppingList = () => {
   const queryClient = useQueryClient();
+  const { currentFamily } = useFamily();
 
   return useMutation({
     mutationFn: ({ listId, itemId }: { listId: number; itemId: number }) =>
-      shoppingListsService.deleteItemFromShoppingList(listId, itemId),
+      shoppingListsService.deleteItemFromShoppingList(currentFamily?.id ?? '', listId, itemId),
     onSuccess: (data) => {
-      queryClient.setQueryData([QUERY_KEY, data.id], data);
+      queryClient.setQueryData([QUERY_KEY, currentFamily?.id, data.id], data);
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY], exact: true });
     },
   });
@@ -99,11 +109,12 @@ export const useDeleteItemFromShoppingList = () => {
 
 export const useClearCompletedItems = () => {
   const queryClient = useQueryClient();
+  const { currentFamily } = useFamily();
 
   return useMutation({
-    mutationFn: (listId: number) => shoppingListsService.clearCompletedItems(listId),
+    mutationFn: (listId: number) => shoppingListsService.clearCompletedItems(currentFamily?.id ?? '', listId),
     onSuccess: (data) => {
-      queryClient.setQueryData([QUERY_KEY, data.id], data);
+      queryClient.setQueryData([QUERY_KEY, currentFamily?.id, data.id], data);
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY], exact: true });
     },
   });

@@ -6,29 +6,34 @@ import type {
   UpdateCalendarEventInput,
 } from './calendars.types';
 import * as calendarsService from '../../services/calendars.service';
+import { useFamily } from '../../contexts/family/family.context.tsx';
 
 const QUERY_KEY = 'calendars';
 
 export const useFetchAllCalendars = () => {
+  const { currentFamily } = useFamily();
   return useQuery({
-    queryKey: [QUERY_KEY],
-    queryFn: calendarsService.getAllCalendars,
+    queryKey: [QUERY_KEY, currentFamily?.id],
+    queryFn: () => calendarsService.getAllCalendars(currentFamily?.id ?? ''),
+    enabled: Boolean(currentFamily?.id),
   });
 };
 
 export const useFetchCalendarById = (id: number) => {
+  const { currentFamily } = useFamily();
   return useQuery({
-    queryKey: [QUERY_KEY, id],
-    queryFn: () => calendarsService.getCalendarById(id),
-    enabled: id > 0,
+    queryKey: [QUERY_KEY, currentFamily?.id, id],
+    queryFn: () => calendarsService.getCalendarById(currentFamily?.id ?? '', id),
+    enabled: id > 0 && Boolean(currentFamily?.id),
   });
 };
 
 export const useCreateCalendar = () => {
   const queryClient = useQueryClient();
+  const { currentFamily } = useFamily();
 
   return useMutation({
-    mutationFn: (input: CreateCalendarInput) => calendarsService.createCalendar(input),
+    mutationFn: (input: CreateCalendarInput) => calendarsService.createCalendar(currentFamily?.id ?? '', input),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY] });
     },
@@ -37,12 +42,13 @@ export const useCreateCalendar = () => {
 
 export const useUpdateCalendar = () => {
   const queryClient = useQueryClient();
+  const { currentFamily } = useFamily();
 
   return useMutation({
     mutationFn: ({ id, input }: { id: number; input: UpdateCalendarInput }) =>
-      calendarsService.updateCalendar(id, input),
+      calendarsService.updateCalendar(currentFamily?.id ?? '', id, input),
     onSuccess: (data) => {
-      queryClient.setQueryData([QUERY_KEY, data.id], data);
+      queryClient.setQueryData([QUERY_KEY, currentFamily?.id, data.id], data);
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY], exact: true });
     },
   });
@@ -50,9 +56,10 @@ export const useUpdateCalendar = () => {
 
 export const useDeleteCalendar = () => {
   const queryClient = useQueryClient();
+  const { currentFamily } = useFamily();
 
   return useMutation({
-    mutationFn: (id: number) => calendarsService.deleteCalendar(id),
+    mutationFn: (id: number) => calendarsService.deleteCalendar(currentFamily?.id ?? '', id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY] });
     },
@@ -61,12 +68,13 @@ export const useDeleteCalendar = () => {
 
 export const useAddEventToCalendar = () => {
   const queryClient = useQueryClient();
+  const { currentFamily } = useFamily();
 
   return useMutation({
     mutationFn: ({ calendarId, input }: { calendarId: number; input: CreateCalendarEventInput }) =>
-      calendarsService.addEventToCalendar(calendarId, input),
+      calendarsService.addEventToCalendar(currentFamily?.id ?? '', calendarId, input),
     onSuccess: (data) => {
-      queryClient.setQueryData([QUERY_KEY, data.id], data);
+      queryClient.setQueryData([QUERY_KEY, currentFamily?.id, data.id], data);
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY], exact: true });
     },
   });
@@ -74,24 +82,26 @@ export const useAddEventToCalendar = () => {
 
 export const useUpdateEventInCalendar = () => {
   const queryClient = useQueryClient();
+  const { currentFamily } = useFamily();
 
   return useMutation({
     mutationFn: ({ calendarId, eventId, input }: { calendarId: number; eventId: number; input: UpdateCalendarEventInput }) =>
-      calendarsService.updateEventInCalendar(calendarId, eventId, input),
+      calendarsService.updateEventInCalendar(currentFamily?.id ?? '', calendarId, eventId, input),
     onSuccess: (data) => {
-      queryClient.setQueryData([QUERY_KEY, data.id], data);
+      queryClient.setQueryData([QUERY_KEY, currentFamily?.id, data.id], data);
     },
   });
 };
 
 export const useDeleteEventFromCalendar = () => {
   const queryClient = useQueryClient();
+  const { currentFamily } = useFamily();
 
   return useMutation({
     mutationFn: ({ calendarId, eventId }: { calendarId: number; eventId: number }) =>
-      calendarsService.deleteEventFromCalendar(calendarId, eventId),
+      calendarsService.deleteEventFromCalendar(currentFamily?.id ?? '', calendarId, eventId),
     onSuccess: (data) => {
-      queryClient.setQueryData([QUERY_KEY, data.id], data);
+      queryClient.setQueryData([QUERY_KEY, currentFamily?.id, data.id], data);
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY], exact: true });
     },
   });
