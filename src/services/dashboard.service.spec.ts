@@ -6,7 +6,7 @@ jest.mock('../helpers/http.ts', () => ({
 }));
 
 describe('Dashboard service', () => {
-  test('should get dashboard data', async () => {
+  test('should get dashboard data using path param', async () => {
     (getOne as jest.Mock).mockResolvedValue({
       agenda: [],
       todos: [],
@@ -17,6 +17,7 @@ describe('Dashboard service', () => {
 
     const response = await getDashboard('1');
 
+    expect(getOne).toHaveBeenCalledWith('dashboard/1', expect.any(Function));
     expect(response).toEqual({
       agenda: [],
       todos: [],

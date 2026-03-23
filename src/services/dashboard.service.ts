@@ -9,7 +9,7 @@ import {
 } from '../stores/dashboard/dashboard.types.ts';
 
 export const getDashboard = (familyId: string): Promise<DashboardData> => {
-  return getOne(`dashboard?familyId=${encodeURIComponent(familyId)}`, responseToDashboard);
+  return getOne(`dashboard/${encodeURIComponent(familyId)}`, responseToDashboard);
 }
 
 export const responseToDashboard = (data: any): DashboardData => {

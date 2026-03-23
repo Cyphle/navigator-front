@@ -1,5 +1,6 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useUser } from '../../contexts/user/user.context';
+import { useFamily } from '../../contexts/family/family.context';
 import { withFetchTemplate } from '../../hoc/fetch-template/use-fetch-template';
 import type { Family, UpsertFamilyRequest } from '../../stores/families/families.types';
 import { useFetchFamilies } from '../../stores/families/families.queries';
@@ -10,6 +11,11 @@ import { Users, Plus } from 'lucide-react';
 
 const FamiliesContent = ({ data }: { data: Family[] }) => {
   const { userState } = useUser();
+  const { setFamilies } = useFamily();
+
+  useEffect(() => {
+    setFamilies(data.map((f) => ({ id: String(f.id), name: f.name })));
+  }, [data, setFamilies]);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingFamilyId, setEditingFamilyId] = useState<number | null>(null);
   const [pendingStatusFamilyId, setPendingStatusFamilyId] = useState<number | null>(null);
@@ -38,7 +44,6 @@ const FamiliesContent = ({ data }: { data: Family[] }) => {
   };
 
   const onMutationSuccess = () => {
-    setIsFormOpen(false);
     setEditingFamilyId(null);
     setFormValues(defaultFormValues);
     setPendingStatusFamilyId(null);
@@ -80,6 +85,8 @@ const FamiliesContent = ({ data }: { data: Family[] }) => {
       ownerName: editingFamily?.owner.relation ?? ownerName,
       memberEmails,
     };
+
+    setIsFormOpen(false);
 
     if (editingFamilyId) {
       updateFamilyMutation(payload);

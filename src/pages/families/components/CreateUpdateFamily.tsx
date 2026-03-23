@@ -108,10 +108,6 @@ export const CreateUpdateFamily = ({
             <Controller
               name="emails"
               control={control}
-              rules={{
-                required: true,
-                validate: (value) => value.trim().length > 0 && parseEmails(value).length > 0,
-              }}
               render={({ field }) => (
                 <Textarea
                   id="family-emails"

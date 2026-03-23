@@ -85,7 +85,7 @@ describe('Families', () => {
     expect(submitButton).toBeDisabled();
   });
 
-  test('submits when family form is valid', async () => {
+  test('submits when family form is valid and closes the dialog', async () => {
     const createFamilyMock = jest.fn();
     (useCreateFamily as jest.Mock).mockImplementation(() => ({
       mutate: createFamilyMock,
@@ -108,7 +108,6 @@ describe('Families', () => {
     const dialog = await screen.findByRole('dialog');
 
     fireEvent.change(within(dialog).getByLabelText('Nom de la famille'), { target: { value: 'Famille Doe' } });
-    fireEvent.change(within(dialog).getByLabelText('Emails des membres'), { target: { value: 'alice@doe.fr' } });
 
     const submitButton = within(dialog).getByRole('button', { name: /creer/i });
     await waitFor(() => expect(submitButton).toBeEnabled());
@@ -120,8 +119,9 @@ describe('Families', () => {
         name: 'Famille Doe',
         ownerEmail: 'john@doe.fr',
         ownerName: 'John Doe',
-        memberEmails: ['alice@doe.fr'],
+        memberEmails: [],
       }));
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     });
   });
 });
