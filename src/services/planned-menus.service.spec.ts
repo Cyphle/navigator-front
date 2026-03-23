@@ -43,7 +43,7 @@ describe('Planned menus service', () => {
 
     const response = await getAllPlannedMenuLists(TEST_FAMILY_ID);
 
-    expect(getOne).toHaveBeenCalledWith('planned-menus?familyId=1', expect.any(Function));
+    expect(getOne).toHaveBeenCalledWith('families/1/planned-menus', expect.any(Function));
     expect(response).toHaveLength(1);
     expect(response[0].name).toBe('Menu semaine 1');
   });
@@ -66,7 +66,7 @@ describe('Planned menus service', () => {
 
     const response = await getPlannedMenuListById(TEST_FAMILY_ID, 1);
 
-    expect(getOne).toHaveBeenCalledWith('planned-menus/1?familyId=1', expect.any(Function));
+    expect(getOne).toHaveBeenCalledWith('families/1/planned-menus/1', expect.any(Function));
     expect(response.id).toBe(1);
     expect(response.recipes).toHaveLength(1);
     expect(response.recipes[0].recipeName).toBe('Salade');
@@ -94,7 +94,7 @@ describe('Planned menus service', () => {
 
     const response = await createPlannedMenuList(TEST_FAMILY_ID, input);
 
-    expect(post).toHaveBeenCalledWith('planned-menus?familyId=1', input, expect.any(Function));
+    expect(post).toHaveBeenCalledWith('families/1/planned-menus', input, expect.any(Function));
     expect(response.id).toBe(2);
     expect(response.name).toBe('Nouveau menu');
   });
@@ -121,7 +121,7 @@ describe('Planned menus service', () => {
 
     const response = await updatePlannedMenuList(TEST_FAMILY_ID, 1, input);
 
-    expect(put).toHaveBeenCalledWith('planned-menus/1?familyId=1', input, expect.any(Function));
+    expect(put).toHaveBeenCalledWith('families/1/planned-menus/1', input, expect.any(Function));
     expect(response.isActiveShoppingList).toBe(true);
   });
 
@@ -130,7 +130,7 @@ describe('Planned menus service', () => {
 
     await deletePlannedMenuList(TEST_FAMILY_ID, 1);
 
-    expect(deleteOne).toHaveBeenCalledWith('planned-menus/1?familyId=1');
+    expect(deleteOne).toHaveBeenCalledWith('families/1/planned-menus/1');
   });
 
   test('should add recipe to planned menu list', async () => {
@@ -152,7 +152,7 @@ describe('Planned menus service', () => {
     const response = await addRecipeToPlannedMenuList(TEST_FAMILY_ID, 1, 5, 'Tarte', ['2026-03-02']);
 
     expect(post).toHaveBeenCalledWith(
-      'planned-menus/1/recipes?familyId=1',
+      'families/1/planned-menus/1/recipes',
       { recipeId: 5, recipeName: 'Tarte', assignedDays: ['2026-03-02'] },
       expect.any(Function)
     );
@@ -178,7 +178,7 @@ describe('Planned menus service', () => {
 
     const response = await removeRecipeFromPlannedMenuList(TEST_FAMILY_ID, 1, 5);
 
-    expect(deleteOne).toHaveBeenCalledWith('planned-menus/1/recipes/5?familyId=1', expect.any(Function));
+    expect(deleteOne).toHaveBeenCalledWith('families/1/planned-menus/1/recipes/5', expect.any(Function));
     expect(response.recipes).toHaveLength(0);
   });
 

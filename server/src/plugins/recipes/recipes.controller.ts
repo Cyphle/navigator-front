@@ -7,7 +7,7 @@ import { Recipe, RecipesPage } from './recipes.types';
 export const getRecipesController =
   (handler: (database: Database) => (page: number, pageSize: number, category?: string, search?: string, minRating?: number, sort?: string) => RecipesPage) =>
     (fastify: FastifyInstance): void => {
-      fastify.get('/', (request: CustomFastifyRequest, reply: FastifyReply) => {
+      fastify.get('/:familyId/recipes', (request: CustomFastifyRequest, reply: FastifyReply) => {
         const pageQuery = getStringQuery(request, 'page');
         const pageSizeQuery = getStringQuery(request, 'pageSize');
         const categoryQuery = getStringQuery(request, 'category');
@@ -29,7 +29,7 @@ export const getRecipesController =
 export const deleteRecipeController =
   (handler: (database: Database) => (id: number) => boolean) =>
     (fastify: FastifyInstance): void => {
-      fastify.post('/:id/delete', (request: CustomFastifyRequest, reply: FastifyReply) => {
+      fastify.post('/:familyId/recipes/:id/delete', (request: CustomFastifyRequest, reply: FastifyReply) => {
         const id = getNumberParam(request, 'id');
         const success = handler(request.database!!)(id);
 
@@ -43,7 +43,7 @@ export const deleteRecipeController =
 export const updateRecipeRatingController =
   (handler: (database: Database) => (id: number, rating: number) => Recipe | undefined) =>
     (fastify: FastifyInstance): void => {
-      fastify.post('/:id/rating', (request: CustomFastifyRequest, reply: FastifyReply) => {
+      fastify.post('/:familyId/recipes/:id/rating', (request: CustomFastifyRequest, reply: FastifyReply) => {
         const id = getNumberParam(request, 'id');
         const ratingValue = getStringBodyElement<number | string>(request, 'rating');
         const rating = typeof ratingValue === 'number'

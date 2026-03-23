@@ -1,9 +1,10 @@
-import { getMany, post } from '../helpers/http.ts';
+import { getMany, post, put } from '../helpers/http.ts';
 import { createFamily, getFamilies, responseToFamilies, updateFamily } from './families.service.ts';
 
 jest.mock('../helpers/http.ts', () => ({
   getMany: jest.fn(),
   post: jest.fn(),
+  put: jest.fn(),
 }));
 
 describe('Families service', () => {
@@ -74,7 +75,7 @@ describe('Families service', () => {
   });
 
   test('should update a family', async () => {
-    (post as jest.Mock).mockResolvedValue({
+    (put as jest.Mock).mockResolvedValue({
       id: 10,
       name: 'Famille Update',
       owner: { id: 1, email: 'owner@banana.fr', role: 'Owner', relation: 'Owner' },
@@ -91,7 +92,7 @@ describe('Families service', () => {
       status: 'INACTIVE'
     });
 
-    expect(post).toHaveBeenCalledWith('families/10', expect.anything(), expect.any(Function));
+    expect(put).toHaveBeenCalledWith('families/10', expect.anything(), expect.any(Function));
     expect(response.status).toBe('INACTIVE');
   });
 });

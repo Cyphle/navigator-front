@@ -1,4 +1,5 @@
 import type { Recipe, RecipeCategory, RecipesPage } from '../stores/recipes/recipes.types';
+import type { DashboardRecipe } from '../stores/dashboard/dashboard.types.ts';
 import { getOne, post } from '../helpers/http';
 
 export const getRecipesPage = (
@@ -13,7 +14,6 @@ export const getRecipesPage = (
   const params = new URLSearchParams({
     page: page.toString(),
     pageSize: pageSize.toString(),
-    familyId,
   });
 
   if (category) {
@@ -32,15 +32,28 @@ export const getRecipesPage = (
     params.set('sort', sort);
   }
 
-  return getOne(`recipes?${params.toString()}`, responseToRecipesPage);
+  return getOne(`families/${encodeURIComponent(familyId)}/recipes?${params.toString()}`, responseToRecipesPage);
 };
 
 export const deleteRecipe = (familyId: string, id: number): Promise<boolean> => {
-  return post(`recipes/${id}/delete?familyId=${encodeURIComponent(familyId)}`, {}, (data: any) => Boolean(data?.success));
+  return post(`families/${encodeURIComponent(familyId)}/recipes/${id}/delete`, {}, (data: any) => Boolean(data?.success));
 };
 
 export const updateRecipeRating = (familyId: string, id: number, rating: number): Promise<Recipe> => {
-  return post(`recipes/${id}/rating?familyId=${encodeURIComponent(familyId)}`, { rating }, responseToRecipe);
+  return post(`families/${encodeURIComponent(familyId)}/recipes/${id}/rating`, { rating }, responseToRecipe);
+};
+
+export const getRecipesSummary = (familyId: string): Promise<DashboardRecipe[]> => {
+  return getOne(`families/${encodeURIComponent(familyId)}/recipes/summary`, (data: any) => {
+    if (!Array.isArray(data)) return [];
+    return data.map((item: any): DashboardRecipe => ({
+      id: item.id,
+      name: item.name,
+      favorite: item.favorite,
+      selectedForWeek: item.selectedForWeek,
+      visibility: item.visibility,
+    }));
+  });
 };
 
 const responseToRecipesPage = (data: any): RecipesPage => {

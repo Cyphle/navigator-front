@@ -6,9 +6,9 @@ import type { Family } from '../../../stores/families/families.types';
 const aFamily = (overrides: Partial<Family> = {}): Family => ({
   id: overrides.id ?? 1,
   name: overrides.name ?? 'Famille Martin',
-  owner: overrides.owner ?? { id: 1, email: 'sarah@martin.fr', relation: 'Owner' },
+  owner: overrides.owner ?? { id: 1, email: 'sarah@martin.fr', role: 'Owner', relation: 'Owner' },
   members: overrides.members ?? [
-    { id: 2, email: 'leo@martin.fr', relation: 'Fils' },
+    { id: 2, email: 'leo@martin.fr', role: 'Member', relation: 'Fils' },
   ],
   status: overrides.status ?? 'ACTIVE',
 });

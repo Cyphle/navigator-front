@@ -10,6 +10,15 @@ import { useFamily } from '../../contexts/family/family.context.tsx';
 
 const QUERY_KEY = 'shopping-lists';
 
+export const useFetchShoppingListSummary = () => {
+  const { currentFamily } = useFamily();
+  return useQuery({
+    queryKey: [QUERY_KEY, 'summary', currentFamily?.id],
+    queryFn: () => shoppingListsService.getShoppingListSummary(currentFamily?.id ?? ''),
+    enabled: Boolean(currentFamily?.id),
+  });
+};
+
 export const useFetchAllShoppingLists = () => {
   const { currentFamily } = useFamily();
   return useQuery({

@@ -43,7 +43,7 @@ describe('family-todos service', () => {
 
     const result = await getAllTodoLists(TEST_FAMILY_ID);
 
-    expect(getOne).toHaveBeenCalledWith('family-todos?familyId=1', expect.any(Function));
+    expect(getOne).toHaveBeenCalledWith('families/1/todos', expect.any(Function));
     expect(result).toHaveLength(1);
     expect(result[0].name).toBe('Tâches du foyer');
     expect(result[0].items[0].title).toBe('Faire la vaisselle');
@@ -56,7 +56,7 @@ describe('family-todos service', () => {
 
     const result = await getTodoListById(TEST_FAMILY_ID, 1);
 
-    expect(getOne).toHaveBeenCalledWith('family-todos/1?familyId=1', expect.any(Function));
+    expect(getOne).toHaveBeenCalledWith('families/1/todos/1', expect.any(Function));
     expect(result.id).toBe(1);
   });
 
@@ -68,7 +68,7 @@ describe('family-todos service', () => {
     const input = { name: 'Nouvelle liste', type: 'PERSONAL' as const };
     await createTodoList(TEST_FAMILY_ID, input);
 
-    expect(post).toHaveBeenCalledWith('family-todos?familyId=1', input, expect.any(Function));
+    expect(post).toHaveBeenCalledWith('families/1/todos', input, expect.any(Function));
   });
 
   test('updateTodoList puts to correct endpoint', async () => {
@@ -78,7 +78,7 @@ describe('family-todos service', () => {
 
     await updateTodoList(TEST_FAMILY_ID, 1, { name: 'Nouveau nom' });
 
-    expect(put).toHaveBeenCalledWith('family-todos/1?familyId=1', { name: 'Nouveau nom' }, expect.any(Function));
+    expect(put).toHaveBeenCalledWith('families/1/todos/1', { name: 'Nouveau nom' }, expect.any(Function));
   });
 
   test('deleteTodoList deletes correct endpoint', async () => {
@@ -86,7 +86,7 @@ describe('family-todos service', () => {
 
     await deleteTodoList(TEST_FAMILY_ID, 1);
 
-    expect(deleteOne).toHaveBeenCalledWith('family-todos/1?familyId=1');
+    expect(deleteOne).toHaveBeenCalledWith('families/1/todos/1');
   });
 
   test('addItemToTodoList posts to items endpoint', async () => {
@@ -97,7 +97,7 @@ describe('family-todos service', () => {
     const input = { title: 'Nouvelle tâche' };
     await addItemToTodoList(TEST_FAMILY_ID, 1, input);
 
-    expect(post).toHaveBeenCalledWith('family-todos/1/items?familyId=1', input, expect.any(Function));
+    expect(post).toHaveBeenCalledWith('families/1/todos/1/items', input, expect.any(Function));
   });
 
   test('updateItemInTodoList puts to correct item endpoint', async () => {
@@ -107,7 +107,7 @@ describe('family-todos service', () => {
 
     await updateItemInTodoList(TEST_FAMILY_ID, 1, 10, { status: 'DONE' });
 
-    expect(put).toHaveBeenCalledWith('family-todos/1/items/10?familyId=1', { status: 'DONE' }, expect.any(Function));
+    expect(put).toHaveBeenCalledWith('families/1/todos/1/items/10', { status: 'DONE' }, expect.any(Function));
   });
 
   test('deleteItemFromTodoList deletes correct item', async () => {
@@ -117,7 +117,7 @@ describe('family-todos service', () => {
 
     await deleteItemFromTodoList(TEST_FAMILY_ID, 1, 10);
 
-    expect(deleteOne).toHaveBeenCalledWith('family-todos/1/items/10?familyId=1', expect.any(Function));
+    expect(deleteOne).toHaveBeenCalledWith('families/1/todos/1/items/10', expect.any(Function));
   });
 
   test('clearCompletedTodos deletes completed items endpoint', async () => {
@@ -127,7 +127,7 @@ describe('family-todos service', () => {
 
     await clearCompletedTodos(TEST_FAMILY_ID, 1);
 
-    expect(deleteOne).toHaveBeenCalledWith('family-todos/1/items/completed?familyId=1', expect.any(Function));
+    expect(deleteOne).toHaveBeenCalledWith('families/1/todos/1/items/completed', expect.any(Function));
   });
 
   test('responseToTodoList handles missing fields gracefully', async () => {

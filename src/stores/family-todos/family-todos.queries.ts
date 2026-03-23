@@ -10,6 +10,15 @@ import { useFamily } from '../../contexts/family/family.context.tsx';
 
 const QUERY_KEY = 'family-todos';
 
+export const useFetchTodosSummary = () => {
+  const { currentFamily } = useFamily();
+  return useQuery({
+    queryKey: [QUERY_KEY, 'summary', currentFamily?.id],
+    queryFn: () => familyTodosService.getTodosSummary(currentFamily?.id ?? ''),
+    enabled: Boolean(currentFamily?.id),
+  });
+};
+
 export const useFetchAllTodoLists = () => {
   const { currentFamily } = useFamily();
   return useQuery({

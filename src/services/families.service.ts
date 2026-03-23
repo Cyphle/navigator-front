@@ -1,4 +1,4 @@
-import { getMany, post } from '../helpers/http';
+import { getMany, post, put } from '../helpers/http';
 import type { Family, UpsertFamilyRequest } from '../stores/families/families.types';
 
 export const getFamilies = (): Promise<Family[]> => {
@@ -10,7 +10,7 @@ export const createFamily = (payload: UpsertFamilyRequest): Promise<Family> => {
 };
 
 export const updateFamily = (id: number, payload: UpsertFamilyRequest): Promise<Family> => {
-  return post(`families/${id}`, payload, responseToFamily);
+  return put(`families/${id}`, payload, responseToFamily);
 };
 
 const responseToFamily = (data: any): Family => {

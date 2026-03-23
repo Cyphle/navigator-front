@@ -5,32 +5,30 @@ import type {
   CreateCalendarEventInput,
   UpdateCalendarEventInput,
 } from '../stores/calendars/calendars.types';
+import type { DashboardAgendaItem } from '../stores/dashboard/dashboard.types.ts';
 import { getOne, post, put, deleteOne } from '../helpers/http';
 
-const withFamily = (path: string, familyId: string) =>
-  `${path}${path.includes('?') ? '&' : '?'}familyId=${encodeURIComponent(familyId)}`;
-
 export const getAllCalendars = (familyId: string): Promise<Calendar[]> => {
-  return getOne(withFamily('calendars', familyId), (data: any) => {
+  return getOne(`families/${encodeURIComponent(familyId)}/calendars`, (data: any) => {
     if (!Array.isArray(data)) return [];
     return data.map(responseToCalendar);
   });
 };
 
 export const getCalendarById = (familyId: string, id: number): Promise<Calendar> => {
-  return getOne(withFamily(`calendars/${id}`, familyId), responseToCalendar);
+  return getOne(`families/${encodeURIComponent(familyId)}/calendars/${id}`, responseToCalendar);
 };
 
 export const createCalendar = (familyId: string, input: CreateCalendarInput): Promise<Calendar> => {
-  return post(withFamily('calendars', familyId), input, responseToCalendar);
+  return post(`families/${encodeURIComponent(familyId)}/calendars`, input, responseToCalendar);
 };
 
 export const updateCalendar = (familyId: string, id: number, input: UpdateCalendarInput): Promise<Calendar> => {
-  return put(withFamily(`calendars/${id}`, familyId), input, responseToCalendar);
+  return put(`families/${encodeURIComponent(familyId)}/calendars/${id}`, input, responseToCalendar);
 };
 
 export const deleteCalendar = (familyId: string, id: number): Promise<void> => {
-  return deleteOne(withFamily(`calendars/${id}`, familyId));
+  return deleteOne(`families/${encodeURIComponent(familyId)}/calendars/${id}`);
 };
 
 export const addEventToCalendar = (
@@ -38,7 +36,7 @@ export const addEventToCalendar = (
   calendarId: number,
   input: CreateCalendarEventInput
 ): Promise<Calendar> => {
-  return post(withFamily(`calendars/${calendarId}/events`, familyId), input, responseToCalendar);
+  return post(`families/${encodeURIComponent(familyId)}/calendars/${calendarId}/events`, input, responseToCalendar);
 };
 
 export const updateEventInCalendar = (
@@ -47,11 +45,26 @@ export const updateEventInCalendar = (
   eventId: number,
   input: UpdateCalendarEventInput
 ): Promise<Calendar> => {
-  return put(withFamily(`calendars/${calendarId}/events/${eventId}`, familyId), input, responseToCalendar);
+  return put(`families/${encodeURIComponent(familyId)}/calendars/${calendarId}/events/${eventId}`, input, responseToCalendar);
 };
 
 export const deleteEventFromCalendar = (familyId: string, calendarId: number, eventId: number): Promise<Calendar> => {
-  return deleteOne(withFamily(`calendars/${calendarId}/events/${eventId}`, familyId), responseToCalendar);
+  return deleteOne(`families/${encodeURIComponent(familyId)}/calendars/${calendarId}/events/${eventId}`, responseToCalendar);
+};
+
+export const getCalendarSummary = (familyId: string): Promise<DashboardAgendaItem[]> => {
+  return getOne(`families/${encodeURIComponent(familyId)}/calendars/summary`, (data: any) => {
+    if (!Array.isArray(data)) return [];
+    return data.map((item: any): DashboardAgendaItem => ({
+      id: item.id,
+      title: item.title,
+      time: item.time,
+      person: item.person,
+      accentColor: item.accentColor,
+      visibility: item.visibility,
+      attendees: item.attendees ?? [],
+    }));
+  });
 };
 
 const responseToCalendar = (data: any): Calendar => ({

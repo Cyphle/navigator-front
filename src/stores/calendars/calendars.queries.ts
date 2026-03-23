@@ -10,6 +10,15 @@ import { useFamily } from '../../contexts/family/family.context.tsx';
 
 const QUERY_KEY = 'calendars';
 
+export const useFetchCalendarSummary = () => {
+  const { currentFamily } = useFamily();
+  return useQuery({
+    queryKey: [QUERY_KEY, 'summary', currentFamily?.id],
+    queryFn: () => calendarsService.getCalendarSummary(currentFamily?.id ?? ''),
+    enabled: Boolean(currentFamily?.id),
+  });
+};
+
 export const useFetchAllCalendars = () => {
   const { currentFamily } = useFamily();
   return useQuery({

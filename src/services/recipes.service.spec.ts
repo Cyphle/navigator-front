@@ -31,7 +31,7 @@ describe('Recipes service', () => {
 
     const response = await getRecipesPage(TEST_FAMILY_ID, 1, 6);
 
-    expect(getOne).toHaveBeenCalledWith('recipes?page=1&pageSize=6&familyId=1', expect.any(Function));
+    expect(getOne).toHaveBeenCalledWith('families/1/recipes?page=1&pageSize=6', expect.any(Function));
     expect(response.items).toHaveLength(1);
     expect(response.items[0].name).toBe('Salade de quinoa');
   });
@@ -98,7 +98,7 @@ describe('Recipes service', () => {
 
     await getRecipesPage(TEST_FAMILY_ID, 1, 10, 'DESSERT');
 
-    expect(getOne).toHaveBeenCalledWith('recipes?page=1&pageSize=10&familyId=1&category=DESSERT', expect.any(Function));
+    expect(getOne).toHaveBeenCalledWith('families/1/recipes?page=1&pageSize=10&category=DESSERT', expect.any(Function));
   });
 
   test('should pass search query param when provided', async () => {
@@ -115,7 +115,7 @@ describe('Recipes service', () => {
 
     await getRecipesPage(TEST_FAMILY_ID, 1, 10, 'ENTREE', 'quinoa');
 
-    expect(getOne).toHaveBeenCalledWith('recipes?page=1&pageSize=10&familyId=1&category=ENTREE&search=quinoa', expect.any(Function));
+    expect(getOne).toHaveBeenCalledWith('families/1/recipes?page=1&pageSize=10&category=ENTREE&search=quinoa', expect.any(Function));
   });
 
   test('should pass rating and sort query params when provided', async () => {
@@ -132,7 +132,7 @@ describe('Recipes service', () => {
 
     await getRecipesPage(TEST_FAMILY_ID, 1, 10, undefined, undefined, 4, 'RATING_DESC');
 
-    expect(getOne).toHaveBeenCalledWith('recipes?page=1&pageSize=10&familyId=1&minRating=4&sort=RATING_DESC', expect.any(Function));
+    expect(getOne).toHaveBeenCalledWith('families/1/recipes?page=1&pageSize=10&minRating=4&sort=RATING_DESC', expect.any(Function));
   });
 
   test('should delete a recipe', async () => {
@@ -142,7 +142,7 @@ describe('Recipes service', () => {
 
     const response = await deleteRecipe(TEST_FAMILY_ID, 2);
 
-    expect(post).toHaveBeenCalledWith('recipes/2/delete?familyId=1', {}, expect.any(Function));
+    expect(post).toHaveBeenCalledWith('families/1/recipes/2/delete', {}, expect.any(Function));
     expect(response).toBe(true);
   });
 
@@ -153,7 +153,7 @@ describe('Recipes service', () => {
 
     const response = await updateRecipeRating(TEST_FAMILY_ID, 1, 5);
 
-    expect(post).toHaveBeenCalledWith('recipes/1/rating?familyId=1', { rating: 5 }, expect.any(Function));
+    expect(post).toHaveBeenCalledWith('families/1/recipes/1/rating', { rating: 5 }, expect.any(Function));
     expect(response.rating).toBe(5);
   });
 });

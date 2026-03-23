@@ -10,7 +10,7 @@ describe('user.service', () => {
     test('should call getOne with correct parameters', async () => {
       (getOne as jest.Mock).mockResolvedValue({});
       await getUserInfo();
-      expect(getOne).toHaveBeenCalledWith('user/info', responseToUserInfo);
+      expect(getOne).toHaveBeenCalledWith('users/info', responseToUserInfo);
     });
 
     test('should return the result of getOne', async () => {

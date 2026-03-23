@@ -40,7 +40,7 @@ describe('Shopping lists service', () => {
 
     const response = await getAllShoppingLists(TEST_FAMILY_ID);
 
-    expect(getOne).toHaveBeenCalledWith('shopping-lists?familyId=1', expect.any(Function));
+    expect(getOne).toHaveBeenCalledWith('families/1/shopping-lists', expect.any(Function));
     expect(response).toHaveLength(1);
     expect(response[0].name).toBe('Courses de la semaine');
   });
@@ -62,7 +62,7 @@ describe('Shopping lists service', () => {
 
     const response = await getShoppingListById(TEST_FAMILY_ID, 1);
 
-    expect(getOne).toHaveBeenCalledWith('shopping-lists/1?familyId=1', expect.any(Function));
+    expect(getOne).toHaveBeenCalledWith('families/1/shopping-lists/1', expect.any(Function));
     expect(response.id).toBe(1);
     expect(response.items).toHaveLength(1);
   });
@@ -87,7 +87,7 @@ describe('Shopping lists service', () => {
 
     const response = await createShoppingList(TEST_FAMILY_ID, input);
 
-    expect(post).toHaveBeenCalledWith('shopping-lists?familyId=1', input, expect.any(Function));
+    expect(post).toHaveBeenCalledWith('families/1/shopping-lists', input, expect.any(Function));
     expect(response.id).toBe(2);
     expect(response.name).toBe('Nouvelle liste');
   });
@@ -123,7 +123,7 @@ describe('Shopping lists service', () => {
 
     const response = await addItemToShoppingList(TEST_FAMILY_ID, 1, input);
 
-    expect(post).toHaveBeenCalledWith('shopping-lists/1/items?familyId=1', input, expect.any(Function));
+    expect(post).toHaveBeenCalledWith('families/1/shopping-lists/1/items', input, expect.any(Function));
     expect(response.items).toHaveLength(1);
     expect(response.items[0].title).toBe('Lait');
   });
@@ -148,7 +148,7 @@ describe('Shopping lists service', () => {
 
     const response = await updateItemInShoppingList(TEST_FAMILY_ID, 1, 1, input);
 
-    expect(put).toHaveBeenCalledWith('shopping-lists/1/items/1?familyId=1', input, expect.any(Function));
+    expect(put).toHaveBeenCalledWith('families/1/shopping-lists/1/items/1', input, expect.any(Function));
     expect(response.items[0].completed).toBe(true);
   });
 
@@ -168,7 +168,7 @@ describe('Shopping lists service', () => {
 
     const response = await deleteItemFromShoppingList(TEST_FAMILY_ID, 1, 1);
 
-    expect(deleteOne).toHaveBeenCalledWith('shopping-lists/1/items/1?familyId=1', expect.any(Function));
+    expect(deleteOne).toHaveBeenCalledWith('families/1/shopping-lists/1/items/1', expect.any(Function));
     expect(response.items).toHaveLength(0);
   });
 

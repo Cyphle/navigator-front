@@ -5,6 +5,15 @@ import { useFamily } from '../../contexts/family/family.context.tsx';
 
 const QUERY_KEY = 'planned-menus';
 
+export const useFetchPlannedMenuSummary = () => {
+  const { currentFamily } = useFamily();
+  return useQuery({
+    queryKey: [QUERY_KEY, 'summary', currentFamily?.id],
+    queryFn: () => plannedMenusService.getPlannedMenuSummary(currentFamily?.id ?? ''),
+    enabled: Boolean(currentFamily?.id),
+  });
+};
+
 export const useFetchAllPlannedMenuLists = () => {
   const { currentFamily } = useFamily();
   return useQuery({

@@ -67,7 +67,7 @@ describe('CreateTodoListForm', () => {
   });
 
   test('shows family selector when SHARED type is selected and families exist', async () => {
-    const families = [{ id: 1, name: 'Famille Martin', owner: { id: 1, email: 'a@b.fr', relation: 'Owner' }, members: [], status: 'ACTIVE' as const }];
+    const families = [{ id: 1, name: 'Famille Martin', owner: { id: 1, email: 'a@b.fr', role: 'Owner' as const, relation: 'Owner' }, members: [], status: 'ACTIVE' as const }];
 
     render(
       <CreateTodoListForm open onCancel={jest.fn()} onSubmit={jest.fn()} families={families} />

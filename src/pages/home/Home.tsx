@@ -1,6 +1,3 @@
-import { withFetchTemplate } from '../../hoc/fetch-template/use-fetch-template.tsx';
-import type { DashboardData } from '@/stores/dashboard/dashboard.types.ts';
-import { useFetchDashboard } from '@/stores/dashboard/dashboard.queries.ts';
 import { useFamily } from '../../contexts/family/family.context.tsx';
 import { Calendar, CheckSquare, ShoppingCart, UtensilsCrossed } from 'lucide-react';
 import { StatCard, type StatCardData } from './components/StatCard.tsx';
@@ -8,11 +5,21 @@ import { AgendaSection } from './components/AgendaSection.tsx';
 import { TodosSection } from './components/TodosSection.tsx';
 import { WeeklyMenusSection } from './components/WeeklyMenusSection.tsx';
 import NoFamilyOverlay from '@/pages/home/components/NoFamilyOverlay.tsx';
+import { useFetchCalendarSummary } from '@/stores/calendars/calendars.queries.ts';
+import { useFetchTodosSummary } from '@/stores/family-todos/family-todos.queries.ts';
+import { useFetchRecipesSummary } from '@/stores/recipes/recipes.queries.ts';
+import { useFetchShoppingListSummary } from '@/stores/shopping-lists/shopping-lists.queries.ts';
+import { useFetchPlannedMenuSummary } from '@/stores/planned-menus/planned-menus.queries.ts';
 
-const buildStatCards = (data: DashboardData): StatCardData[] => [
+const buildStatCards = (
+  agendaCount: number,
+  activeTodosCount: number,
+  favoriteRecipesCount: number,
+  shoppingItems: number
+): StatCardData[] => [
   {
     title: 'Familles actives',
-    value: data.agenda.length,
+    value: agendaCount,
     subtitle: 'événements à venir',
     icon: <Calendar className="w-5 h-5" />,
     iconColor: 'var(--ocean)',
@@ -20,7 +27,7 @@ const buildStatCards = (data: DashboardData): StatCardData[] => [
   },
   {
     title: 'Tâches en cours',
-    value: data.todos.filter((todo) => !todo.completed).length,
+    value: activeTodosCount,
     subtitle: 'tâches actives',
     icon: <CheckSquare className="w-5 h-5" />,
     iconColor: 'var(--sage)',
@@ -28,7 +35,7 @@ const buildStatCards = (data: DashboardData): StatCardData[] => [
   },
   {
     title: 'Recettes',
-    value: data.recipes.filter((recipe) => recipe.favorite).length,
+    value: favoriteRecipesCount,
     subtitle: 'recettes favorites',
     icon: <UtensilsCrossed className="w-5 h-5" />,
     iconColor: 'var(--sun)',
@@ -36,7 +43,7 @@ const buildStatCards = (data: DashboardData): StatCardData[] => [
   },
   {
     title: 'Liste de courses',
-    value: data.shopping.items,
+    value: shoppingItems,
     subtitle: 'articles à acheter',
     icon: <ShoppingCart className="w-5 h-5" />,
     iconColor: 'var(--coral)',
@@ -44,22 +51,41 @@ const buildStatCards = (data: DashboardData): StatCardData[] => [
   },
 ];
 
-const HomeContent = ({ data }: { data: DashboardData }) => (
-  <div className="p-4 md:p-6 min-h-full" style={{ background: 'var(--sand)' }}>
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-6 md:mb-8">
-      {buildStatCards(data).map((stat, i) => (
-        <StatCard key={i} {...stat} />
-      ))}
-    </div>
-    <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 md:gap-6">
-      <AgendaSection events={data.agenda} />
-      <TodosSection todos={data.todos} />
-      <WeeklyMenusSection weeklyMenu={data.weeklyMenu} recipes={data.recipes} />
-    </div>
-  </div>
-);
+const HomeContent = () => {
+  const calendarQuery = useFetchCalendarSummary();
+  const todosQuery = useFetchTodosSummary();
+  const recipesQuery = useFetchRecipesSummary();
+  const shoppingQuery = useFetchShoppingListSummary();
+  const plannedMenuQuery = useFetchPlannedMenuSummary();
 
-const HomeWithData = withFetchTemplate<any, DashboardData>(HomeContent, useFetchDashboard);
+  const agenda = calendarQuery.data ?? [];
+  const todos = todosQuery.data ?? [];
+  const recipes = recipesQuery.data ?? [];
+  const shopping = shoppingQuery.data ?? { items: 0 };
+  const weeklyMenu = plannedMenuQuery.data ?? { weekLabel: '', days: [] };
+
+  const statCards = buildStatCards(
+    agenda.length,
+    todos.filter((todo) => !todo.completed).length,
+    recipes.filter((recipe) => recipe.favorite).length,
+    shopping.items
+  );
+
+  return (
+    <div className="p-4 md:p-6 min-h-full" style={{ background: 'var(--sand)' }}>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4 mb-6 md:mb-8">
+        {statCards.map((stat, i) => (
+          <StatCard key={i} {...stat} />
+        ))}
+      </div>
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 md:gap-6">
+        <AgendaSection events={agenda} />
+        <TodosSection todos={todos} />
+        <WeeklyMenusSection weeklyMenu={weeklyMenu} recipes={recipes} />
+      </div>
+    </div>
+  );
+};
 
 export const Home = () => {
   const { families } = useFamily();
@@ -72,5 +98,5 @@ export const Home = () => {
     );
   }
 
-  return <HomeWithData />;
+  return <HomeContent />;
 };

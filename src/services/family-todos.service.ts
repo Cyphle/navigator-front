@@ -5,32 +5,30 @@ import type {
   CreateTodoItemInput,
   UpdateTodoItemInput,
 } from '../stores/family-todos/family-todos.types';
+import type { DashboardTodoItem } from '../stores/dashboard/dashboard.types.ts';
 import { getOne, post, put, deleteOne } from '../helpers/http';
 
-const withFamily = (path: string, familyId: string) =>
-  `${path}${path.includes('?') ? '&' : '?'}familyId=${encodeURIComponent(familyId)}`;
-
 export const getAllTodoLists = (familyId: string): Promise<TodoList[]> => {
-  return getOne(withFamily('family-todos', familyId), (data: any) => {
+  return getOne(`families/${encodeURIComponent(familyId)}/todos`, (data: any) => {
     if (!Array.isArray(data)) return [];
     return data.map(responseToTodoList);
   });
 };
 
 export const getTodoListById = (familyId: string, id: number): Promise<TodoList> => {
-  return getOne(withFamily(`family-todos/${id}`, familyId), responseToTodoList);
+  return getOne(`families/${encodeURIComponent(familyId)}/todos/${id}`, responseToTodoList);
 };
 
 export const createTodoList = (familyId: string, input: CreateTodoListInput): Promise<TodoList> => {
-  return post(withFamily('family-todos', familyId), input, responseToTodoList);
+  return post(`families/${encodeURIComponent(familyId)}/todos`, input, responseToTodoList);
 };
 
 export const updateTodoList = (familyId: string, id: number, input: UpdateTodoListInput): Promise<TodoList> => {
-  return put(withFamily(`family-todos/${id}`, familyId), input, responseToTodoList);
+  return put(`families/${encodeURIComponent(familyId)}/todos/${id}`, input, responseToTodoList);
 };
 
 export const deleteTodoList = (familyId: string, id: number): Promise<void> => {
-  return deleteOne(withFamily(`family-todos/${id}`, familyId));
+  return deleteOne(`families/${encodeURIComponent(familyId)}/todos/${id}`);
 };
 
 export const addItemToTodoList = (
@@ -38,7 +36,7 @@ export const addItemToTodoList = (
   listId: number,
   input: CreateTodoItemInput
 ): Promise<TodoList> => {
-  return post(withFamily(`family-todos/${listId}/items`, familyId), input, responseToTodoList);
+  return post(`families/${encodeURIComponent(familyId)}/todos/${listId}/items`, input, responseToTodoList);
 };
 
 export const updateItemInTodoList = (
@@ -47,15 +45,28 @@ export const updateItemInTodoList = (
   itemId: number,
   input: UpdateTodoItemInput
 ): Promise<TodoList> => {
-  return put(withFamily(`family-todos/${listId}/items/${itemId}`, familyId), input, responseToTodoList);
+  return put(`families/${encodeURIComponent(familyId)}/todos/${listId}/items/${itemId}`, input, responseToTodoList);
 };
 
 export const deleteItemFromTodoList = (familyId: string, listId: number, itemId: number): Promise<TodoList> => {
-  return deleteOne(withFamily(`family-todos/${listId}/items/${itemId}`, familyId), responseToTodoList);
+  return deleteOne(`families/${encodeURIComponent(familyId)}/todos/${listId}/items/${itemId}`, responseToTodoList);
 };
 
 export const clearCompletedTodos = (familyId: string, listId: number): Promise<TodoList> => {
-  return deleteOne(withFamily(`family-todos/${listId}/items/completed`, familyId), responseToTodoList);
+  return deleteOne(`families/${encodeURIComponent(familyId)}/todos/${listId}/items/completed`, responseToTodoList);
+};
+
+export const getTodosSummary = (familyId: string): Promise<DashboardTodoItem[]> => {
+  return getOne(`families/${encodeURIComponent(familyId)}/todos/summary`, (data: any) => {
+    if (!Array.isArray(data)) return [];
+    return data.map((item: any): DashboardTodoItem => ({
+      id: item.id,
+      label: item.label,
+      assignee: item.assignee,
+      completed: item.completed,
+      visibility: item.visibility,
+    }));
+  });
 };
 
 const responseToTodoList = (data: any): TodoList => ({

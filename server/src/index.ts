@@ -24,11 +24,11 @@ const fastify = initFastify(
     { plugin: securityPlugin, routesPrefix: '' },
     { plugin: dashboardPlugin, routesPrefix: '/dashboard' },
     { plugin: familiesPlugin, routesPrefix: '/families' },
-    { plugin: recipesPlugin, routesPrefix: '/recipes' },
-    { plugin: plannedMenusPlugin, routesPrefix: '' },
-    { plugin: shoppingListsPlugin, routesPrefix: '' },
-    { plugin: familyTodosPlugin, routesPrefix: '' },
-    { plugin: calendarsPlugin, routesPrefix: '' }
+    { plugin: recipesPlugin, routesPrefix: '/families' },
+    { plugin: plannedMenusPlugin, routesPrefix: '/families' },
+    { plugin: shoppingListsPlugin, routesPrefix: '/families' },
+    { plugin: familyTodosPlugin, routesPrefix: '/families' },
+    { plugin: calendarsPlugin, routesPrefix: '/families' }
   ]
 );
 

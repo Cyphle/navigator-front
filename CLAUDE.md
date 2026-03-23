@@ -35,3 +35,6 @@
 - Respect the design used for Home using FetchTemplate for loading initial data.
 - Use react query mutations for creating and updating data.
 - Never put mock data in the production code. Mock data should be served by the mock server.
+
+## API Design
+- APIs have to respect REST definitions. So /ressource/id/ressource...

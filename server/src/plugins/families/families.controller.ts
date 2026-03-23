@@ -34,7 +34,7 @@ export const createFamilyController = (handler: (database: Database) => (request
 };
 
 export const updateFamilyController = (handler: (database: Database) => (id: number, request: FamilyUpsertRequest) => Family | undefined) => (fastify: FastifyInstance): void => {
-  fastify.post('/:id', (request: CustomFastifyRequest, reply: FastifyReply) => {
+  fastify.put('/:id', (request: CustomFastifyRequest, reply: FastifyReply) => {
     const id = getNumberParam(request, 'id');
     const command: FamilyUpsertRequest = {
       name: getStringBodyElement<string>(request, 'name'),
