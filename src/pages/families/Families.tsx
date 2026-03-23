@@ -110,7 +110,37 @@ const FamiliesContent = ({ data }: { data: Family[] }) => {
       </div>
 
       {/* Cards grid */}
-      <section className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-5">
+      <section>
+        {data.length === 0 && (
+          <div className="flex flex-col items-center justify-center py-24 gap-4">
+            <div
+              className="w-16 h-16 rounded-full flex items-center justify-center"
+              style={{ background: 'var(--ocean-pale)', color: 'var(--ocean)' }}
+            >
+              <Users className="w-8 h-8" />
+            </div>
+            <div className="text-center">
+              <p className="text-base font-semibold m-0" style={{ color: 'var(--stone)' }}>
+                Aucune famille pour le moment
+              </p>
+              <p className="text-sm mt-1 m-0" style={{ color: 'var(--mist)' }}>
+                Créez votre première famille pour commencer à utiliser Navigator.
+              </p>
+            </div>
+            <button
+              onClick={handleCreateClick}
+              className="flex items-center gap-2 text-white text-sm font-semibold px-5 py-2.5 rounded-[var(--radius-sm)] transition-all duration-150 hover:-translate-y-px"
+              style={{
+                background: 'linear-gradient(135deg, var(--ocean) 0%, var(--ocean-light) 100%)',
+                boxShadow: '0 3px 12px rgba(27,79,138,0.3)',
+              }}
+            >
+              <Plus className="w-4 h-4" />
+              Créer une famille
+            </button>
+          </div>
+        )}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-5">
         {data.map((family) => (
           <div
             key={family.id}
@@ -230,6 +260,7 @@ const FamiliesContent = ({ data }: { data: Family[] }) => {
             </div>
           </div>
         ))}
+        </div>
       </section>
 
       <CreateUpdateFamily

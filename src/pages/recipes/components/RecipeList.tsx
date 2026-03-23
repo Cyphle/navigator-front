@@ -1,4 +1,4 @@
-import { Edit2, Share2, Trash2 } from 'lucide-react';
+import { Edit2, Share2, Trash2, UtensilsCrossed, Plus } from 'lucide-react';
 import type { Recipe, RecipeCategory } from '../../../stores/recipes/recipes.types';
 import { cn } from '@/lib/utils';
 
@@ -49,22 +49,62 @@ const Rate = ({ value, onChange }: { value: number; onChange: (v: number) => voi
 interface RecipeListProps {
   recipes: Recipe[];
   categoryLabels: Record<RecipeCategory, string>;
+  isFiltered: boolean;
   onSelect: (recipe: Recipe) => void;
   onEdit: (recipe: Recipe) => void;
   onShare: (recipe: Recipe) => void;
   onDelete: (recipe: Recipe) => void;
   onRate: (id: number, rating: number) => void;
+  onCreateNew: () => void;
 }
 
 export const RecipeList = ({
   recipes,
   categoryLabels,
+  isFiltered,
   onSelect,
   onEdit,
   onShare,
   onDelete,
   onRate,
+  onCreateNew,
 }: RecipeListProps) => {
+  if (recipes.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-24 gap-4">
+        <div
+          className="w-16 h-16 rounded-[var(--radius-lg)] flex items-center justify-center"
+          style={{ background: 'var(--sun-pale)', color: 'var(--sun)' }}
+        >
+          <UtensilsCrossed className="w-8 h-8" />
+        </div>
+        <div className="text-center">
+          <p className="text-base font-semibold m-0" style={{ color: 'var(--stone)' }}>
+            {isFiltered ? 'Aucune recette trouvée' : 'Aucune recette pour le moment'}
+          </p>
+          <p className="text-sm mt-1 m-0" style={{ color: 'var(--mist)' }}>
+            {isFiltered
+              ? 'Essayez de modifier vos filtres ou votre recherche.'
+              : 'Ajoutez votre première recette pour constituer votre carnet.'}
+          </p>
+        </div>
+        {!isFiltered && (
+          <button
+            onClick={onCreateNew}
+            className="flex items-center gap-2 text-white text-sm font-semibold px-5 py-2.5 rounded-[var(--radius-sm)] transition-all duration-150 hover:-translate-y-px"
+            style={{
+              background: 'linear-gradient(135deg, var(--ocean) 0%, var(--ocean-light) 100%)',
+              boxShadow: '0 3px 12px rgba(27,79,138,0.3)',
+            }}
+          >
+            <Plus className="w-4 h-4" />
+            Ajouter une recette
+          </button>
+        )}
+      </div>
+    );
+  }
+
   return (
     <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 md:gap-4 lg:gap-5">
       {recipes.map((recipe) => (

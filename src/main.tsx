@@ -20,8 +20,10 @@ export async function initialDataLoader() {
   if (!userInfo.isSome()) {
     return redirect('/registration');
   }
+
   const families = await getFamilies();
   const simpleFamilies: CurrentFamily[] = families.map(f => ({ id: String(f.id), name: f.name }));
+
   return { userInfo, families: simpleFamilies };
 }
 

@@ -17,11 +17,13 @@ describe('RecipeList', () => {
           { id: 2, name: 'Tarte', category: 'DESSERT', rating: 5, imageUrl: 'https://example.com/tarte.jpg' },
         ]}
         categoryLabels={{ ENTREE: 'Entrée', PLAT: 'Plat', DESSERT: 'Dessert', SAUCE: 'Sauce', APERO: 'Apéro' }}
+        isFiltered={false}
         onSelect={onSelect}
         onEdit={onEdit}
         onShare={onShare}
         onDelete={onDelete}
         onRate={onRate}
+        onCreateNew={jest.fn()}
       />
     );
 

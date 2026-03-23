@@ -243,11 +243,13 @@ export const Recipes = () => {
         <RecipeList
           recipes={recipes}
           categoryLabels={CATEGORY_LABELS}
+          isFiltered={categoryFilter !== 'ALL' || Boolean(searchValue)}
           onSelect={setSelectedRecipe}
           onEdit={setEditRecipeTarget}
           onShare={setShareRecipeTarget}
           onDelete={setDeleteRecipeTarget}
           onRate={(id, rating) => updateRatingMutation({ id, rating })}
+          onCreateNew={() => setIsCreateModalOpen(true)}
         />
 
         {total > pageSize && (

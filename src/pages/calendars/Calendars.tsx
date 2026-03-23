@@ -13,7 +13,7 @@ import { CalendarsView } from './components/CalendarsView';
 import { CreateCalendarForm } from './components/CreateCalendarForm';
 import { CreateEventForm } from './components/CreateEventForm';
 import type { CreateCalendarInput, CreateCalendarEventInput, UpdateCalendarEventInput } from '../../stores/calendars/calendars.types';
-import { Loader2 } from 'lucide-react';
+import { CalendarDays, Loader2, Plus } from 'lucide-react';
 
 export const Calendars = () => {
   const [isCalendarFormOpen, setIsCalendarFormOpen] = useState(false);
@@ -116,6 +116,47 @@ export const Calendars = () => {
           <p className="text-sm font-medium">Une erreur est survenue (error loading calendars).</p>
         </div>
       </div>
+    );
+  }
+
+  if (!calendars || calendars.length === 0) {
+    return (
+      <>
+        <div className="flex flex-col items-center justify-center py-24 gap-4 min-h-full" style={{ background: 'var(--sand)' }}>
+          <div
+            className="w-16 h-16 rounded-[var(--radius-lg)] flex items-center justify-center"
+            style={{ background: 'var(--ocean-pale)', color: 'var(--ocean)' }}
+          >
+            <CalendarDays className="w-8 h-8" />
+          </div>
+          <div className="text-center">
+            <p className="text-base font-semibold m-0" style={{ color: 'var(--stone)' }}>
+              Aucun calendrier pour le moment
+            </p>
+            <p className="text-sm mt-1 m-0" style={{ color: 'var(--mist)' }}>
+              Créez votre premier calendrier pour organiser vos événements familiaux.
+            </p>
+          </div>
+          <button
+            onClick={() => setIsCalendarFormOpen(true)}
+            className="flex items-center gap-2 text-white text-sm font-semibold px-5 py-2.5 rounded-[var(--radius-sm)] transition-all duration-150 hover:-translate-y-px"
+            style={{
+              background: 'linear-gradient(135deg, var(--ocean) 0%, var(--ocean-light) 100%)',
+              boxShadow: '0 3px 12px rgba(27,79,138,0.3)',
+            }}
+          >
+            <Plus className="w-4 h-4" />
+            Créer un calendrier
+          </button>
+        </div>
+        <CreateCalendarForm
+          open={isCalendarFormOpen}
+          onCancel={() => setIsCalendarFormOpen(false)}
+          onSubmit={handleCreateCalendar}
+          isLoading={createCalendarMutation.isPending}
+          families={families || []}
+        />
+      </>
     );
   }
 
