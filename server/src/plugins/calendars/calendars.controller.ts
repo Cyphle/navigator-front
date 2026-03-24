@@ -27,7 +27,7 @@ export const calendarsController: FastifyPluginAsync = async (fastify) => {
         title: event.title,
         time: event.time,
         person: calendar.name,
-        accentColor: calendar.color,
+        calendarColor: calendar.color,
         visibility: calendar.type === 'SHARED' ? 'FAMILY' : 'PERSONAL',
         attendees: event.invites ?? [],
       }))

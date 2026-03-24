@@ -5,7 +5,7 @@ export interface DashboardAgendaItem {
   title: string;
   time: string;
   person: string;
-  accentColor: string;
+  calendarColor: string;
   visibility: ItemVisibility;
   attendees: string[];
 }

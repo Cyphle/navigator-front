@@ -32,7 +32,7 @@ const toAgendaItem = (item: any): DashboardAgendaItem => ({
   title: item.title,
   time: item.time,
   person: item.person,
-  accentColor: item.accentColor,
+  calendarColor: item.calendarColor,
   visibility: item.visibility,
   attendees: item.attendees
 });

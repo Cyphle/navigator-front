@@ -6,7 +6,7 @@
         "title": "Anniversaire lycee",
         "time": "19:30",
         "person": "Emma",
-        "accentColor": "#f3a6a6",
+        "calendarColor": "#f3a6a6",
         "visibility": "FAMILY",
         "attendees": ["Noemie", "Emma"]
       },
@@ -15,7 +15,7 @@
         "title": "Avis podocteur",
         "time": "09:00",
         "person": "Emma",
-        "accentColor": "#8ec5e8",
+        "calendarColor": "#8ec5e8",
         "visibility": "PERSONAL",
         "attendees": ["Emma"]
       },
@@ -24,7 +24,7 @@
         "title": "Activite de ferrage",
         "time": "19:00",
         "person": "Louis",
-        "accentColor": "#f6c56c",
+        "calendarColor": "#f6c56c",
         "visibility": "FAMILY",
         "attendees": ["Louis", "Leo"]
       }

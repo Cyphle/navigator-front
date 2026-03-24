@@ -60,7 +60,7 @@ export const getCalendarSummary = (familyId: string): Promise<DashboardAgendaIte
       title: item.title,
       time: item.time,
       person: item.person,
-      accentColor: item.accentColor,
+      calendarColor: item.calendarColor,
       visibility: item.visibility,
       attendees: item.attendees ?? [],
     }));

@@ -35,7 +35,7 @@ describe('Dashboard service', () => {
           title: 'Anniversaire',
           time: '19:30',
           person: 'Emma',
-          accentColor: '#f3a6a6',
+          calendarColor: '#f3a6a6',
           visibility: 'FAMILY',
           attendees: ['Emma']
         }

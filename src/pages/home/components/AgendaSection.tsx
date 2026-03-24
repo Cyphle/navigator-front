@@ -30,7 +30,7 @@ export const AgendaSection = ({ events }: { events: DashboardAgendaItem[] }) => 
         <li key={event.id} className="px-6 py-4 flex items-start gap-4 hover:bg-[var(--sand)] transition-colors">
           <span
             className="w-1 h-12 rounded-full shrink-0 mt-0.5"
-            style={{ backgroundColor: event.accentColor }}
+            style={{ backgroundColor: event.calendarColor }}
             aria-hidden="true"
           />
           <div className="flex-1 min-w-0">
