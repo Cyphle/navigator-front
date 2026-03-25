@@ -1,12 +1,12 @@
 // Skipping these tests due to dayjs/Ant Design DatePicker mocking complexity
 import { render, screen, fireEvent } from '@testing-library/react';
-import { aPlannedMenuList, aPlannedMenuRecipe } from '../../../../test-utils/factories';
-import { PlannedMenuListsView } from './PlannedMenuListsView';
+import { aMealsList, aMealsRecipe } from '../../../../test-utils/factories';
+import { MealsListsView } from './MealsListsView';
 
-describe.skip('PlannedMenuListsView', () => {
+describe.skip('MealsListsView', () => {
   test('shows empty state when no lists', () => {
     render(
-      <PlannedMenuListsView
+      <MealsListsView
         lists={[]}
         onCreateNew={jest.fn()}
         onSelectList={jest.fn()}
@@ -23,7 +23,7 @@ describe.skip('PlannedMenuListsView', () => {
     const onCreateNew = jest.fn();
 
     render(
-      <PlannedMenuListsView
+      <MealsListsView
         lists={[]}
         onCreateNew={onCreateNew}
         onSelectList={jest.fn()}
@@ -38,10 +38,10 @@ describe.skip('PlannedMenuListsView', () => {
   });
 
   test('displays header with create button when lists exist', () => {
-    const lists = [aPlannedMenuList()];
+    const lists = [aMealsList()];
 
     render(
-      <PlannedMenuListsView
+      <MealsListsView
         lists={lists}
         onCreateNew={jest.fn()}
         onSelectList={jest.fn()}
@@ -56,10 +56,10 @@ describe.skip('PlannedMenuListsView', () => {
 
   test('calls onCreateNew when create button clicked in header', () => {
     const onCreateNew = jest.fn();
-    const lists = [aPlannedMenuList()];
+    const lists = [aMealsList()];
 
     render(
-      <PlannedMenuListsView
+      <MealsListsView
         lists={lists}
         onCreateNew={onCreateNew}
         onSelectList={jest.fn()}
@@ -75,18 +75,18 @@ describe.skip('PlannedMenuListsView', () => {
 
   test('renders list cards with correct information', () => {
     const lists = [
-      aPlannedMenuList({
+      aMealsList({
         id: 1,
         name: 'Menu semaine 1',
         startDate: '2026-03-01',
         endDate: '2026-03-07',
-        recipes: [aPlannedMenuRecipe(), aPlannedMenuRecipe({ recipeId: 2 })],
+        recipes: [aMealsRecipe(), aMealsRecipe({ recipeId: 2 })],
         isActiveShoppingList: false,
       }),
     ];
 
     render(
-      <PlannedMenuListsView
+      <MealsListsView
         lists={lists}
         onCreateNew={jest.fn()}
         onSelectList={jest.fn()}
@@ -103,10 +103,10 @@ describe.skip('PlannedMenuListsView', () => {
 
   test('calls onSelectList when card is clicked', () => {
     const onSelectList = jest.fn();
-    const lists = [aPlannedMenuList({ id: 1, name: 'Menu test' })];
+    const lists = [aMealsList({ id: 1, name: 'Menu test' })];
 
     render(
-      <PlannedMenuListsView
+      <MealsListsView
         lists={lists}
         onCreateNew={jest.fn()}
         onSelectList={onSelectList}
@@ -126,10 +126,10 @@ describe.skip('PlannedMenuListsView', () => {
 
   test('calls onDelete when delete button clicked', () => {
     const onDelete = jest.fn();
-    const lists = [aPlannedMenuList({ id: 1 })];
+    const lists = [aMealsList({ id: 1 })];
 
     render(
-      <PlannedMenuListsView
+      <MealsListsView
         lists={lists}
         onCreateNew={jest.fn()}
         onSelectList={jest.fn()}
@@ -146,10 +146,10 @@ describe.skip('PlannedMenuListsView', () => {
 
   test('calls onToggleShoppingList when shopping button clicked', () => {
     const onToggleShoppingList = jest.fn();
-    const lists = [aPlannedMenuList({ id: 1, isActiveShoppingList: false })];
+    const lists = [aMealsList({ id: 1, isActiveShoppingList: false })];
 
     render(
-      <PlannedMenuListsView
+      <MealsListsView
         lists={lists}
         onCreateNew={jest.fn()}
         onSelectList={jest.fn()}
@@ -165,10 +165,10 @@ describe.skip('PlannedMenuListsView', () => {
   });
 
   test('shows active shopping list badge when enabled', () => {
-    const lists = [aPlannedMenuList({ id: 1, isActiveShoppingList: true })];
+    const lists = [aMealsList({ id: 1, isActiveShoppingList: true })];
 
     render(
-      <PlannedMenuListsView
+      <MealsListsView
         lists={lists}
         onCreateNew={jest.fn()}
         onSelectList={jest.fn()}
@@ -184,10 +184,10 @@ describe.skip('PlannedMenuListsView', () => {
   test('stops event propagation when action buttons clicked', () => {
     const onSelectList = jest.fn();
     const onDelete = jest.fn();
-    const lists = [aPlannedMenuList({ id: 1 })];
+    const lists = [aMealsList({ id: 1 })];
 
     render(
-      <PlannedMenuListsView
+      <MealsListsView
         lists={lists}
         onCreateNew={jest.fn()}
         onSelectList={onSelectList}
@@ -206,13 +206,13 @@ describe.skip('PlannedMenuListsView', () => {
 
   test('renders multiple lists correctly', () => {
     const lists = [
-      aPlannedMenuList({ id: 1, name: 'Menu 1' }),
-      aPlannedMenuList({ id: 2, name: 'Menu 2' }),
-      aPlannedMenuList({ id: 3, name: 'Menu 3' }),
+      aMealsList({ id: 1, name: 'Menu 1' }),
+      aMealsList({ id: 2, name: 'Menu 2' }),
+      aMealsList({ id: 3, name: 'Menu 3' }),
     ];
 
     render(
-      <PlannedMenuListsView
+      <MealsListsView
         lists={lists}
         onCreateNew={jest.fn()}
         onSelectList={jest.fn()}

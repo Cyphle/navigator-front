@@ -3,13 +3,13 @@ import { Calendar, CheckSquare, ShoppingCart, UtensilsCrossed } from 'lucide-rea
 import { StatCard, type StatCardData } from './components/StatCard.tsx';
 import { AgendaSection } from './components/AgendaSection.tsx';
 import { TodosSection } from './components/TodosSection.tsx';
-import { WeeklyMenusSection } from './components/WeeklyMenusSection.tsx';
+import { MealsSection } from './components/MealsSection.tsx';
 import NoFamilyOverlay from '@/pages/home/components/NoFamilyOverlay.tsx';
 import { useFetchCalendarSummary } from '@/stores/calendars/calendars.queries.ts';
 import { useFetchTodosSummary } from '@/stores/family-todos/family-todos.queries.ts';
 import { useFetchRecipesSummary } from '@/stores/recipes/recipes.queries.ts';
 import { useFetchShoppingListSummary } from '@/stores/shopping-lists/shopping-lists.queries.ts';
-import { useFetchPlannedMenuSummary } from '@/stores/planned-menus/planned-menus.queries.ts';
+import { useFetchMealsSummary } from '@/stores/meals/meals.queries.ts';
 
 const buildStatCards = (
   agendaCount: number,
@@ -56,13 +56,13 @@ const HomeContent = () => {
   const todosQuery = useFetchTodosSummary();
   const recipesQuery = useFetchRecipesSummary();
   const shoppingQuery = useFetchShoppingListSummary();
-  const plannedMenuQuery = useFetchPlannedMenuSummary();
+  const mealsQuery = useFetchMealsSummary();
 
   const agenda = calendarQuery.data ?? [];
   const todos = todosQuery.data ?? [];
   const recipes = recipesQuery.data ?? [];
   const shopping = shoppingQuery.data ?? { items: 0 };
-  const weeklyMenu = plannedMenuQuery.data ?? { weekLabel: '', days: [] };
+  const weeklyMenu = mealsQuery.data ?? { weekLabel: '', days: [] };
 
   const statCards = buildStatCards(
     agenda.length,
@@ -81,7 +81,7 @@ const HomeContent = () => {
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 md:gap-6">
         <AgendaSection events={agenda} />
         <TodosSection todos={todos} />
-        <WeeklyMenusSection weeklyMenu={weeklyMenu} recipes={recipes} />
+        <MealsSection weeklyMenu={weeklyMenu} recipes={recipes} />
       </div>
     </div>
   );

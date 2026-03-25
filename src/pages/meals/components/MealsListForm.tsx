@@ -9,12 +9,12 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import type { CreatePlannedMenuListInput } from '../../../stores/planned-menus/planned-menus.types';
+import type { CreateMealsListInput } from '../../../stores/meals/meals.types';
 
-interface PlannedMenuListFormProps {
+interface MealsListFormProps {
   open: boolean;
   onCancel: () => void;
-  onSubmit: (input: CreatePlannedMenuListInput) => void;
+  onSubmit: (input: CreateMealsListInput) => void;
   isLoading?: boolean;
 }
 
@@ -31,7 +31,7 @@ interface FormValues {
   range: number;
 }
 
-export const PlannedMenuListForm = ({ open, onCancel, onSubmit, isLoading }: PlannedMenuListFormProps) => {
+export const MealsListForm = ({ open, onCancel, onSubmit, isLoading }: MealsListFormProps) => {
   const { control, handleSubmit, reset, watch, formState: { isValid } } = useForm<FormValues>({
     mode: 'onChange',
     defaultValues: { name: '', startDate: dayjs().format('YYYY-MM-DD'), range: 7 },

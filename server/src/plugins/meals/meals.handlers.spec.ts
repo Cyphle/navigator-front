@@ -1,28 +1,28 @@
 import {
-  getAllPlannedMenuLists,
-  getPlannedMenuListById,
-  createPlannedMenuList,
-  updatePlannedMenuList,
-  deletePlannedMenuList,
-  addRecipeToPlannedMenuList,
-  removeRecipeFromPlannedMenuList,
-} from './planned-menus.handlers';
+  getAllMealsLists,
+  getMealsListById,
+  createMealsList,
+  updateMealsList,
+  deleteMealsList,
+  addRecipeToMealsList,
+  removeRecipeFromMealsList,
+} from './meals.handlers';
 
 describe('planned-menus handlers', () => {
   test('should get all planned menu lists', () => {
-    const list1 = createPlannedMenuList({
+    const list1 = createMealsList({
       name: 'Menu 1',
       startDate: '2026-03-01',
       endDate: '2026-03-07',
     });
 
-    const list2 = createPlannedMenuList({
+    const list2 = createMealsList({
       name: 'Menu 2',
       startDate: '2026-03-08',
       endDate: '2026-03-14',
     });
 
-    const lists = getAllPlannedMenuLists();
+    const lists = getAllMealsLists();
 
     expect(lists).toHaveLength(2);
     expect(lists[0].name).toBe('Menu 1');
@@ -30,13 +30,13 @@ describe('planned-menus handlers', () => {
   });
 
   test('should get planned menu list by id', () => {
-    const created = createPlannedMenuList({
+    const created = createMealsList({
       name: 'Test Menu',
       startDate: '2026-03-01',
       endDate: '2026-03-07',
     });
 
-    const found = getPlannedMenuListById(created.id);
+    const found = getMealsListById(created.id);
 
     expect(found).toBeDefined();
     expect(found?.id).toBe(created.id);
@@ -44,7 +44,7 @@ describe('planned-menus handlers', () => {
   });
 
   test('should return undefined for non-existent id', () => {
-    const found = getPlannedMenuListById(99999);
+    const found = getMealsListById(99999);
 
     expect(found).toBeUndefined();
   });
@@ -56,7 +56,7 @@ describe('planned-menus handlers', () => {
       endDate: '2026-03-07',
     };
 
-    const created = createPlannedMenuList(input);
+    const created = createMealsList(input);
 
     expect(created.id).toBeGreaterThan(0);
     expect(created.name).toBe('New Menu');
@@ -69,13 +69,13 @@ describe('planned-menus handlers', () => {
   });
 
   test('should update planned menu list', () => {
-    const created = createPlannedMenuList({
+    const created = createMealsList({
       name: 'Original Name',
       startDate: '2026-03-01',
       endDate: '2026-03-07',
     });
 
-    const updated = updatePlannedMenuList(created.id, {
+    const updated = updateMealsList(created.id, {
       name: 'Updated Name',
       isActiveShoppingList: true,
     });
@@ -87,38 +87,38 @@ describe('planned-menus handlers', () => {
   });
 
   test('should return undefined when updating non-existent list', () => {
-    const updated = updatePlannedMenuList(99999, { name: 'Test' });
+    const updated = updateMealsList(99999, { name: 'Test' });
 
     expect(updated).toBeUndefined();
   });
 
   test('should delete planned menu list', () => {
-    const created = createPlannedMenuList({
+    const created = createMealsList({
       name: 'To Delete',
       startDate: '2026-03-01',
       endDate: '2026-03-07',
     });
 
-    const deleted = deletePlannedMenuList(created.id);
+    const deleted = deleteMealsList(created.id);
 
     expect(deleted).toBe(true);
-    expect(getPlannedMenuListById(created.id)).toBeUndefined();
+    expect(getMealsListById(created.id)).toBeUndefined();
   });
 
   test('should return false when deleting non-existent list', () => {
-    const deleted = deletePlannedMenuList(99999);
+    const deleted = deleteMealsList(99999);
 
     expect(deleted).toBe(false);
   });
 
   test('should add recipe to planned menu list', () => {
-    const created = createPlannedMenuList({
+    const created = createMealsList({
       name: 'Menu with recipes',
       startDate: '2026-03-01',
       endDate: '2026-03-07',
     });
 
-    const updated = addRecipeToPlannedMenuList(created.id, 5, 'Tarte aux pommes', ['2026-03-02']);
+    const updated = addRecipeToMealsList(created.id, 5, 'Tarte aux pommes', ['2026-03-02']);
 
     expect(updated).toBeDefined();
     expect(updated?.recipes).toHaveLength(1);
@@ -128,36 +128,36 @@ describe('planned-menus handlers', () => {
   });
 
   test('should update existing recipe when adding duplicate', () => {
-    const created = createPlannedMenuList({
+    const created = createMealsList({
       name: 'Menu',
       startDate: '2026-03-01',
       endDate: '2026-03-07',
     });
 
-    addRecipeToPlannedMenuList(created.id, 5, 'Tarte', ['2026-03-02']);
-    const updated = addRecipeToPlannedMenuList(created.id, 5, 'Tarte', ['2026-03-03', '2026-03-04']);
+    addRecipeToMealsList(created.id, 5, 'Tarte', ['2026-03-02']);
+    const updated = addRecipeToMealsList(created.id, 5, 'Tarte', ['2026-03-03', '2026-03-04']);
 
     expect(updated?.recipes).toHaveLength(1);
     expect(updated?.recipes[0].assignedDays).toEqual(['2026-03-03', '2026-03-04']);
   });
 
   test('should return undefined when adding recipe to non-existent list', () => {
-    const updated = addRecipeToPlannedMenuList(99999, 5, 'Tarte');
+    const updated = addRecipeToMealsList(99999, 5, 'Tarte');
 
     expect(updated).toBeUndefined();
   });
 
   test('should remove recipe from planned menu list', () => {
-    const created = createPlannedMenuList({
+    const created = createMealsList({
       name: 'Menu',
       startDate: '2026-03-01',
       endDate: '2026-03-07',
     });
 
-    addRecipeToPlannedMenuList(created.id, 5, 'Tarte');
-    addRecipeToPlannedMenuList(created.id, 6, 'Salade');
+    addRecipeToMealsList(created.id, 5, 'Tarte');
+    addRecipeToMealsList(created.id, 6, 'Salade');
 
-    const updated = removeRecipeFromPlannedMenuList(created.id, 5);
+    const updated = removeRecipeFromMealsList(created.id, 5);
 
     expect(updated).toBeDefined();
     expect(updated?.recipes).toHaveLength(1);
@@ -165,19 +165,19 @@ describe('planned-menus handlers', () => {
   });
 
   test('should return undefined when removing recipe from non-existent list', () => {
-    const updated = removeRecipeFromPlannedMenuList(99999, 5);
+    const updated = removeRecipeFromMealsList(99999, 5);
 
     expect(updated).toBeUndefined();
   });
 
   test('should handle removing non-existent recipe', () => {
-    const created = createPlannedMenuList({
+    const created = createMealsList({
       name: 'Menu',
       startDate: '2026-03-01',
       endDate: '2026-03-07',
     });
 
-    const updated = removeRecipeFromPlannedMenuList(created.id, 99999);
+    const updated = removeRecipeFromMealsList(created.id, 99999);
 
     expect(updated).toBeDefined();
     expect(updated?.recipes).toHaveLength(0);

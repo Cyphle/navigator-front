@@ -1,4 +1,4 @@
-import type { PlannedMenuList, PlannedMenuRecipe } from '../src/stores/planned-menus/planned-menus.types';
+import type { MealsList, MealsRecipe } from '../src/stores/meals/meals.types';
 import type { ShoppingList, ShoppingListItem } from '../src/stores/shopping-lists/shopping-lists.types';
 import type { Calendar, CalendarEvent } from '../src/stores/calendars/calendars.types';
 import type { TodoList, TodoItem } from '../src/stores/family-todos/family-todos.types';
@@ -25,17 +25,17 @@ export const aTodoList = (overrides: Partial<TodoList> = {}): TodoList => ({
   updatedAt: overrides.updatedAt ?? '2026-03-01T10:00:00Z',
 });
 
-export const aPlannedMenuRecipe = (
-  overrides: Partial<PlannedMenuRecipe> = {}
-): PlannedMenuRecipe => ({
+export const aMealsRecipe = (
+  overrides: Partial<MealsRecipe> = {}
+): MealsRecipe => ({
   recipeId: overrides.recipeId ?? 1,
   recipeName: overrides.recipeName ?? 'Tarte aux pommes',
   assignedDays: overrides.assignedDays,
 });
 
-export const aPlannedMenuList = (
-  overrides: Partial<PlannedMenuList> = {}
-): PlannedMenuList => ({
+export const aMealsList = (
+  overrides: Partial<MealsList> = {}
+): MealsList => ({
   id: overrides.id ?? 1,
   name: overrides.name ?? 'Menu de la semaine',
   startDate: overrides.startDate ?? '2026-03-01',

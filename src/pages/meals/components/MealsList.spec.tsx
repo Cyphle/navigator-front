@@ -1,12 +1,12 @@
 import { fireEvent, screen } from '@testing-library/react';
 import { render } from '../../../../test-utils';
-import { WeeklyMenusList } from './WeeklyMenusList';
+import { MealsList } from './MealsList';
 
-describe('WeeklyMenusList', () => {
+describe('MealsList', () => {
   test('renders recipes and triggers select', () => {
     const onSelect = jest.fn();
     render(
-      <WeeklyMenusList
+      <MealsList
         recipes={[
           { id: 1, name: 'Salade', category: 'ENTREE', rating: 4 },
           { id: 2, name: 'Tarte', category: 'DESSERT', rating: 5 },
@@ -24,7 +24,7 @@ describe('WeeklyMenusList', () => {
 
   test('disables button when already selected', () => {
     render(
-      <WeeklyMenusList
+      <MealsList
         recipes={[
           { id: 1, name: 'Salade', category: 'ENTREE', rating: 4 },
         ]}

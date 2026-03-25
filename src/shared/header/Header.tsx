@@ -27,7 +27,7 @@ const PAGE_CONTENT: Record<string, { title: string; subtitle: string }> = {
   '/calendars':     { title: 'Mes calendriers',              subtitle: 'Pour gérer mon temps et celui de ma famille' },
   '/family-todos':  { title: 'To do lists',                  subtitle: 'Mes tâches et celles de ma famille' },
   '/shopping-lists':{ title: 'Listes de course',             subtitle: 'Acheter acheter acheter ! Pour ma famille et moi' },
-  '/weekly-menus':  { title: 'Recettes de la semaine et plus', subtitle: 'Pour bien manger dans les jours à venir' },
+  '/meals':  { title: 'Recettes de la semaine et plus', subtitle: 'Pour bien manger dans les jours à venir' },
   '/recipes':       { title: 'Recettes',                     subtitle: 'Mes recettes, celles de ma famille mais pas que' },
   '/profile':       { title: 'Mon profil',                   subtitle: 'Moi moi et encore moi. Mais aussi nous' },
 };

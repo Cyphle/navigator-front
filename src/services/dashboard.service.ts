@@ -2,8 +2,8 @@ import { getOne } from '../helpers/http.ts';
 import {
   DashboardAgendaItem,
   DashboardData,
-  DashboardMenuDay,
-  DashboardMenuEntry,
+  DashboardMealsDay,
+  DashboardMealsEntry,
   DashboardRecipe,
   DashboardTodoItem
 } from '../stores/dashboard/dashboard.types.ts';
@@ -45,7 +45,7 @@ const toTodoItem = (item: any): DashboardTodoItem => ({
   visibility: item.visibility
 });
 
-const toMenuEntry = (entry: any): DashboardMenuEntry => ({
+const toMenuEntry = (entry: any): DashboardMealsEntry => ({
   id: entry.id,
   name: entry.name,
   time: entry.time,
@@ -55,7 +55,7 @@ const toMenuEntry = (entry: any): DashboardMenuEntry => ({
   visibility: entry.visibility
 });
 
-const toMenuDay = (day: any): DashboardMenuDay => ({
+const toMenuDay = (day: any): DashboardMealsDay => ({
   id: day.id,
   label: day.label,
   entries: day.entries.map((entry: any) => toMenuEntry(entry))

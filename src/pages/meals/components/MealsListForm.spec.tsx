@@ -1,11 +1,11 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { render } from '../../../../test-utils';
-import { PlannedMenuListForm } from './PlannedMenuListForm';
+import { MealsListForm } from './MealsListForm';
 
-describe('PlannedMenuListForm', () => {
+describe('MealsListForm', () => {
   test('does not render when closed', () => {
     render(
-      <PlannedMenuListForm
+      <MealsListForm
         open={false}
         onCancel={jest.fn()}
         onSubmit={jest.fn()}
@@ -17,7 +17,7 @@ describe('PlannedMenuListForm', () => {
 
   test('renders form when open', async () => {
     render(
-      <PlannedMenuListForm
+      <MealsListForm
         open={true}
         onCancel={jest.fn()}
         onSubmit={jest.fn()}
@@ -36,7 +36,7 @@ describe('PlannedMenuListForm', () => {
     const onCancel = jest.fn();
 
     render(
-      <PlannedMenuListForm
+      <MealsListForm
         open={true}
         onCancel={onCancel}
         onSubmit={jest.fn()}
@@ -55,7 +55,7 @@ describe('PlannedMenuListForm', () => {
 
   test('automatically calculates end date based on range', async () => {
     render(
-      <PlannedMenuListForm
+      <MealsListForm
         open={true}
         onCancel={jest.fn()}
         onSubmit={jest.fn()}
@@ -73,7 +73,7 @@ describe('PlannedMenuListForm', () => {
 
   test('shows loading state on submit button when loading', async () => {
     render(
-      <PlannedMenuListForm
+      <MealsListForm
         open={true}
         onCancel={jest.fn()}
         onSubmit={jest.fn()}

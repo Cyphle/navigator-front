@@ -1,18 +1,18 @@
 import type { FastifyPluginAsync } from 'fastify';
 import {
-  getAllPlannedMenuLists,
-  getPlannedMenuListById,
-  createPlannedMenuList,
-  updatePlannedMenuList,
-  deletePlannedMenuList,
-  addRecipeToPlannedMenuList,
-  removeRecipeFromPlannedMenuList,
-} from './planned-menus.handlers';
-import type { CreatePlannedMenuListInput, UpdatePlannedMenuListInput } from './planned-menus.types';
+  getAllMealsLists,
+  getMealsListById,
+  createMealsList,
+  updateMealsList,
+  deleteMealsList,
+  addRecipeToMealsList,
+  removeRecipeFromMealsList,
+} from './meals.handlers';
+import type { CreateMealsListInput, UpdateMealsListInput } from './meals.types';
 
-export const plannedMenusController: FastifyPluginAsync = async (fastify) => {
-  // Get planned menu summary for a family (registered FIRST to avoid conflict with /:familyId/planned-menus/:id)
-  fastify.get<{ Params: { familyId: string } }>('/:familyId/planned-menus/summary', async (_request, reply) => {
+export const mealsController: FastifyPluginAsync = async (fastify) => {
+  // Get planned menu summary for a family (registered FIRST to avoid conflict with /:familyId/meals/:id)
+  fastify.get<{ Params: { familyId: string } }>('/:familyId/meals/summary', async (_request, reply) => {
     const summary = {
       weekLabel: 'Mar. 23',
       days: [
@@ -29,15 +29,15 @@ export const plannedMenusController: FastifyPluginAsync = async (fastify) => {
   });
 
   // Get all planned menu lists
-  fastify.get<{ Params: { familyId: string } }>('/:familyId/planned-menus', async (_request, reply) => {
-    const lists = getAllPlannedMenuLists();
+  fastify.get<{ Params: { familyId: string } }>('/:familyId/meals', async (_request, reply) => {
+    const lists = getAllMealsLists();
     return reply.code(200).send(lists);
   });
 
   // Get a specific planned menu list
-  fastify.get<{ Params: { familyId: string; id: string } }>('/:familyId/planned-menus/:id', async (request, reply) => {
+  fastify.get<{ Params: { familyId: string; id: string } }>('/:familyId/meals/:id', async (request, reply) => {
     const id = parseInt(request.params.id, 10);
-    const list = getPlannedMenuListById(id);
+    const list = getMealsListById(id);
 
     if (!list) {
       return reply.code(404).send({ error: 'Planned menu list not found' });
@@ -47,17 +47,17 @@ export const plannedMenusController: FastifyPluginAsync = async (fastify) => {
   });
 
   // Create a new planned menu list
-  fastify.post<{ Params: { familyId: string }; Body: CreatePlannedMenuListInput }>('/:familyId/planned-menus', async (request, reply) => {
-    const newList = createPlannedMenuList(request.body);
+  fastify.post<{ Params: { familyId: string }; Body: CreateMealsListInput }>('/:familyId/meals', async (request, reply) => {
+    const newList = createMealsList(request.body);
     return reply.code(201).send(newList);
   });
 
   // Update a planned menu list
-  fastify.put<{ Params: { familyId: string; id: string }; Body: UpdatePlannedMenuListInput }>(
-    '/:familyId/planned-menus/:id',
+  fastify.put<{ Params: { familyId: string; id: string }; Body: UpdateMealsListInput }>(
+    '/:familyId/meals/:id',
     async (request, reply) => {
       const id = parseInt(request.params.id, 10);
-      const updatedList = updatePlannedMenuList(id, request.body);
+      const updatedList = updateMealsList(id, request.body);
 
       if (!updatedList) {
         return reply.code(404).send({ error: 'Planned menu list not found' });
@@ -68,9 +68,9 @@ export const plannedMenusController: FastifyPluginAsync = async (fastify) => {
   );
 
   // Delete a planned menu list
-  fastify.delete<{ Params: { familyId: string; id: string } }>('/:familyId/planned-menus/:id', async (request, reply) => {
+  fastify.delete<{ Params: { familyId: string; id: string } }>('/:familyId/meals/:id', async (request, reply) => {
     const id = parseInt(request.params.id, 10);
-    const deleted = deletePlannedMenuList(id);
+    const deleted = deleteMealsList(id);
 
     if (!deleted) {
       return reply.code(404).send({ error: 'Planned menu list not found' });
@@ -83,11 +83,11 @@ export const plannedMenusController: FastifyPluginAsync = async (fastify) => {
   fastify.post<{
     Params: { familyId: string; id: string };
     Body: { recipeId: number; recipeName: string; assignedDays?: string[] };
-  }>('/:familyId/planned-menus/:id/recipes', async (request, reply) => {
+  }>('/:familyId/meals/:id/recipes', async (request, reply) => {
     const id = parseInt(request.params.id, 10);
     const { recipeId, recipeName, assignedDays } = request.body;
 
-    const updatedList = addRecipeToPlannedMenuList(id, recipeId, recipeName, assignedDays);
+    const updatedList = addRecipeToMealsList(id, recipeId, recipeName, assignedDays);
 
     if (!updatedList) {
       return reply.code(404).send({ error: 'Planned menu list not found' });
@@ -98,12 +98,12 @@ export const plannedMenusController: FastifyPluginAsync = async (fastify) => {
 
   // Remove a recipe from a planned menu list
   fastify.delete<{ Params: { familyId: string; id: string; recipeId: string } }>(
-    '/:familyId/planned-menus/:id/recipes/:recipeId',
+    '/:familyId/meals/:id/recipes/:recipeId',
     async (request, reply) => {
       const id = parseInt(request.params.id, 10);
       const recipeId = parseInt(request.params.recipeId, 10);
 
-      const updatedList = removeRecipeFromPlannedMenuList(id, recipeId);
+      const updatedList = removeRecipeFromMealsList(id, recipeId);
 
       if (!updatedList) {
         return reply.code(404).send({ error: 'Planned menu list not found' });

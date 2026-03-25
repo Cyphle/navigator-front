@@ -1,19 +1,19 @@
 import { Button, Rate } from 'antd';
 import type { Recipe, RecipeCategory } from '../../../stores/recipes/recipes.types';
 
-interface WeeklyMenusListProps {
+interface MealsListProps {
   recipes: Recipe[];
   categoryLabels: Record<RecipeCategory, string>;
   selectedIds: Set<number>;
   onSelect: (recipe: Recipe) => void;
 }
 
-export const WeeklyMenusList = ({
+export const MealsList = ({
   recipes,
   categoryLabels,
   selectedIds,
   onSelect,
-}: WeeklyMenusListProps) => {
+}: MealsListProps) => {
   return (
     <div className="weekly-menus-list__grid">
       {recipes.map((recipe) => (

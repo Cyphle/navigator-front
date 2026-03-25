@@ -1,13 +1,13 @@
 import { getOne, post, put, deleteOne } from '../helpers/http';
 import {
-  getAllPlannedMenuLists,
-  getPlannedMenuListById,
-  createPlannedMenuList,
-  updatePlannedMenuList,
-  deletePlannedMenuList,
-  addRecipeToPlannedMenuList,
-  removeRecipeFromPlannedMenuList,
-} from './planned-menus.service';
+  getAllMealsLists,
+  getMealsListById,
+  createMealsList,
+  updateMealsList,
+  deleteMealsList,
+  addRecipeToMealsList,
+  removeRecipeFromMealsList,
+} from './meals.service';
 
 jest.mock('../helpers/http', () => ({
   getOne: jest.fn(),
@@ -41,9 +41,9 @@ describe('Planned menus service', () => {
       return Promise.resolve(mapper(apiResponse));
     });
 
-    const response = await getAllPlannedMenuLists(TEST_FAMILY_ID);
+    const response = await getAllMealsLists(TEST_FAMILY_ID);
 
-    expect(getOne).toHaveBeenCalledWith('families/1/planned-menus', expect.any(Function));
+    expect(getOne).toHaveBeenCalledWith('families/1/meals', expect.any(Function));
     expect(response).toHaveLength(1);
     expect(response[0].name).toBe('Menu semaine 1');
   });
@@ -64,9 +64,9 @@ describe('Planned menus service', () => {
       return Promise.resolve(mapper(apiResponse));
     });
 
-    const response = await getPlannedMenuListById(TEST_FAMILY_ID, 1);
+    const response = await getMealsListById(TEST_FAMILY_ID, 1);
 
-    expect(getOne).toHaveBeenCalledWith('families/1/planned-menus/1', expect.any(Function));
+    expect(getOne).toHaveBeenCalledWith('families/1/meals/1', expect.any(Function));
     expect(response.id).toBe(1);
     expect(response.recipes).toHaveLength(1);
     expect(response.recipes[0].recipeName).toBe('Salade');
@@ -92,9 +92,9 @@ describe('Planned menus service', () => {
       return Promise.resolve(mapper(apiResponse));
     });
 
-    const response = await createPlannedMenuList(TEST_FAMILY_ID, input);
+    const response = await createMealsList(TEST_FAMILY_ID, input);
 
-    expect(post).toHaveBeenCalledWith('families/1/planned-menus', input, expect.any(Function));
+    expect(post).toHaveBeenCalledWith('families/1/meals', input, expect.any(Function));
     expect(response.id).toBe(2);
     expect(response.name).toBe('Nouveau menu');
   });
@@ -119,18 +119,18 @@ describe('Planned menus service', () => {
       return Promise.resolve(mapper(apiResponse));
     });
 
-    const response = await updatePlannedMenuList(TEST_FAMILY_ID, 1, input);
+    const response = await updateMealsList(TEST_FAMILY_ID, 1, input);
 
-    expect(put).toHaveBeenCalledWith('families/1/planned-menus/1', input, expect.any(Function));
+    expect(put).toHaveBeenCalledWith('families/1/meals/1', input, expect.any(Function));
     expect(response.isActiveShoppingList).toBe(true);
   });
 
   test('should delete planned menu list', async () => {
     (deleteOne as jest.Mock).mockResolvedValue(undefined);
 
-    await deletePlannedMenuList(TEST_FAMILY_ID, 1);
+    await deleteMealsList(TEST_FAMILY_ID, 1);
 
-    expect(deleteOne).toHaveBeenCalledWith('families/1/planned-menus/1');
+    expect(deleteOne).toHaveBeenCalledWith('families/1/meals/1');
   });
 
   test('should add recipe to planned menu list', async () => {
@@ -149,10 +149,10 @@ describe('Planned menus service', () => {
       return Promise.resolve(mapper(apiResponse));
     });
 
-    const response = await addRecipeToPlannedMenuList(TEST_FAMILY_ID, 1, 5, 'Tarte', ['2026-03-02']);
+    const response = await addRecipeToMealsList(TEST_FAMILY_ID, 1, 5, 'Tarte', ['2026-03-02']);
 
     expect(post).toHaveBeenCalledWith(
-      'families/1/planned-menus/1/recipes',
+      'families/1/meals/1/recipes',
       { recipeId: 5, recipeName: 'Tarte', assignedDays: ['2026-03-02'] },
       expect.any(Function)
     );
@@ -176,9 +176,9 @@ describe('Planned menus service', () => {
       return Promise.resolve(mapper(apiResponse));
     });
 
-    const response = await removeRecipeFromPlannedMenuList(TEST_FAMILY_ID, 1, 5);
+    const response = await removeRecipeFromMealsList(TEST_FAMILY_ID, 1, 5);
 
-    expect(deleteOne).toHaveBeenCalledWith('families/1/planned-menus/1/recipes/5', expect.any(Function));
+    expect(deleteOne).toHaveBeenCalledWith('families/1/meals/1/recipes/5', expect.any(Function));
     expect(response.recipes).toHaveLength(0);
   });
 
@@ -187,7 +187,7 @@ describe('Planned menus service', () => {
       return Promise.resolve(mapper(null));
     });
 
-    const response = await getAllPlannedMenuLists(TEST_FAMILY_ID);
+    const response = await getAllMealsLists(TEST_FAMILY_ID);
 
     expect(response).toEqual([]);
   });
@@ -204,7 +204,7 @@ describe('Planned menus service', () => {
       return Promise.resolve(mapper(apiResponse));
     });
 
-    const response = await getPlannedMenuListById(TEST_FAMILY_ID, 1);
+    const response = await getMealsListById(TEST_FAMILY_ID, 1);
 
     expect(response.recipes).toEqual([]);
     expect(response.isActiveShoppingList).toBe(false);

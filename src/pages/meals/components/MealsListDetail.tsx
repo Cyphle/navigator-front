@@ -15,12 +15,12 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { cn } from '@/lib/utils';
-import type { PlannedMenuList, PlannedMenuRecipe } from '../../../stores/planned-menus/planned-menus.types';
+import type { MealsList, MealsRecipe } from '../../../stores/meals/meals.types';
 import type { RecipeCategory } from '../../../stores/recipes/recipes.types';
 import { useFetchRecipesPage } from '../../../stores/recipes/recipes.queries';
 
-interface PlannedMenuListDetailProps {
-  list: PlannedMenuList;
+interface MealsListDetailProps {
+  list: MealsList;
   onBack: () => void;
   onAddRecipe: (recipeId: number, recipeName: string, assignedDays?: string[]) => void;
   onRemoveRecipe: (recipeId: number) => void;
@@ -43,15 +43,15 @@ const CATEGORY_COLORS: Record<RecipeCategory, { bg: string; text: string }> = {
   APERO:   { bg: 'var(--ocean-pale)', text: 'var(--ocean)' },
 };
 
-export const PlannedMenuListDetail = ({
+export const MealsListDetail = ({
   list,
   onBack,
   onAddRecipe,
   onRemoveRecipe,
   onUpdateRecipeDays,
-}: PlannedMenuListDetailProps) => {
+}: MealsListDetailProps) => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [selectedRecipeForDays, setSelectedRecipeForDays] = useState<PlannedMenuRecipe | null>(null);
+  const [selectedRecipeForDays, setSelectedRecipeForDays] = useState<MealsRecipe | null>(null);
   const [selectedDays, setSelectedDays] = useState<string[]>([]);
 
   const [page, setPage] = useState(1);
@@ -91,7 +91,7 @@ export const PlannedMenuListDetail = ({
     return dates;
   }, [list.startDate, list.endDate]);
 
-  const handleOpenDaysModal = (recipe: PlannedMenuRecipe) => {
+  const handleOpenDaysModal = (recipe: MealsRecipe) => {
     setSelectedRecipeForDays(recipe);
     setSelectedDays(recipe.assignedDays || []);
   };

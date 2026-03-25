@@ -1,22 +1,22 @@
 import { Plus, Trash2, Utensils, Calendar as CalendarIcon, ShoppingCart } from 'lucide-react';
 import dayjs from 'dayjs';
-import type { PlannedMenuList } from '../../../stores/planned-menus/planned-menus.types';
+import type { MealsList } from '../../../stores/meals/meals.types';
 
-interface PlannedMenuListsViewProps {
-  lists: PlannedMenuList[];
+interface MealsListsViewProps {
+  lists: MealsList[];
   onCreateNew: () => void;
   onSelectList: (id: number) => void;
   onDelete: (id: number) => void;
   onToggleShoppingList: (id: number, isActive: boolean) => void;
 }
 
-export const PlannedMenuListsView = ({
+export const MealsListsView = ({
   lists,
   onCreateNew,
   onSelectList,
   onDelete,
   onToggleShoppingList,
-}: PlannedMenuListsViewProps) => {
+}: MealsListsViewProps) => {
   return (
     <div className="p-4 md:p-6 min-h-full" style={{ background: 'var(--sand)' }}>
       {/* Header */}

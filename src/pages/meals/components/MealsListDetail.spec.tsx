@@ -1,24 +1,24 @@
 // Skipping these tests due to dayjs/Ant Design Calendar mocking complexity
 // The component uses Ant Design Calendar with dayjs which requires complex mocking setup
 import { render, screen, fireEvent, waitFor, within } from '@testing-library/react';
-import { aPlannedMenuList, aPlannedMenuRecipe } from '../../../../test-utils/factories';
-import { PlannedMenuListDetail } from './PlannedMenuListDetail';
+import { aMealsList, aMealsRecipe } from '../../../../test-utils/factories';
+import { MealsListDetail } from './MealsListDetail';
 import { useFetchRecipesPage } from '../../../stores/recipes/recipes.queries';
 
-describe.skip('PlannedMenuListDetail', () => {
+describe.skip('MealsListDetail', () => {
   it.skip('placeholder', () => {
     jest.clearAllMocks();
   });
 
   test('displays list information in header', () => {
-    const list = aPlannedMenuList({
+    const list = aMealsList({
       name: 'Menu de test',
       startDate: '2026-03-01',
       endDate: '2026-03-07',
     });
 
     render(
-      <PlannedMenuListDetail
+      <MealsListDetail
         list={list}
         onBack={jest.fn()}
         onAddRecipe={jest.fn()}
@@ -33,10 +33,10 @@ describe.skip('PlannedMenuListDetail', () => {
 
   test('calls onBack when back button clicked', () => {
     const onBack = jest.fn();
-    const list = aPlannedMenuList();
+    const list = aMealsList();
 
     render(
-      <PlannedMenuListDetail
+      <MealsListDetail
         list={list}
         onBack={onBack}
         onAddRecipe={jest.fn()}
@@ -51,10 +51,10 @@ describe.skip('PlannedMenuListDetail', () => {
   });
 
   test('shows empty state when no recipes selected', () => {
-    const list = aPlannedMenuList({ recipes: [] });
+    const list = aMealsList({ recipes: [] });
 
     render(
-      <PlannedMenuListDetail
+      <MealsListDetail
         list={list}
         onBack={jest.fn()}
         onAddRecipe={jest.fn()}
@@ -67,15 +67,15 @@ describe.skip('PlannedMenuListDetail', () => {
   });
 
   test('displays selected recipes', () => {
-    const list = aPlannedMenuList({
+    const list = aMealsList({
       recipes: [
-        aPlannedMenuRecipe({ recipeId: 1, recipeName: 'Salade' }),
-        aPlannedMenuRecipe({ recipeId: 2, recipeName: 'Tarte' }),
+        aMealsRecipe({ recipeId: 1, recipeName: 'Salade' }),
+        aMealsRecipe({ recipeId: 2, recipeName: 'Tarte' }),
       ],
     });
 
     render(
-      <PlannedMenuListDetail
+      <MealsListDetail
         list={list}
         onBack={jest.fn()}
         onAddRecipe={jest.fn()}
@@ -90,12 +90,12 @@ describe.skip('PlannedMenuListDetail', () => {
 
   test('calls onRemoveRecipe when remove button clicked', () => {
     const onRemoveRecipe = jest.fn();
-    const list = aPlannedMenuList({
-      recipes: [aPlannedMenuRecipe({ recipeId: 1, recipeName: 'Salade' })],
+    const list = aMealsList({
+      recipes: [aMealsRecipe({ recipeId: 1, recipeName: 'Salade' })],
     });
 
     render(
-      <PlannedMenuListDetail
+      <MealsListDetail
         list={list}
         onBack={jest.fn()}
         onAddRecipe={jest.fn()}
@@ -110,10 +110,10 @@ describe.skip('PlannedMenuListDetail', () => {
   });
 
   test('opens add recipe modal when add button clicked', async () => {
-    const list = aPlannedMenuList();
+    const list = aMealsList();
 
     render(
-      <PlannedMenuListDetail
+      <MealsListDetail
         list={list}
         onBack={jest.fn()}
         onAddRecipe={jest.fn()}
@@ -133,10 +133,10 @@ describe.skip('PlannedMenuListDetail', () => {
   });
 
   test('displays recipes in add modal', async () => {
-    const list = aPlannedMenuList();
+    const list = aMealsList();
 
     render(
-      <PlannedMenuListDetail
+      <MealsListDetail
         list={list}
         onBack={jest.fn()}
         onAddRecipe={jest.fn()}
@@ -156,10 +156,10 @@ describe.skip('PlannedMenuListDetail', () => {
 
   test('calls onAddRecipe and closes modal when recipe added', async () => {
     const onAddRecipe = jest.fn();
-    const list = aPlannedMenuList();
+    const list = aMealsList();
 
     render(
-      <PlannedMenuListDetail
+      <MealsListDetail
         list={list}
         onBack={jest.fn()}
         onAddRecipe={onAddRecipe}
@@ -185,12 +185,12 @@ describe.skip('PlannedMenuListDetail', () => {
   });
 
   test('disables add button for already selected recipes', async () => {
-    const list = aPlannedMenuList({
-      recipes: [aPlannedMenuRecipe({ recipeId: 1, recipeName: 'Salade' })],
+    const list = aMealsList({
+      recipes: [aMealsRecipe({ recipeId: 1, recipeName: 'Salade' })],
     });
 
     render(
-      <PlannedMenuListDetail
+      <MealsListDetail
         list={list}
         onBack={jest.fn()}
         onAddRecipe={jest.fn()}
@@ -209,12 +209,12 @@ describe.skip('PlannedMenuListDetail', () => {
   });
 
   test('opens days assignment modal when Jours button clicked', async () => {
-    const list = aPlannedMenuList({
-      recipes: [aPlannedMenuRecipe({ recipeId: 1, recipeName: 'Salade' })],
+    const list = aMealsList({
+      recipes: [aMealsRecipe({ recipeId: 1, recipeName: 'Salade' })],
     });
 
     render(
-      <PlannedMenuListDetail
+      <MealsListDetail
         list={list}
         onBack={jest.fn()}
         onAddRecipe={jest.fn()}
@@ -231,9 +231,9 @@ describe.skip('PlannedMenuListDetail', () => {
   });
 
   test('shows assigned days for recipes', () => {
-    const list = aPlannedMenuList({
+    const list = aMealsList({
       recipes: [
-        aPlannedMenuRecipe({
+        aMealsRecipe({
           recipeId: 1,
           recipeName: 'Salade',
           assignedDays: ['2026-03-01', '2026-03-02'],
@@ -242,7 +242,7 @@ describe.skip('PlannedMenuListDetail', () => {
     });
 
     render(
-      <PlannedMenuListDetail
+      <MealsListDetail
         list={list}
         onBack={jest.fn()}
         onAddRecipe={jest.fn()}
@@ -256,12 +256,12 @@ describe.skip('PlannedMenuListDetail', () => {
   });
 
   test('shows message when no days assigned', () => {
-    const list = aPlannedMenuList({
-      recipes: [aPlannedMenuRecipe({ recipeId: 1, recipeName: 'Salade', assignedDays: undefined })],
+    const list = aMealsList({
+      recipes: [aMealsRecipe({ recipeId: 1, recipeName: 'Salade', assignedDays: undefined })],
     });
 
     render(
-      <PlannedMenuListDetail
+      <MealsListDetail
         list={list}
         onBack={jest.fn()}
         onAddRecipe={jest.fn()}
@@ -280,10 +280,10 @@ describe.skip('PlannedMenuListDetail', () => {
       isError: false,
     });
 
-    const list = aPlannedMenuList();
+    const list = aMealsList();
 
     render(
-      <PlannedMenuListDetail
+      <MealsListDetail
         list={list}
         onBack={jest.fn()}
         onAddRecipe={jest.fn()}

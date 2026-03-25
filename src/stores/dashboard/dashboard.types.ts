@@ -18,7 +18,7 @@ export interface DashboardTodoItem {
   visibility: ItemVisibility;
 }
 
-export interface DashboardMenuEntry {
+export interface DashboardMealsEntry {
   id: number;
   name: string;
   time: string;
@@ -28,15 +28,15 @@ export interface DashboardMenuEntry {
   visibility: ItemVisibility;
 }
 
-export interface DashboardMenuDay {
+export interface DashboardMealsDay {
   id: number;
   label: string;
-  entries: DashboardMenuEntry[];
+  entries: DashboardMealsEntry[];
 }
 
-export interface DashboardWeeklyMenu {
+export interface DashboardMeals {
   weekLabel: string;
-  days: DashboardMenuDay[];
+  days: DashboardMealsDay[];
 }
 
 export interface DashboardRecipe {
@@ -54,7 +54,7 @@ export interface DashboardShopping {
 export interface DashboardData {
   agenda: DashboardAgendaItem[];
   todos: DashboardTodoItem[];
-  weeklyMenu: DashboardWeeklyMenu;
+  weeklyMenu: DashboardMeals;
   recipes: DashboardRecipe[];
   shopping: DashboardShopping;
 }

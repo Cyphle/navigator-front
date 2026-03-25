@@ -1,12 +1,12 @@
 import { Button } from 'antd';
 import type { Recipe } from '../../../stores/recipes/recipes.types';
 
-interface WeeklyMenusSelectedProps {
+interface MealsSelectedProps {
   selectedRecipes: Recipe[];
   onRemove: (recipeId: number) => void;
 }
 
-export const WeeklyMenusSelected = ({ selectedRecipes, onRemove }: WeeklyMenusSelectedProps) => {
+export const MealsSelected = ({ selectedRecipes, onRemove }: MealsSelectedProps) => {
   return (
     <div className="weekly-menus-selected__content">
       <div className="weekly-menus-selected__header">

@@ -7,7 +7,7 @@ import ErrorPage from './shared/error/ErrorPage.tsx';
 import { Families } from './pages/families/Families.tsx';
 import { Recipes } from './pages/recipes/Recipes.tsx';
 import { Profile } from './pages/profile/Profile.tsx';
-import { WeeklyMenus } from './pages/weekly-menus/WeeklyMenus.tsx';
+import { Meals } from './pages/meals/Meals.tsx';
 import { ShoppingLists } from './pages/shopping-lists/ShoppingLists.tsx';
 import { FamilyTodos } from './pages/family-todos/FamilyTodos.tsx';
 import { Calendars } from './pages/calendars/Calendars.tsx';
@@ -103,8 +103,8 @@ export const ROUTES_PATHS: RouteDefinitionConfig[] = [
   {
     id: 7,
     name: 'Menus de la semaine',
-    path: 'weekly-menus',
-    element: <WeeklyMenus />,
+    path: 'meals',
+    element: <Meals />,
     icon: (
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M4 6h16v2H4V6Zm0 5h16v2H4v-2Zm0 5h10v2H4v-2Z" />

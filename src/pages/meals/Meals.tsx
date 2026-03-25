@@ -1,34 +1,34 @@
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import {
-  useFetchAllPlannedMenuLists,
-  useFetchPlannedMenuListById,
-  useCreatePlannedMenuList,
-  useUpdatePlannedMenuList,
-  useDeletePlannedMenuList,
-  useAddRecipeToPlannedMenuList,
-  useRemoveRecipeFromPlannedMenuList,
-} from '../../stores/planned-menus/planned-menus.queries';
-import { PlannedMenuListsView } from './components/PlannedMenuListsView';
-import { PlannedMenuListForm } from './components/PlannedMenuListForm';
-import { PlannedMenuListDetail } from './components/PlannedMenuListDetail';
-import type { CreatePlannedMenuListInput } from '../../stores/planned-menus/planned-menus.types';
+  useFetchAllMealsLists,
+  useFetchMealsListById,
+  useCreateMealsList,
+  useUpdateMealsList,
+  useDeleteMealsList,
+  useAddRecipeToMealsList,
+  useRemoveRecipeFromMealsList,
+} from '../../stores/meals/meals.queries';
+import { MealsListsView } from './components/MealsListsView';
+import { MealsListForm } from './components/MealsListForm';
+import { MealsListDetail } from './components/MealsListDetail';
+import type { CreateMealsListInput } from '../../stores/meals/meals.types';
 import { Loader2 } from 'lucide-react';
 
-export const WeeklyMenus = () => {
+export const Meals = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedListId, setSelectedListId] = useState<number | null>(null);
   const { toast } = useToast();
 
-  const { data: lists, isPending, isError } = useFetchAllPlannedMenuLists();
-  const { data: selectedList } = useFetchPlannedMenuListById(selectedListId || 0);
-  const createMutation = useCreatePlannedMenuList();
-  const updateMutation = useUpdatePlannedMenuList();
-  const deleteMutation = useDeletePlannedMenuList();
-  const addRecipeMutation = useAddRecipeToPlannedMenuList();
-  const removeRecipeMutation = useRemoveRecipeFromPlannedMenuList();
+  const { data: lists, isPending, isError } = useFetchAllMealsLists();
+  const { data: selectedList } = useFetchMealsListById(selectedListId || 0);
+  const createMutation = useCreateMealsList();
+  const updateMutation = useUpdateMealsList();
+  const deleteMutation = useDeleteMealsList();
+  const addRecipeMutation = useAddRecipeToMealsList();
+  const removeRecipeMutation = useRemoveRecipeFromMealsList();
 
-  const handleCreateList = (input: CreatePlannedMenuListInput) => {
+  const handleCreateList = (input: CreateMealsListInput) => {
     createMutation.mutate(input, {
       onSuccess: () => {
         toast({ title: 'Liste créée avec succès' });
@@ -140,7 +140,7 @@ export const WeeklyMenus = () => {
   // Show detail view if a list is selected
   if (selectedListId && selectedList) {
     return (
-      <PlannedMenuListDetail
+      <MealsListDetail
         list={selectedList}
         onBack={() => setSelectedListId(null)}
         onAddRecipe={handleAddRecipe}
@@ -153,7 +153,7 @@ export const WeeklyMenus = () => {
   // Show list view
   return (
     <div className="min-h-full" style={{ background: 'var(--sand)' }}>
-      <PlannedMenuListsView
+      <MealsListsView
         lists={lists || []}
         onCreateNew={() => setIsFormOpen(true)}
         onSelectList={setSelectedListId}
@@ -161,7 +161,7 @@ export const WeeklyMenus = () => {
         onToggleShoppingList={handleToggleShoppingList}
       />
 
-      <PlannedMenuListForm
+      <MealsListForm
         open={isFormOpen}
         onCancel={() => setIsFormOpen(false)}
         onSubmit={handleCreateList}

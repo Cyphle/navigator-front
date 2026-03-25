@@ -1,17 +1,17 @@
 import { fireEvent, screen } from '@testing-library/react';
 import { render } from '../../../../test-utils';
-import { WeeklyMenusSelected } from './WeeklyMenusSelected';
+import { MealsSelected } from './MealsSelected';
 
-describe('WeeklyMenusSelected', () => {
+describe('MealsSelected', () => {
   test('renders empty state', () => {
-    render(<WeeklyMenusSelected selectedRecipes={[]} onRemove={jest.fn()} />);
+    render(<MealsSelected selectedRecipes={[]} onRemove={jest.fn()} />);
     expect(screen.getByText('Aucune recette sélectionnée.')).toBeInTheDocument();
   });
 
   test('renders selected recipes and removes', () => {
     const onRemove = jest.fn();
     render(
-      <WeeklyMenusSelected
+      <MealsSelected
         selectedRecipes={[{ id: 1, name: 'Salade', category: 'ENTREE', rating: 4 }]}
         onRemove={onRemove}
       />

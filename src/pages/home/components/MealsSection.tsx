@@ -1,14 +1,14 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { UtensilsCrossed, ArrowRight, Star } from 'lucide-react';
-import type { DashboardWeeklyMenu, DashboardRecipe } from '../../../stores/dashboard/dashboard.types';
+import type { DashboardMeals, DashboardRecipe } from '../../../stores/dashboard/dashboard.types';
 
-interface WeeklyMenusSectionProps {
-  weeklyMenu: DashboardWeeklyMenu;
+interface MealsSectionProps {
+  weeklyMenu: DashboardMeals;
   recipes: DashboardRecipe[];
 }
 
-export const WeeklyMenusSection = ({ weeklyMenu, recipes }: WeeklyMenusSectionProps) => (
+export const MealsSection = ({ weeklyMenu, recipes }: MealsSectionProps) => (
   <div
     className="bg-white rounded-[var(--radius-lg)] overflow-hidden"
     style={{ boxShadow: 'var(--shadow-soft)' }}

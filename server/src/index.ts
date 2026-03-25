@@ -9,7 +9,7 @@ import { securityPlugin } from './plugins/security/security.plugin';
 import { dashboardPlugin } from './plugins/dashboard/dashboard.plugin';
 import { familiesPlugin } from './plugins/families/families.plugin';
 import { recipesPlugin } from './plugins/recipes/recipes.plugin';
-import { plannedMenusPlugin } from './plugins/planned-menus/planned-menus.plugin';
+import { mealsPlugin } from './plugins/meals/meals.plugin';
 import { shoppingListsPlugin } from './plugins/shopping-lists/shopping-lists.plugin';
 import { familyTodosPlugin } from './plugins/family-todos/family-todos.plugin';
 import { calendarsPlugin } from './plugins/calendars/calendars.plugin';
@@ -25,7 +25,7 @@ const fastify = initFastify(
     { plugin: dashboardPlugin, routesPrefix: '/dashboard' },
     { plugin: familiesPlugin, routesPrefix: '/families' },
     { plugin: recipesPlugin, routesPrefix: '/families' },
-    { plugin: plannedMenusPlugin, routesPrefix: '/families' },
+    { plugin: mealsPlugin, routesPrefix: '/families' },
     { plugin: shoppingListsPlugin, routesPrefix: '/families' },
     { plugin: familyTodosPlugin, routesPrefix: '/families' },
     { plugin: calendarsPlugin, routesPrefix: '/families' }

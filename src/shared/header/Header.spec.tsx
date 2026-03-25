@@ -79,7 +79,7 @@ describe('Header Component', () => {
 
   test('renders weekly menus header content', () => {
     const { useLocation } = jest.requireMock('react-router-dom');
-    useLocation.mockReturnValue({ pathname: '/weekly-menus' });
+    useLocation.mockReturnValue({ pathname: '/meals' });
 
     renderWithRouter(<Header userInfo={someUserInfo}/>);
 

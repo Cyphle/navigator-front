@@ -1,56 +1,56 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import type { CreatePlannedMenuListInput, UpdatePlannedMenuListInput } from './planned-menus.types';
-import * as plannedMenusService from '../../services/planned-menus.service';
+import type { CreateMealsListInput, UpdateMealsListInput } from './meals.types';
+import * as mealsService from '../../services/meals.service';
 import { useFamily } from '../../contexts/family/family.context.tsx';
 
-const QUERY_KEY = 'planned-menus';
+const QUERY_KEY = 'meals';
 
-export const useFetchPlannedMenuSummary = () => {
+export const useFetchMealsSummary = () => {
   const { currentFamily } = useFamily();
   return useQuery({
     queryKey: [QUERY_KEY, 'summary', currentFamily?.id],
-    queryFn: () => plannedMenusService.getPlannedMenuSummary(currentFamily?.id ?? ''),
+    queryFn: () => mealsService.getMealsSummary(currentFamily?.id ?? ''),
     enabled: Boolean(currentFamily?.id),
   });
 };
 
-export const useFetchAllPlannedMenuLists = () => {
+export const useFetchAllMealsLists = () => {
   const { currentFamily } = useFamily();
   return useQuery({
     queryKey: [QUERY_KEY, currentFamily?.id],
-    queryFn: () => plannedMenusService.getAllPlannedMenuLists(currentFamily?.id ?? ''),
+    queryFn: () => mealsService.getAllMealsLists(currentFamily?.id ?? ''),
     enabled: Boolean(currentFamily?.id),
   });
 };
 
-export const useFetchPlannedMenuListById = (id: number) => {
+export const useFetchMealsListById = (id: number) => {
   const { currentFamily } = useFamily();
   return useQuery({
     queryKey: [QUERY_KEY, currentFamily?.id, id],
-    queryFn: () => plannedMenusService.getPlannedMenuListById(currentFamily?.id ?? '', id),
+    queryFn: () => mealsService.getMealsListById(currentFamily?.id ?? '', id),
     enabled: id > 0 && Boolean(currentFamily?.id),
   });
 };
 
-export const useCreatePlannedMenuList = () => {
+export const useCreateMealsList = () => {
   const queryClient = useQueryClient();
   const { currentFamily } = useFamily();
 
   return useMutation({
-    mutationFn: (input: CreatePlannedMenuListInput) => plannedMenusService.createPlannedMenuList(currentFamily?.id ?? '', input),
+    mutationFn: (input: CreateMealsListInput) => mealsService.createMealsList(currentFamily?.id ?? '', input),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY] });
     },
   });
 };
 
-export const useUpdatePlannedMenuList = () => {
+export const useUpdateMealsList = () => {
   const queryClient = useQueryClient();
   const { currentFamily } = useFamily();
 
   return useMutation({
-    mutationFn: ({ id, input }: { id: number; input: UpdatePlannedMenuListInput }) =>
-      plannedMenusService.updatePlannedMenuList(currentFamily?.id ?? '', id, input),
+    mutationFn: ({ id, input }: { id: number; input: UpdateMealsListInput }) =>
+      mealsService.updateMealsList(currentFamily?.id ?? '', id, input),
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY] });
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY, currentFamily?.id, data.id] });
@@ -58,19 +58,19 @@ export const useUpdatePlannedMenuList = () => {
   });
 };
 
-export const useDeletePlannedMenuList = () => {
+export const useDeleteMealsList = () => {
   const queryClient = useQueryClient();
   const { currentFamily } = useFamily();
 
   return useMutation({
-    mutationFn: (id: number) => plannedMenusService.deletePlannedMenuList(currentFamily?.id ?? '', id),
+    mutationFn: (id: number) => mealsService.deleteMealsList(currentFamily?.id ?? '', id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY] });
     },
   });
 };
 
-export const useAddRecipeToPlannedMenuList = () => {
+export const useAddRecipeToMealsList = () => {
   const queryClient = useQueryClient();
   const { currentFamily } = useFamily();
 
@@ -85,7 +85,7 @@ export const useAddRecipeToPlannedMenuList = () => {
       recipeId: number;
       recipeName: string;
       assignedDays?: string[];
-    }) => plannedMenusService.addRecipeToPlannedMenuList(currentFamily?.id ?? '', listId, recipeId, recipeName, assignedDays),
+    }) => mealsService.addRecipeToMealsList(currentFamily?.id ?? '', listId, recipeId, recipeName, assignedDays),
     onSuccess: (data) => {
       queryClient.setQueryData([QUERY_KEY, currentFamily?.id, data.id], data);
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY], exact: true });
@@ -93,13 +93,13 @@ export const useAddRecipeToPlannedMenuList = () => {
   });
 };
 
-export const useRemoveRecipeFromPlannedMenuList = () => {
+export const useRemoveRecipeFromMealsList = () => {
   const queryClient = useQueryClient();
   const { currentFamily } = useFamily();
 
   return useMutation({
     mutationFn: ({ listId, recipeId }: { listId: number; recipeId: number }) =>
-      plannedMenusService.removeRecipeFromPlannedMenuList(currentFamily?.id ?? '', listId, recipeId),
+      mealsService.removeRecipeFromMealsList(currentFamily?.id ?? '', listId, recipeId),
     onSuccess: (data) => {
       queryClient.setQueryData([QUERY_KEY, currentFamily?.id, data.id], data);
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY], exact: true });
