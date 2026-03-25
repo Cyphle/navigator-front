@@ -4,6 +4,10 @@ import type { Calendar, CalendarEvent } from '../src/stores/calendars/calendars.
 import type { TodoList, TodoItem } from '../src/stores/family-todos/family-todos.types';
 import type { Recipe } from '../src/stores/recipes/recipes.types';
 import type { Family, FamilyMember } from '../src/stores/families/families.types';
+import type {
+  BankAccountMonthView,
+  BudgetMonthView,
+} from '../src/stores/bank-accounts/bank-accounts.types';
 
 export const aTodoItem = (overrides: Partial<TodoItem> = {}): TodoItem => ({
   id: overrides.id ?? 1,
@@ -109,6 +113,30 @@ export const aRecipe = (overrides: Partial<Recipe> = {}): Recipe => ({
   ingredients: overrides.ingredients ?? ['Pommes', 'Pâte feuilletée'],
   steps: overrides.steps ?? ['Éplucher les pommes', 'Étaler la pâte'],
   parts: overrides.parts,
+});
+
+export const aBudgetMonthView = (overrides: Partial<BudgetMonthView> = {}): BudgetMonthView => ({
+  id: overrides.id ?? 1,
+  name: overrides.name ?? 'Alimentation',
+  initialAmount: overrides.initialAmount ?? 400,
+  currentAmount: overrides.currentAmount ?? 270,
+  expenses: overrides.expenses ?? [],
+});
+
+export const aBankAccountMonthView = (overrides: Partial<BankAccountMonthView> = {}): BankAccountMonthView => ({
+  id: overrides.id ?? 1,
+  name: overrides.name ?? 'Compte courant',
+  startingAmount: overrides.startingAmount ?? 1000,
+  startDate: overrides.startDate ?? '2026-01-01',
+  visibility: overrides.visibility ?? 'PERSONAL',
+  familyId: overrides.familyId,
+  monthLabel: overrides.monthLabel ?? 'Mars 2026',
+  remainingAmount: overrides.remainingAmount ?? 500,
+  actualAmount: overrides.actualAmount ?? 350,
+  budgets: overrides.budgets ?? [],
+  charges: overrides.charges ?? [],
+  credits: overrides.credits ?? [],
+  expenses: overrides.expenses ?? [],
 });
 
 export const aCalendar = (

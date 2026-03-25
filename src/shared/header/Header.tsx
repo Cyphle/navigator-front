@@ -30,6 +30,7 @@ const PAGE_CONTENT: Record<string, { title: string; subtitle: string }> = {
   '/meals':  { title: 'Recettes de la semaine et plus', subtitle: 'Pour bien manger dans les jours à venir' },
   '/recipes':       { title: 'Recettes',                     subtitle: 'Mes recettes, celles de ma famille mais pas que' },
   '/profile':       { title: 'Mon profil',                   subtitle: 'Moi moi et encore moi. Mais aussi nous' },
+  '/bank-accounts': { title: 'Comptes bancaires',            subtitle: 'Gérez vos comptes et budgets' },
 };
 
 const DEFAULT_CONTENT = { title: 'Dashboard', subtitle: 'Gérer la famille au même endroit' };

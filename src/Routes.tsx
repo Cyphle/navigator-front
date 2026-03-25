@@ -11,6 +11,7 @@ import { Meals } from './pages/meals/Meals.tsx';
 import { ShoppingLists } from './pages/shopping-lists/ShoppingLists.tsx';
 import { FamilyTodos } from './pages/family-todos/FamilyTodos.tsx';
 import { Calendars } from './pages/calendars/Calendars.tsx';
+import { BankAccounts } from './pages/bank-accounts/BankAccounts.tsx';
 
 export interface RouteDefinition {
   id?: number;
@@ -122,6 +123,18 @@ export const ROUTES_PATHS: RouteDefinitionConfig[] = [
         <path d="M7 6h15l-1.6 9.5a2 2 0 0 1-2 1.7H9.4a2 2 0 0 1-2-1.6L5.4 5H2V3h4l1 3Z" />
         <circle cx="9.5" cy="20" r="1.5" />
         <circle cx="17.5" cy="20" r="1.5" />
+      </svg>
+    ),
+    isAuth: true
+  },
+  {
+    id: 10,
+    name: 'Comptes bancaires',
+    path: 'bank-accounts',
+    element: <BankAccounts />,
+    icon: (
+      <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M4 10h16v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8Zm0-2 8-5 8 5H4Zm8-3L6.5 8h11L12 5Z" />
       </svg>
     ),
     isAuth: true

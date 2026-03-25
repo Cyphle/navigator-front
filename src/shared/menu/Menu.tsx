@@ -14,6 +14,7 @@ const DOT_COLORS: Record<number, string> = {
   7: 'var(--sage-light)',   // Menus de la semaine
   8: 'var(--coral)',        // Liste de courses
   9: 'var(--ocean-light)',  // Profil
+  10: '#34D399',            // Comptes bancaires
 };
 
 const resolvePath = (item: RouteDefinitionConfig): string | undefined => {

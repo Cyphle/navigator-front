@@ -13,6 +13,7 @@ import { mealsPlugin } from './plugins/meals/meals.plugin';
 import { shoppingListsPlugin } from './plugins/shopping-lists/shopping-lists.plugin';
 import { familyTodosPlugin } from './plugins/family-todos/family-todos.plugin';
 import { calendarsPlugin } from './plugins/calendars/calendars.plugin';
+import { bankAccountsPlugin } from './plugins/bank-accounts/bank-accounts.plugin';
 
 const fastify = initFastify(
   [decorateWithUser, decorateWithDatabase],
@@ -28,7 +29,8 @@ const fastify = initFastify(
     { plugin: mealsPlugin, routesPrefix: '/families' },
     { plugin: shoppingListsPlugin, routesPrefix: '/families' },
     { plugin: familyTodosPlugin, routesPrefix: '/families' },
-    { plugin: calendarsPlugin, routesPrefix: '/families' }
+    { plugin: calendarsPlugin, routesPrefix: '/families' },
+    { plugin: bankAccountsPlugin, routesPrefix: '/families' }
   ]
 );
 
