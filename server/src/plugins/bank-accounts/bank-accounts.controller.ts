@@ -2,6 +2,7 @@ import type { FastifyPluginAsync } from 'fastify';
 import {
   getAllBankAccounts,
   getBankAccountByIdForMonth,
+  getBankAccountsSummaryForMonth,
   createBankAccount,
   addBudget,
   addBudgetExpense,
@@ -19,6 +20,14 @@ import type {
 } from './bank-accounts.types';
 
 export const bankAccountsController: FastifyPluginAsync = async (fastify) => {
+  // GET /:familyId/bank-accounts/summary — registered FIRST to avoid conflict with /:id
+  fastify.get<{ Params: { familyId: string } }>('/:familyId/bank-accounts/summary', async (request, reply) => {
+    const familyId = parseInt(request.params.familyId, 10);
+    const now = new Date();
+    const summary = getBankAccountsSummaryForMonth(familyId, now.getFullYear(), now.getMonth() + 1);
+    return reply.code(200).send(summary);
+  });
+
   // GET /:familyId/bank-accounts
   fastify.get<{ Params: { familyId: string } }>('/:familyId/bank-accounts', async (request, reply) => {
     const familyId = parseInt(request.params.familyId, 10);

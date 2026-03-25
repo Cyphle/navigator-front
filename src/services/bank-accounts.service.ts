@@ -3,6 +3,7 @@ import type {
   BankAccount,
   BudgetMonthView,
   BankAccountMonthView,
+  BankAccountSummaryItem,
   Budget,
   BudgetExpense,
   Charge,
@@ -110,6 +111,21 @@ const responseToBankAccountMonthView = (data: Record<string, unknown>): BankAcco
     ? (data.expenses as Record<string, unknown>[]).map(responseToExpense)
     : [],
 });
+
+const responseToBankAccountSummaryItem = (data: Record<string, unknown>): BankAccountSummaryItem => ({
+  id: (data.id as number) ?? 0,
+  name: (data.name as string) ?? '',
+  visibility: (data.visibility as BankAccountSummaryItem['visibility']) ?? 'PERSONAL',
+  actualAmount: (data.actualAmount as number) ?? 0,
+  endOfMonthForecast: (data.endOfMonthForecast as number) ?? 0,
+});
+
+export const getBankAccountsSummary = (familyId: string): Promise<BankAccountSummaryItem[]> => {
+  return getOne(`families/${encodeURIComponent(familyId)}/bank-accounts/summary`, (data: unknown) => {
+    if (!Array.isArray(data)) return [];
+    return (data as Record<string, unknown>[]).map(responseToBankAccountSummaryItem);
+  });
+};
 
 export const getAllBankAccounts = (familyId: string): Promise<BankAccount[]> => {
   return getOne(`families/${encodeURIComponent(familyId)}/bank-accounts`, (data: unknown) => {

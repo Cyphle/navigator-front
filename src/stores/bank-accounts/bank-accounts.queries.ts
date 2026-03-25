@@ -12,6 +12,15 @@ import { useFamily } from '../../contexts/family/family.context.tsx';
 
 const QUERY_KEY = 'bank-accounts';
 
+export const useFetchBankAccountsSummary = () => {
+  const { currentFamily } = useFamily();
+  return useQuery({
+    queryKey: [QUERY_KEY, currentFamily?.id, 'summary'],
+    queryFn: () => bankAccountsService.getBankAccountsSummary(currentFamily?.id ?? ''),
+    enabled: Boolean(currentFamily?.id),
+  });
+};
+
 export const useFetchAllBankAccounts = () => {
   const { currentFamily } = useFamily();
   return useQuery({

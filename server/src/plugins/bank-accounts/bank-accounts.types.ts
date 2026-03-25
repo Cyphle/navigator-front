@@ -76,6 +76,14 @@ export interface BankAccountMonthView {
   expenses: Expense[];
 }
 
+export interface BankAccountSummaryItem {
+  id: number;
+  name: string;
+  visibility: AccountVisibility;
+  actualAmount: number;
+  endOfMonthForecast: number;
+}
+
 export interface CreateBankAccountInput {
   name: string;
   startingAmount: number;

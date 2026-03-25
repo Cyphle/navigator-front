@@ -10,6 +10,8 @@ import { useFetchTodosSummary } from '@/stores/family-todos/family-todos.queries
 import { useFetchRecipesSummary } from '@/stores/recipes/recipes.queries.ts';
 import { useFetchShoppingListSummary } from '@/stores/shopping-lists/shopping-lists.queries.ts';
 import { useFetchMealsSummary } from '@/stores/meals/meals.queries.ts';
+import { useFetchBankAccountsSummary } from '@/stores/bank-accounts/bank-accounts.queries.ts';
+import { BankAccountsSection } from './components/BankAccountsSection.tsx';
 
 const buildStatCards = (
   agendaCount: number,
@@ -57,12 +59,14 @@ const HomeContent = () => {
   const recipesQuery = useFetchRecipesSummary();
   const shoppingQuery = useFetchShoppingListSummary();
   const mealsQuery = useFetchMealsSummary();
+  const bankAccountsQuery = useFetchBankAccountsSummary();
 
   const agenda = calendarQuery.data ?? [];
   const todos = todosQuery.data ?? [];
   const recipes = recipesQuery.data ?? [];
   const shopping = shoppingQuery.data ?? { items: 0 };
   const weeklyMenu = mealsQuery.data ?? { weekLabel: '', days: [] };
+  const bankAccounts = bankAccountsQuery.data ?? [];
 
   const statCards = buildStatCards(
     agenda.length,
@@ -82,6 +86,9 @@ const HomeContent = () => {
         <AgendaSection events={agenda} />
         <TodosSection todos={todos} />
         <MealsSection weeklyMenu={weeklyMenu} recipes={recipes} />
+      </div>
+      <div className="mt-4 md:mt-6">
+        <BankAccountsSection accounts={bankAccounts} />
       </div>
     </div>
   );
