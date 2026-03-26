@@ -38,7 +38,7 @@ const FamiliesContent = ({ data }: { data: Family[] }) => {
     setFormValues({
       name: family.name,
       creatorRelation: family.creator.relation,
-      members: family.members.map((m) => ({ username: m.username, relation: m.relation, isAdmin: m.isAdmin })),
+      members: family.members.map((m) => ({ usernameOrEmail: m.usernameOrEmail, relation: m.relation, isAdmin: m.isAdmin })),
     });
     setIsFormOpen(true);
   };
@@ -65,7 +65,7 @@ const FamiliesContent = ({ data }: { data: Family[] }) => {
       id: family.id,
       name: family.name,
       creatorRelation: family.creator.relation,
-      members: family.members.map((m) => ({ username: m.username, relation: m.relation, isAdmin: m.isAdmin })),
+      members: family.members.map((m) => ({ usernameOrEmail: m.usernameOrEmail, relation: m.relation, isAdmin: m.isAdmin })),
       status: 'INACTIVE',
     });
   };
@@ -75,7 +75,7 @@ const FamiliesContent = ({ data }: { data: Family[] }) => {
       id: editingFamilyId ?? undefined,
       name: values.name,
       creatorRelation: values.creatorRelation,
-      members: values.members.filter((m) => m.username !== username),
+      members: values.members.filter((m) => m.usernameOrEmail !== username),
     };
 
     setIsFormOpen(false);

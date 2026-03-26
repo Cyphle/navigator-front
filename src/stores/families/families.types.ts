@@ -19,7 +19,7 @@ export const FAMILY_RELATION_LABELS: Record<FamilyMemberRelation, string> = {
 
 export interface FamilyMember {
   id: number;
-  username: string;
+  usernameOrEmail: string;
   relation: FamilyMemberRelation;
   isAdmin: boolean;
 }
@@ -41,7 +41,7 @@ export interface UpsertFamilyRequest {
 }
 
 export interface UpsertFamilyMemberRequest {
-  username: string;
+  usernameOrEmail: string;
   relation: FamilyMemberRelation;
   isAdmin: boolean;
 }

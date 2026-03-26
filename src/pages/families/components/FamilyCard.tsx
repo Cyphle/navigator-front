@@ -58,7 +58,7 @@ export const FamilyCard = ({ family, isPendingDeactivation, onEdit, onDeactivate
             Créateur · {FAMILY_RELATION_LABELS[family.creator.relation]}
           </p>
           <p className="text-sm font-medium m-0 truncate max-w-[180px]" style={{ color: 'var(--stone)' }}>
-            {family.creator.username}
+            {family.creator.usernameOrEmail}
           </p>
         </div>
         <div
@@ -94,7 +94,7 @@ export const FamilyCard = ({ family, isPendingDeactivation, onEdit, onDeactivate
                 )}
               </div>
               <span className="text-sm font-medium truncate max-w-[160px]" style={{ color: 'var(--stone)' }}>
-                {member.username}
+                {member.usernameOrEmail}
               </span>
             </li>
           ))}

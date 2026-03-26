@@ -20,13 +20,13 @@ const mockFamilies = [
     name: 'Famille Martin',
     creator: {
       id: 1,
-      username: 'sarah.martin',
+      usernameOrEmail: 'sarah.martin',
       relation: 'PARENT',
       isAdmin: true
     },
     members: [
-      { id: 2, username: 'leo.martin', relation: 'CHILD', isAdmin: false },
-      { id: 3, username: 'emma.martin', relation: 'CHILD', isAdmin: false },
+      { id: 2, usernameOrEmail: 'leo.martin', relation: 'CHILD', isAdmin: false },
+      { id: 3, usernameOrEmail: 'emma.martin', relation: 'CHILD', isAdmin: false },
     ],
     status: 'ACTIVE'
   }

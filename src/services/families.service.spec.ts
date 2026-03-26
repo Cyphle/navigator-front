@@ -9,7 +9,7 @@ jest.mock('../helpers/http.ts', () => ({
 
 describe('Families service', () => {
   test('should get families data', async () => {
-    const families = [
+    const familiesResponse = [
       {
         id: 1,
         name: 'Famille Martin',
@@ -19,11 +19,19 @@ describe('Families service', () => {
       }
     ];
 
-    (getMany as jest.Mock).mockResolvedValue(families);
+    (getMany as jest.Mock).mockImplementation((_path, mapper) => Promise.resolve(mapper(familiesResponse)));
 
     const response = await getFamilies();
 
-    expect(response).toEqual(families);
+    expect(response).toEqual([
+      {
+        id: 1,
+        name: 'Famille Martin',
+        creator: { id: 1, usernameOrEmail: 'sarah.martin', relation: 'PARENT', isAdmin: true },
+        members: [],
+        status: 'ACTIVE'
+      }
+    ]);
   });
 
   test('should map families response', () => {
@@ -41,8 +49,8 @@ describe('Families service', () => {
       {
         id: 5,
         name: 'Famille Dupont',
-        creator: { id: 10, username: 'claire.dupont', relation: 'PARENT', isAdmin: true },
-        members: [{ id: 11, username: 'leo.dupont', relation: 'CHILD', isAdmin: false }],
+        creator: { id: 10, usernameOrEmail: 'claire.dupont', relation: 'PARENT', isAdmin: true },
+        members: [{ id: 11, usernameOrEmail: 'leo.dupont', relation: 'CHILD', isAdmin: false }],
         status: 'INACTIVE'
       }
     ]);

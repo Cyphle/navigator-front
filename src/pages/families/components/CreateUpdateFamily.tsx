@@ -21,7 +21,7 @@ const RELATION_OPTIONS: FamilyMemberRelation[] = [
 export interface FamilyFormValues {
   name: string;
   creatorRelation: FamilyMemberRelation;
-  members: { username: string; relation: FamilyMemberRelation; isAdmin: boolean }[];
+  members: { usernameOrEmail: string; relation: FamilyMemberRelation; isAdmin: boolean }[];
 }
 
 export interface CreateUpdateFamilyPayload {
@@ -72,13 +72,13 @@ export const CreateUpdateFamily = ({
       name: values.name.trim(),
       creatorRelation: values.creatorRelation,
       members: values.members
-        .filter((m) => m.username.trim().length > 0)
-        .map((m) => ({ username: m.username.trim(), relation: m.relation, isAdmin: m.isAdmin })),
+        .filter((m) => m.usernameOrEmail.trim().length > 0)
+        .map((m) => ({ usernameOrEmail: m.usernameOrEmail.trim(), relation: m.relation, isAdmin: m.isAdmin })),
     });
   };
 
   const handleAddMember = () => {
-    append({ username: '', relation: 'PARENT', isAdmin: false });
+    append({ usernameOrEmail: '', relation: 'PARENT', isAdmin: false });
   };
 
   return (
@@ -167,16 +167,16 @@ export const CreateUpdateFamily = ({
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
 
-                    {/* Username */}
+                    {/* Username or Email */}
                     <div>
                       <Label className="text-[9px] uppercase tracking-widest font-light text-gray-400">
-                        Nom d'utilisateur
+                        Email ou Nom d'utilisateur
                       </Label>
                       <Input
                         className="rounded-none border-gray-200 focus:border-blue-500 focus-visible:ring-0 mt-1"
-                        placeholder="nom d'utilisateur"
+                        placeholder="email ou nom d'utilisateur"
                         type="text"
-                        {...register(`members.${index}.username`)}
+                        {...register(`members.${index}.usernameOrEmail`)}
                       />
                     </div>
 
