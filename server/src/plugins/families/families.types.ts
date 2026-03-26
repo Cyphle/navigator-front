@@ -1,7 +1,17 @@
+export type FamilyMemberRelation =
+  | 'PARENT'
+  | 'GRAND_PARENT'
+  | 'CHILD'
+  | 'UNCLE'
+  | 'AUNT'
+  | 'SISTER'
+  | 'BROTHER';
+
 export interface FamilyMember {
   id: number;
   email: string;
-  relation?: string;
+  relation: FamilyMemberRelation;
+  isAdmin: boolean;
 }
 
 export interface Family {
@@ -12,10 +22,18 @@ export interface Family {
   status: 'ACTIVE' | 'INACTIVE';
 }
 
+export interface FamilyMemberInput {
+  email: string;
+  relation: FamilyMemberRelation;
+  isAdmin: boolean;
+}
+
 export interface FamilyUpsertRequest {
   name: string;
   ownerEmail: string;
   ownerName: string;
-  memberEmails: string[];
+  ownerRelation: FamilyMemberRelation;
+  ownerIsAdmin?: boolean;
+  members: FamilyMemberInput[];
   status?: 'ACTIVE' | 'INACTIVE';
 }

@@ -1,7 +1,7 @@
 import { FastifyInstance, FastifyReply } from 'fastify';
 import { Database } from '../../database/database';
 import { CustomFastifyRequest } from '../../fastify.types';
-import { getNumberParam, getStringBodyElement } from '../../helpers/fastify.helpers';
+import { getNumberParam } from '../../helpers/fastify.helpers';
 import { Family, FamilyUpsertRequest } from './families.types';
 
 export const getFamiliesController = (handler: (database: Database) => Family[]) => (fastify: FastifyInstance): void => {
@@ -16,14 +16,7 @@ export const getFamiliesController = (handler: (database: Database) => Family[])
 
 export const createFamilyController = (handler: (database: Database) => (request: FamilyUpsertRequest) => Family) => (fastify: FastifyInstance): void => {
   fastify.post('/', (request: CustomFastifyRequest, reply: FastifyReply) => {
-    const command: FamilyUpsertRequest = {
-      name: getStringBodyElement<string>(request, 'name'),
-      ownerEmail: getStringBodyElement<string>(request, 'ownerEmail'),
-      ownerName: getStringBodyElement<string>(request, 'ownerName'),
-      memberEmails: getStringBodyElement<string[]>(request, 'memberEmails') ?? [],
-      status: getStringBodyElement<'ACTIVE' | 'INACTIVE' | undefined>(request, 'status')
-    };
-
+    const command = request.body as FamilyUpsertRequest;
     const family = handler(request.database!!)(command);
 
     reply
@@ -36,14 +29,7 @@ export const createFamilyController = (handler: (database: Database) => (request
 export const updateFamilyController = (handler: (database: Database) => (id: number, request: FamilyUpsertRequest) => Family | undefined) => (fastify: FastifyInstance): void => {
   fastify.put('/:id', (request: CustomFastifyRequest, reply: FastifyReply) => {
     const id = getNumberParam(request, 'id');
-    const command: FamilyUpsertRequest = {
-      name: getStringBodyElement<string>(request, 'name'),
-      ownerEmail: getStringBodyElement<string>(request, 'ownerEmail'),
-      ownerName: getStringBodyElement<string>(request, 'ownerName'),
-      memberEmails: getStringBodyElement<string[]>(request, 'memberEmails') ?? [],
-      status: getStringBodyElement<'ACTIVE' | 'INACTIVE' | undefined>(request, 'status')
-    };
-
+    const command = request.body as FamilyUpsertRequest;
     const family = handler(request.database!!)(id, command);
 
     reply

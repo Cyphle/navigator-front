@@ -19,7 +19,7 @@ const FamiliesContent = ({ data }: { data: Family[] }) => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingFamilyId, setEditingFamilyId] = useState<number | null>(null);
   const [pendingStatusFamilyId, setPendingStatusFamilyId] = useState<number | null>(null);
-  const defaultFormValues: FamilyFormValues = { name: '', emails: '' };
+  const defaultFormValues: FamilyFormValues = { name: '', ownerRelation: 'PARENT', members: [] };
   const [formValues, setFormValues] = useState<FamilyFormValues>(defaultFormValues);
 
   const ownerEmail = useMemo(() => {
@@ -38,7 +38,8 @@ const FamiliesContent = ({ data }: { data: Family[] }) => {
     setEditingFamilyId(family.id);
     setFormValues({
       name: family.name,
-      emails: family.members.map((member) => member.email).join(', '),
+      ownerRelation: family.owner.relation,
+      members: family.members.map((m) => ({ email: m.email, relation: m.relation, isAdmin: m.isAdmin })),
     });
     setIsFormOpen(true);
   };
@@ -65,14 +66,15 @@ const FamiliesContent = ({ data }: { data: Family[] }) => {
       id: family.id,
       name: family.name,
       ownerEmail: family.owner.email,
-      ownerName: family.owner.relation ?? 'Owner',
-      memberEmails: family.members.map((member) => member.email),
+      ownerName: family.owner.email,
+      ownerRelation: family.owner.relation,
+      ownerIsAdmin: family.owner.isAdmin,
+      members: family.members.map((m) => ({ email: m.email, relation: m.relation, isAdmin: m.isAdmin })),
       status: 'INACTIVE',
     });
   };
 
   const onSubmit = (values: CreateUpdateFamilyPayload) => {
-    const memberEmails = values.memberEmails.filter((email) => email !== ownerEmail);
     const ownerName = `${userState.firstName} ${userState.lastName}`.trim() || 'Owner';
     const editingFamily = editingFamilyId
       ? data.find((family) => family.id === editingFamilyId)
@@ -82,8 +84,10 @@ const FamiliesContent = ({ data }: { data: Family[] }) => {
       id: editingFamilyId ?? undefined,
       name: values.name,
       ownerEmail: editingFamily?.owner.email ?? ownerEmail,
-      ownerName: editingFamily?.owner.relation ?? ownerName,
-      memberEmails,
+      ownerName,
+      ownerRelation: values.ownerRelation,
+      ownerIsAdmin: true,
+      members: values.members.filter((m) => m.email !== ownerEmail),
     };
 
     setIsFormOpen(false);

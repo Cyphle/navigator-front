@@ -1,5 +1,7 @@
 import { Database } from '../../database/database';
-import { Family, FamilyMember, FamilyUpsertRequest } from './families.types';
+import { Family, FamilyMember, FamilyMemberRelation, FamilyUpsertRequest } from './families.types';
+
+const DEFAULT_RELATION: FamilyMemberRelation = 'PARENT';
 
 export const getFamiliesHandler = (database: Database): Family[] => {
   return database.read<Family>('families');
@@ -11,16 +13,19 @@ export const createFamilyHandler = (database: Database) => (request: FamilyUpser
     .reverse();
 
   const nextId = (families[0]?.id ?? 0) + 1;
+
   const owner: FamilyMember = {
     id: nextId * 100 + 1,
     email: request.ownerEmail,
-    relation: request.ownerName || 'Owner'
+    relation: request.ownerRelation ?? DEFAULT_RELATION,
+    isAdmin: request.ownerIsAdmin ?? true,
   };
 
-  const members: FamilyMember[] = request.memberEmails.map((email, index) => ({
+  const members: FamilyMember[] = request.members.map((m, index) => ({
     id: nextId * 100 + 2 + index,
-    email,
-    relation: 'Member'
+    email: m.email,
+    relation: m.relation ?? DEFAULT_RELATION,
+    isAdmin: m.isAdmin ?? false,
   }));
 
   const family: Family = {
@@ -28,7 +33,7 @@ export const createFamilyHandler = (database: Database) => (request: FamilyUpser
     name: request.name,
     owner,
     members,
-    status: request.status === 'INACTIVE' ? 'INACTIVE' : 'ACTIVE'
+    status: request.status === 'INACTIVE' ? 'INACTIVE' : 'ACTIVE',
   };
 
   return database.create<Family>('families', family);
@@ -41,10 +46,11 @@ export const updateFamilyHandler = (database: Database) => (id: number, request:
     return undefined;
   }
 
-  const members: FamilyMember[] = request.memberEmails.map((email, index) => ({
+  const members: FamilyMember[] = request.members.map((m, index) => ({
     id: existing.members[index]?.id ?? id * 100 + 2 + index,
-    email,
-    relation: existing.members[index]?.relation ?? 'Member'
+    email: m.email,
+    relation: m.relation ?? existing.members[index]?.relation ?? DEFAULT_RELATION,
+    isAdmin: m.isAdmin ?? existing.members[index]?.isAdmin ?? false,
   }));
 
   const updated: Family = {
@@ -53,10 +59,11 @@ export const updateFamilyHandler = (database: Database) => (id: number, request:
     owner: {
       ...existing.owner,
       email: request.ownerEmail ?? existing.owner.email,
-      relation: request.ownerName ?? existing.owner.relation
+      relation: request.ownerRelation ?? existing.owner.relation,
+      isAdmin: request.ownerIsAdmin ?? existing.owner.isAdmin,
     },
     members,
-    status: request.status ?? existing.status
+    status: request.status ?? existing.status,
   };
 
   database.update<Family>('families', id, updated);

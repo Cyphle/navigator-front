@@ -1,5 +1,6 @@
-import { Users, User, Settings, ShieldAlert } from 'lucide-react';
+import { Users, User, Settings, ShieldAlert, Shield } from 'lucide-react';
 import type { Family } from '../../../stores/families/families.types';
+import { FAMILY_RELATION_LABELS } from '../../../stores/families/families.types';
 
 interface FamilyCardProps {
   family: Family;
@@ -54,7 +55,7 @@ export const FamilyCard = ({ family, isPendingDeactivation, onEdit, onDeactivate
       >
         <div>
           <p className="text-[10px] font-semibold uppercase tracking-wide m-0 mb-0.5" style={{ color: 'var(--mist)' }}>
-            Owner
+            Propriétaire · {FAMILY_RELATION_LABELS[family.owner.relation]}
           </p>
           <p className="text-sm font-medium m-0 truncate max-w-[180px]" style={{ color: 'var(--stone)' }}>
             {family.owner.email}
@@ -79,10 +80,20 @@ export const FamilyCard = ({ family, isPendingDeactivation, onEdit, onDeactivate
               key={member.id}
               className="flex items-center justify-between text-sm py-1.5 border-b border-black/5 last:border-0"
             >
-              <span className="text-xs font-medium" style={{ color: 'var(--mist)' }}>
-                {member.relation ?? 'Membre'}
-              </span>
-              <span className="text-sm font-medium" style={{ color: 'var(--stone)' }}>
+              <div className="flex items-center gap-2">
+                <span
+                  className="text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded-full"
+                  style={{ background: 'var(--sand)', color: 'var(--mist)' }}
+                >
+                  {FAMILY_RELATION_LABELS[member.relation]}
+                </span>
+                {member.isAdmin && (
+                  <span title="Admin">
+                    <Shield className="w-3 h-3" style={{ color: 'var(--ocean)' }} />
+                  </span>
+                )}
+              </div>
+              <span className="text-sm font-medium truncate max-w-[160px]" style={{ color: 'var(--stone)' }}>
                 {member.email}
               </span>
             </li>

@@ -1,6 +1,5 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import {
   Dialog,
@@ -8,18 +7,27 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from "@/components/ui/dialog";
-import { Controller, useForm } from 'react-hook-form';
+} from '@/components/ui/dialog';
+import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import { useEffect } from 'react';
+import { Plus, Trash2 } from 'lucide-react';
+import type { UpsertFamilyMemberRequest, FamilyMemberRelation } from '../../../stores/families/families.types';
+import { FAMILY_RELATION_LABELS } from '../../../stores/families/families.types';
+
+const RELATION_OPTIONS: FamilyMemberRelation[] = [
+  'PARENT', 'GRAND_PARENT', 'CHILD', 'UNCLE', 'AUNT', 'SISTER', 'BROTHER',
+];
 
 export interface FamilyFormValues {
   name: string;
-  emails: string;
+  ownerRelation: FamilyMemberRelation;
+  members: { email: string; relation: FamilyMemberRelation; isAdmin: boolean }[];
 }
 
 export interface CreateUpdateFamilyPayload {
   name: string;
-  memberEmails: string[];
+  ownerRelation: FamilyMemberRelation;
+  members: UpsertFamilyMemberRequest[];
 }
 
 interface CreateUpdateFamilyProps {
@@ -31,17 +39,6 @@ interface CreateUpdateFamilyProps {
   onCancel: () => void;
 }
 
-const parseEmails = (value: string): string[] => {
-  return Array.from(
-    new Set(
-      value
-        .split(/[\n,;]+/)
-        .map((email) => email.trim())
-        .filter((email) => email.length > 0)
-    )
-  );
-};
-
 export const CreateUpdateFamily = ({
   isOpen,
   isEditing,
@@ -52,6 +49,7 @@ export const CreateUpdateFamily = ({
 }: CreateUpdateFamilyProps) => {
   const {
     control,
+    register,
     handleSubmit,
     formState: { isValid },
     reset,
@@ -61,11 +59,10 @@ export const CreateUpdateFamily = ({
     defaultValues: initialValues,
   });
 
-  useEffect(() => {
-    if (!isOpen) {
-      return;
-    }
+  const { fields, append, remove } = useFieldArray({ control, name: 'members' });
 
+  useEffect(() => {
+    if (!isOpen) return;
     reset(initialValues);
     void trigger();
   }, [initialValues, isOpen, reset, trigger]);
@@ -73,29 +70,39 @@ export const CreateUpdateFamily = ({
   const handleFormSubmit = (values: FamilyFormValues) => {
     onSubmit({
       name: values.name.trim(),
-      memberEmails: parseEmails(values.emails),
+      ownerRelation: values.ownerRelation,
+      members: values.members
+        .filter((m) => m.email.trim().length > 0)
+        .map((m) => ({ email: m.email.trim(), relation: m.relation, isAdmin: m.isAdmin })),
     });
+  };
+
+  const handleAddMember = () => {
+    append({ email: '', relation: 'PARENT', isAdmin: false });
   };
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onCancel()}>
-      <DialogContent className="sm:max-w-[425px] rounded-none">
+      <DialogContent className="sm:max-w-[540px] max-h-[90vh] overflow-y-auto rounded-none">
         <DialogHeader>
           <DialogTitle className="text-xl font-light uppercase tracking-widest">
-            {isEditing ? 'Modifier la famille' : 'Creer une famille'}
+            {isEditing ? 'Modifier la famille' : 'Créer une famille'}
           </DialogTitle>
         </DialogHeader>
+
         <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-6 pt-4">
+          {/* Family name */}
           <div className="space-y-2">
-            <Label htmlFor="family-name" className="text-[10px] uppercase tracking-widest font-light text-gray-400">Nom de la famille</Label>
+            <Label className="text-[10px] uppercase tracking-widest font-light text-gray-400">
+              Nom de la famille
+            </Label>
             <Controller
               name="name"
               control={control}
-              rules={{ required: true, validate: (value) => value.trim().length > 0 }}
+              rules={{ required: true, validate: (v) => v.trim().length > 0 }}
               render={({ field }) => (
                 <Input
-                  id="family-name"
-                  className="rounded-none border-gray-200 focus:border-blue-500 focus-visible:ring-0 transition-colors"
+                  className="rounded-none border-gray-200 focus:border-blue-500 focus-visible:ring-0"
                   placeholder="Nom de la famille"
                   {...field}
                 />
@@ -103,21 +110,125 @@ export const CreateUpdateFamily = ({
             />
           </div>
 
+          {/* Owner relation */}
           <div className="space-y-2">
-            <Label htmlFor="family-emails" className="text-[10px] uppercase tracking-widest font-light text-gray-400">Emails des membres</Label>
+            <Label className="text-[10px] uppercase tracking-widest font-light text-gray-400">
+              Votre rôle dans la famille
+            </Label>
             <Controller
-              name="emails"
+              name="ownerRelation"
               control={control}
+              rules={{ required: true }}
               render={({ field }) => (
-                <Textarea
-                  id="family-emails"
-                  className="rounded-none border-gray-200 focus:border-blue-500 focus-visible:ring-0 transition-colors"
-                  placeholder="email1@exemple.fr, email2@exemple.fr"
-                  rows={3}
+                <select
                   {...field}
-                />
+                  className="w-full h-9 rounded-none border border-gray-200 bg-white px-3 text-sm focus:outline-none focus:border-blue-500"
+                >
+                  {RELATION_OPTIONS.map((rel) => (
+                    <option key={rel} value={rel}>
+                      {FAMILY_RELATION_LABELS[rel]}
+                    </option>
+                  ))}
+                </select>
               )}
             />
+          </div>
+
+          {/* Members */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <Label className="text-[10px] uppercase tracking-widest font-light text-gray-400">
+                Membres
+              </Label>
+              <button
+                type="button"
+                onClick={handleAddMember}
+                className="flex items-center gap-1.5 text-xs text-blue-600 hover:text-blue-800 font-medium transition-colors"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                Ajouter un membre
+              </button>
+            </div>
+
+            {fields.length === 0 ? (
+              <p className="text-xs text-gray-400 py-2">
+                Aucun membre ajouté. Vous pouvez inviter des membres ci-dessus.
+              </p>
+            ) : (
+              <div className="space-y-3">
+                {fields.map((field, index) => (
+                  <div key={field.id} className="border border-gray-100 p-3 space-y-2 relative">
+                    <button
+                      type="button"
+                      onClick={() => remove(index)}
+                      className="absolute top-2 right-2 text-gray-300 hover:text-red-500 transition-colors"
+                      aria-label="Supprimer ce membre"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+
+                    {/* Email */}
+                    <div>
+                      <Label className="text-[9px] uppercase tracking-widest font-light text-gray-400">
+                        Email
+                      </Label>
+                      <Input
+                        className="rounded-none border-gray-200 focus:border-blue-500 focus-visible:ring-0 mt-1"
+                        placeholder="email@exemple.fr"
+                        type="email"
+                        {...register(`members.${index}.email`)}
+                      />
+                    </div>
+
+                    {/* Relation + isAdmin */}
+                    <div className="flex items-center gap-3 pt-1">
+                      <div className="flex-1">
+                        <Label className="text-[9px] uppercase tracking-widest font-light text-gray-400">
+                          Rôle
+                        </Label>
+                        <Controller
+                          name={`members.${index}.relation`}
+                          control={control}
+                          render={({ field: selectField }) => (
+                            <select
+                              {...selectField}
+                              className="w-full h-9 rounded-none border border-gray-200 bg-white px-3 text-sm focus:outline-none focus:border-blue-500 mt-1"
+                            >
+                              {RELATION_OPTIONS.map((rel) => (
+                                <option key={rel} value={rel}>
+                                  {FAMILY_RELATION_LABELS[rel]}
+                                </option>
+                              ))}
+                            </select>
+                          )}
+                        />
+                      </div>
+                      <div className="flex items-center gap-2 pt-5">
+                        <Controller
+                          name={`members.${index}.isAdmin`}
+                          control={control}
+                          render={({ field: checkField }) => (
+                            <input
+                              type="checkbox"
+                              id={`member-admin-${index}`}
+                              checked={checkField.value}
+                              onChange={checkField.onChange}
+                              className="w-4 h-4 accent-blue-600"
+                            />
+                          )}
+                        />
+                        <Label
+                          htmlFor={`member-admin-${index}`}
+                          className="text-[9px] uppercase tracking-widest font-light text-gray-400 cursor-pointer"
+                        >
+                          Admin
+                        </Label>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           <DialogFooter className="flex flex-row sm:justify-end gap-2">
@@ -134,7 +245,7 @@ export const CreateUpdateFamily = ({
               className="rounded-none bg-black hover:bg-gray-800 text-white uppercase tracking-widest font-light text-xs"
               disabled={!isValid || isSubmitting}
             >
-              {isEditing ? 'Mettre a jour' : 'Creer'}
+              {isEditing ? 'Mettre à jour' : 'Créer'}
             </Button>
           </DialogFooter>
         </form>

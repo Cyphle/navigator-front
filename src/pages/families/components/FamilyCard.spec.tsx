@@ -6,9 +6,15 @@ import type { Family } from '../../../stores/families/families.types';
 const aFamily = (overrides: Partial<Family> = {}): Family => ({
   id: overrides.id ?? 1,
   name: overrides.name ?? 'Famille Martin',
-  owner: overrides.owner ?? { id: 1, email: 'sarah@martin.fr', role: 'Owner', relation: 'Owner' },
+  owner: overrides.owner ?? {
+    id: 1,
+    email: 'sarah@martin.fr',
+    role: 'Owner',
+    relation: 'PARENT',
+    isAdmin: true,
+  },
   members: overrides.members ?? [
-    { id: 2, email: 'leo@martin.fr', role: 'Member', relation: 'Fils' },
+    { id: 2, email: 'leo@martin.fr', role: 'Member', relation: 'CHILD', isAdmin: false },
   ],
   status: overrides.status ?? 'ACTIVE',
 });
@@ -30,11 +36,44 @@ describe('FamilyCard', () => {
     expect(screen.getByText('2 membres')).toBeInTheDocument();
   });
 
+  test('displays owner relation label', () => {
+    render(
+      <FamilyCard
+        family={aFamily()}
+        isPendingDeactivation={false}
+        onEdit={jest.fn()}
+        onDeactivate={jest.fn()}
+      />
+    );
+    expect(screen.getByText(/Parent/)).toBeInTheDocument();
+  });
+
+  test('displays member relation badge', () => {
+    render(
+      <FamilyCard
+        family={aFamily()}
+        isPendingDeactivation={false}
+        onEdit={jest.fn()}
+        onDeactivate={jest.fn()}
+      />
+    );
+    expect(screen.getByText('Enfant')).toBeInTheDocument();
+  });
+
+  test('shows shield icon for admin member', () => {
+    const family = aFamily({
+      members: [{ id: 2, email: 'admin@martin.fr', role: 'Member', relation: 'PARENT', isAdmin: true }],
+    });
+    const { container } = render(
+      <FamilyCard family={family} isPendingDeactivation={false} onEdit={jest.fn()} onDeactivate={jest.fn()} />
+    );
+    expect(container.querySelector('[title="Admin"]')).toBeInTheDocument();
+  });
+
   test('shows ACTIF badge for active family', () => {
     render(
       <FamilyCard family={aFamily()} isPendingDeactivation={false} onEdit={jest.fn()} onDeactivate={jest.fn()} />
     );
-
     expect(screen.getByText('Actif')).toBeInTheDocument();
   });
 
@@ -47,33 +86,26 @@ describe('FamilyCard', () => {
         onDeactivate={jest.fn()}
       />
     );
-
     expect(screen.getByText('Désactivé')).toBeInTheDocument();
   });
 
   test('Modifier button calls onEdit with the family', () => {
     const onEdit = jest.fn();
     const family = aFamily();
-
     render(
       <FamilyCard family={family} isPendingDeactivation={false} onEdit={onEdit} onDeactivate={jest.fn()} />
     );
-
     fireEvent.click(screen.getByRole('button', { name: /modifier/i }));
-
     expect(onEdit).toHaveBeenCalledWith(family);
   });
 
   test('Désactiver button calls onDeactivate with the family', () => {
     const onDeactivate = jest.fn();
     const family = aFamily();
-
     render(
       <FamilyCard family={family} isPendingDeactivation={false} onEdit={jest.fn()} onDeactivate={onDeactivate} />
     );
-
     fireEvent.click(screen.getByRole('button', { name: /désactiver/i }));
-
     expect(onDeactivate).toHaveBeenCalledWith(family);
   });
 
@@ -86,7 +118,6 @@ describe('FamilyCard', () => {
         onDeactivate={jest.fn()}
       />
     );
-
     expect(screen.getByRole('button', { name: /modifier/i })).toBeDisabled();
     expect(screen.getByRole('button', { name: /désactiver/i })).toBeDisabled();
   });
@@ -100,7 +131,6 @@ describe('FamilyCard', () => {
         onDeactivate={jest.fn()}
       />
     );
-
     expect(screen.getByRole('button', { name: /désactiver/i })).toBeDisabled();
   });
 
@@ -113,7 +143,6 @@ describe('FamilyCard', () => {
         onDeactivate={jest.fn()}
       />
     );
-
     expect(screen.getByText('Aucun autre membre')).toBeInTheDocument();
   });
 });

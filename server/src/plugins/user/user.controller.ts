@@ -2,7 +2,6 @@ import { FastifyInstance, FastifyReply } from 'fastify';
 import { Database } from '../../database/database';
 import { CustomFastifyRequest } from '../../fastify.types';
 import { UserInfo } from './user.types';
-import { Profile } from '../profile/profile.types';
 
 export const userInfoController = (handler: (database: Database) => (username: string) => UserInfo | undefined) => (fastify: FastifyInstance): void => {
   fastify.get('/info', (request: CustomFastifyRequest, reply: FastifyReply) => {
