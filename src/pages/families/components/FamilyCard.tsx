@@ -48,17 +48,17 @@ export const FamilyCard = ({ family, isPendingDeactivation, onEdit, onDeactivate
         )}
       </div>
 
-      {/* Owner */}
+      {/* Creator */}
       <div
         className="rounded-[var(--radius-sm)] p-3 flex items-center justify-between mb-4"
         style={{ background: 'var(--sand)' }}
       >
         <div>
           <p className="text-[10px] font-semibold uppercase tracking-wide m-0 mb-0.5" style={{ color: 'var(--mist)' }}>
-            Propriétaire · {FAMILY_RELATION_LABELS[family.owner.relation]}
+            Créateur · {FAMILY_RELATION_LABELS[family.creator.relation]}
           </p>
           <p className="text-sm font-medium m-0 truncate max-w-[180px]" style={{ color: 'var(--stone)' }}>
-            {family.owner.email}
+            {family.creator.username}
           </p>
         </div>
         <div
@@ -94,7 +94,7 @@ export const FamilyCard = ({ family, isPendingDeactivation, onEdit, onDeactivate
                 )}
               </div>
               <span className="text-sm font-medium truncate max-w-[160px]" style={{ color: 'var(--stone)' }}>
-                {member.email}
+                {member.username}
               </span>
             </li>
           ))}

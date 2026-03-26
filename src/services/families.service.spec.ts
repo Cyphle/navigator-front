@@ -13,7 +13,7 @@ describe('Families service', () => {
       {
         id: 1,
         name: 'Famille Martin',
-        owner: { id: 1, email: 'sarah.martin@banana.fr', role: 'Owner', relation: 'Owner' },
+        creator: { id: 1, username: 'sarah.martin', relation: 'PARENT', isAdmin: true },
         members: [],
         status: 'ACTIVE'
       }
@@ -31,8 +31,8 @@ describe('Families service', () => {
       {
         id: 5,
         name: 'Famille Dupont',
-        owner: { id: 10, email: 'claire.dupont@banana.fr', relation: 'Owner' },
-        members: [{ id: 11, email: 'leo.dupont@banana.fr', relation: 'Son' }],
+        creator: { id: 10, username: 'claire.dupont', relation: 'PARENT', isAdmin: true },
+        members: [{ id: 11, username: 'leo.dupont', relation: 'CHILD', isAdmin: false }],
         status: 'INACTIVE'
       }
     ]);
@@ -41,8 +41,8 @@ describe('Families service', () => {
       {
         id: 5,
         name: 'Famille Dupont',
-        owner: { id: 10, email: 'claire.dupont@banana.fr', role: 'Owner', relation: 'Owner' },
-        members: [{ id: 11, email: 'leo.dupont@banana.fr', role: 'Member', relation: 'Son' }],
+        creator: { id: 10, username: 'claire.dupont', relation: 'PARENT', isAdmin: true },
+        members: [{ id: 11, username: 'leo.dupont', relation: 'CHILD', isAdmin: false }],
         status: 'INACTIVE'
       }
     ]);
@@ -58,16 +58,15 @@ describe('Families service', () => {
     (post as jest.Mock).mockResolvedValue({
       id: 10,
       name: 'Famille Test',
-      owner: { id: 1, email: 'owner@banana.fr', role: 'Owner', relation: 'Owner' },
+      creator: { id: 1, username: 'owner', relation: 'PARENT', isAdmin: true },
       members: [],
       status: 'ACTIVE'
     });
 
     const response = await createFamily({
       name: 'Famille Test',
-      ownerEmail: 'owner@banana.fr',
-      ownerName: 'Owner',
-      memberEmails: []
+      creatorRelation: 'PARENT',
+      members: []
     });
 
     expect(post).toHaveBeenCalledWith('families', expect.anything(), expect.any(Function));
@@ -78,7 +77,7 @@ describe('Families service', () => {
     (put as jest.Mock).mockResolvedValue({
       id: 10,
       name: 'Famille Update',
-      owner: { id: 1, email: 'owner@banana.fr', role: 'Owner', relation: 'Owner' },
+      creator: { id: 1, username: 'owner', relation: 'PARENT', isAdmin: true },
       members: [],
       status: 'INACTIVE'
     });
@@ -86,9 +85,8 @@ describe('Families service', () => {
     const response = await updateFamily(10, {
       id: 10,
       name: 'Famille Update',
-      ownerEmail: 'owner@banana.fr',
-      ownerName: 'Owner',
-      memberEmails: [],
+      creatorRelation: 'PARENT',
+      members: [],
       status: 'INACTIVE'
     });
 

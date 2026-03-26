@@ -18,15 +18,15 @@ const mockFamilies = [
   {
     id: 1,
     name: 'Famille Martin',
-    owner: {
+    creator: {
       id: 1,
-      email: 'sarah.martin@banana.fr',
-      role: 'Owner',
-      relation: 'Owner'
+      username: 'sarah.martin',
+      relation: 'PARENT',
+      isAdmin: true
     },
     members: [
-      { id: 2, email: 'leo.martin@banana.fr', role: 'Member', relation: 'Son' },
-      { id: 3, email: 'emma.martin@banana.fr', role: 'Member', relation: 'Daughter' },
+      { id: 2, username: 'leo.martin', relation: 'CHILD', isAdmin: false },
+      { id: 3, username: 'emma.martin', relation: 'CHILD', isAdmin: false },
     ],
     status: 'ACTIVE'
   }
@@ -117,9 +117,8 @@ describe('Families', () => {
     await waitFor(() => {
       expect(createFamilyMock).toHaveBeenCalledWith(expect.objectContaining({
         name: 'Famille Doe',
-        ownerEmail: 'john@doe.fr',
-        ownerName: 'John Doe',
-        memberEmails: [],
+        creatorRelation: 'PARENT',
+        members: [],
       }));
       expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     });

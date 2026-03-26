@@ -20,13 +20,13 @@ const RELATION_OPTIONS: FamilyMemberRelation[] = [
 
 export interface FamilyFormValues {
   name: string;
-  ownerRelation: FamilyMemberRelation;
-  members: { email: string; relation: FamilyMemberRelation; isAdmin: boolean }[];
+  creatorRelation: FamilyMemberRelation;
+  members: { username: string; relation: FamilyMemberRelation; isAdmin: boolean }[];
 }
 
 export interface CreateUpdateFamilyPayload {
   name: string;
-  ownerRelation: FamilyMemberRelation;
+  creatorRelation: FamilyMemberRelation;
   members: UpsertFamilyMemberRequest[];
 }
 
@@ -70,15 +70,15 @@ export const CreateUpdateFamily = ({
   const handleFormSubmit = (values: FamilyFormValues) => {
     onSubmit({
       name: values.name.trim(),
-      ownerRelation: values.ownerRelation,
+      creatorRelation: values.creatorRelation,
       members: values.members
-        .filter((m) => m.email.trim().length > 0)
-        .map((m) => ({ email: m.email.trim(), relation: m.relation, isAdmin: m.isAdmin })),
+        .filter((m) => m.username.trim().length > 0)
+        .map((m) => ({ username: m.username.trim(), relation: m.relation, isAdmin: m.isAdmin })),
     });
   };
 
   const handleAddMember = () => {
-    append({ email: '', relation: 'PARENT', isAdmin: false });
+    append({ username: '', relation: 'PARENT', isAdmin: false });
   };
 
   return (
@@ -110,13 +110,13 @@ export const CreateUpdateFamily = ({
             />
           </div>
 
-          {/* Owner relation */}
+          {/* Creator relation */}
           <div className="space-y-2">
             <Label className="text-[10px] uppercase tracking-widest font-light text-gray-400">
               Votre rôle dans la famille
             </Label>
             <Controller
-              name="ownerRelation"
+              name="creatorRelation"
               control={control}
               rules={{ required: true }}
               render={({ field }) => (
@@ -167,16 +167,16 @@ export const CreateUpdateFamily = ({
                       <Trash2 className="w-3.5 h-3.5" />
                     </button>
 
-                    {/* Email */}
+                    {/* Username */}
                     <div>
                       <Label className="text-[9px] uppercase tracking-widest font-light text-gray-400">
-                        Email
+                        Nom d'utilisateur
                       </Label>
                       <Input
                         className="rounded-none border-gray-200 focus:border-blue-500 focus-visible:ring-0 mt-1"
-                        placeholder="email@exemple.fr"
-                        type="email"
-                        {...register(`members.${index}.email`)}
+                        placeholder="nom d'utilisateur"
+                        type="text"
+                        {...register(`members.${index}.username`)}
                       />
                     </div>
 

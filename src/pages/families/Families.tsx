@@ -19,14 +19,13 @@ const FamiliesContent = ({ data }: { data: Family[] }) => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingFamilyId, setEditingFamilyId] = useState<number | null>(null);
   const [pendingStatusFamilyId, setPendingStatusFamilyId] = useState<number | null>(null);
-  const defaultFormValues: FamilyFormValues = { name: '', ownerRelation: 'PARENT', members: [] };
+  const defaultFormValues: FamilyFormValues = { name: '', creatorRelation: 'PARENT', members: [] };
   const [formValues, setFormValues] = useState<FamilyFormValues>(defaultFormValues);
 
-  const ownerEmail = useMemo(() => {
-    if (userState.email) return userState.email;
-    if (userState.username) return `${userState.username}@banana.fr`;
-    return 'owner@banana.fr';
-  }, [userState.email, userState.username]);
+  const username = useMemo(() => {
+    if (userState.username) return userState.username;
+    return 'owner';
+  }, [userState.username]);
 
   const handleCreateClick = () => {
     setEditingFamilyId(null);
@@ -38,8 +37,8 @@ const FamiliesContent = ({ data }: { data: Family[] }) => {
     setEditingFamilyId(family.id);
     setFormValues({
       name: family.name,
-      ownerRelation: family.owner.relation,
-      members: family.members.map((m) => ({ email: m.email, relation: m.relation, isAdmin: m.isAdmin })),
+      creatorRelation: family.creator.relation,
+      members: family.members.map((m) => ({ username: m.username, relation: m.relation, isAdmin: m.isAdmin })),
     });
     setIsFormOpen(true);
   };
@@ -65,29 +64,18 @@ const FamiliesContent = ({ data }: { data: Family[] }) => {
     updateFamilyMutation({
       id: family.id,
       name: family.name,
-      ownerEmail: family.owner.email,
-      ownerName: family.owner.email,
-      ownerRelation: family.owner.relation,
-      ownerIsAdmin: family.owner.isAdmin,
-      members: family.members.map((m) => ({ email: m.email, relation: m.relation, isAdmin: m.isAdmin })),
+      creatorRelation: family.creator.relation,
+      members: family.members.map((m) => ({ username: m.username, relation: m.relation, isAdmin: m.isAdmin })),
       status: 'INACTIVE',
     });
   };
 
   const onSubmit = (values: CreateUpdateFamilyPayload) => {
-    const ownerName = `${userState.firstName} ${userState.lastName}`.trim() || 'Owner';
-    const editingFamily = editingFamilyId
-      ? data.find((family) => family.id === editingFamilyId)
-      : undefined;
-
     const payload: UpsertFamilyRequest = {
       id: editingFamilyId ?? undefined,
       name: values.name,
-      ownerEmail: editingFamily?.owner.email ?? ownerEmail,
-      ownerName,
-      ownerRelation: values.ownerRelation,
-      ownerIsAdmin: true,
-      members: values.members.filter((m) => m.email !== ownerEmail),
+      creatorRelation: values.creatorRelation,
+      members: values.members.filter((m) => m.username !== username),
     };
 
     setIsFormOpen(false);

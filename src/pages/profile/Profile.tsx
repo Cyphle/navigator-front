@@ -23,14 +23,14 @@ const getUserEmail = (username: string, email: string): string => {
   return '';
 };
 
-const getMemberships = (families: Family[], userEmail: string): FamilyMembership[] => {
+const getMemberships = (families: Family[], username: string): FamilyMembership[] => {
   return families
     .map((family) => {
-      if (family.owner.email === userEmail) {
-        return { family, role: family.owner.relation ?? 'Owner' };
+      if (family.creator.username === username) {
+        return { family, role: family.creator.relation ?? 'Owner' };
       }
 
-      const member = family.members.find((item) => item.email === userEmail);
+      const member = family.members.find((item) => item.username === username);
       if (member) {
         return { family, role: member.relation ?? 'Member' };
       }
@@ -79,12 +79,9 @@ const SectionCard = ({ title, children }: SectionCardProps) => (
 
 const ProfileContent = ({ data }: { data: Family[] }) => {
   const { userState } = useUser();
-  const userEmail = useMemo(
-    () => getUserEmail(userState.username, userState.email),
-    [userState.username, userState.email]
-  );
+  const username = userState.username;
 
-  const memberships = useMemo(() => getMemberships(data, userEmail), [data, userEmail]);
+  const memberships = useMemo(() => getMemberships(data, username), [data, username]);
   const roles = useMemo(
     () => Array.from(new Set(memberships.map((membership) => membership.role))),
     [memberships]
@@ -128,7 +125,7 @@ const ProfileContent = ({ data }: { data: Family[] }) => {
           <InfoRow label="Username" value={userState.username} />
           <InfoRow label="Prénom" value={userState.firstName} />
           <InfoRow label="Nom" value={userState.lastName} />
-          <InfoRow label="Email" value={userEmail} />
+          <InfoRow label="Email" value={userState.email} />
         </SectionCard>
 
         {/* Rôles */}

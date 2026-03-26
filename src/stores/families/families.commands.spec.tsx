@@ -20,7 +20,7 @@ describe('families commands', () => {
     (createFamily as jest.Mock).mockResolvedValue({
       id: 1,
       name: 'Famille Martin',
-      owner: { id: 1, email: 'owner@banana.fr', role: 'Owner', relation: 'Owner' },
+      creator: { id: 1, username: 'owner', relation: 'PARENT', isAdmin: true },
       members: [],
       status: 'ACTIVE'
     });
@@ -35,9 +35,8 @@ describe('families commands', () => {
     act(() => {
       result.current.mutate({
         name: 'Famille Martin',
-        ownerEmail: 'owner@banana.fr',
-        ownerName: 'Owner',
-        memberEmails: []
+        creatorRelation: 'PARENT',
+        members: []
       });
     });
 
@@ -51,7 +50,7 @@ describe('families commands', () => {
     (updateFamily as jest.Mock).mockResolvedValue({
       id: 1,
       name: 'Famille Update',
-      owner: { id: 1, email: 'owner@banana.fr', role: 'Owner', relation: 'Owner' },
+      creator: { id: 1, username: 'owner', relation: 'PARENT', isAdmin: true },
       members: [],
       status: 'ACTIVE'
     });
@@ -67,9 +66,8 @@ describe('families commands', () => {
       result.current.mutate({
         id: 1,
         name: 'Famille Update',
-        ownerEmail: 'owner@banana.fr',
-        ownerName: 'Owner',
-        memberEmails: []
+        creatorRelation: 'PARENT',
+        members: []
       });
     });
 

@@ -11,28 +11,28 @@ const mockFamilies = [
   {
     id: 1,
     name: 'Famille Martin',
-    owner: {
+    creator: {
       id: 1,
-      email: 'john.doe@banana.fr',
-      role: 'Owner',
-      relation: 'Owner'
+      username: 'john.doe',
+      relation: 'PARENT',
+      isAdmin: true
     },
     members: [
-      { id: 2, email: 'emma@banana.fr', role: 'Member', relation: 'Sister' }
+      { id: 2, username: 'emma', relation: 'SISTER', isAdmin: false }
     ],
     status: 'ACTIVE'
   },
   {
     id: 2,
     name: 'Famille Dupont',
-    owner: {
+    creator: {
       id: 3,
-      email: 'claire@banana.fr',
-      role: 'Owner',
-      relation: 'Owner'
+      username: 'claire',
+      relation: 'PARENT',
+      isAdmin: true
     },
     members: [
-      { id: 4, email: 'john.doe@banana.fr', role: 'Member', relation: 'Father' }
+      { id: 4, username: 'john.doe', relation: 'PARENT', isAdmin: false }
     ],
     status: 'ACTIVE'
   }
@@ -59,8 +59,7 @@ describe('Profile', () => {
     expect(screen.getByText('john.doe@banana.fr')).toBeInTheDocument();
 
     expect(screen.getByText('Mon rôle')).toBeInTheDocument();
-    expect(screen.getAllByText('Owner').length).toBeGreaterThanOrEqual(1);
-    expect(screen.getAllByText('Father').length).toBeGreaterThanOrEqual(1);
+    expect(screen.getAllByText('Parent').length).toBeGreaterThanOrEqual(1);
   });
 
   test('renders families list with roles', () => {

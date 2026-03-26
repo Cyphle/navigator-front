@@ -35,18 +35,16 @@ export const responseToFamilies = (data: unknown): Family[] => {
   return data.map((family: Record<string, unknown>, index: number) => ({
     id: (family.id as number) ?? index + 1,
     name: (family.name as string) ?? 'Famille',
-    owner: {
-      id: (family.owner as Record<string, unknown>)?.id as number ?? 1,
-      email: (family.owner as Record<string, unknown>)?.email as string ?? '',
-      role: 'Owner' as const,
-      relation: toRelation((family.owner as Record<string, unknown>)?.relation),
-      isAdmin: (family.owner as Record<string, unknown>)?.isAdmin as boolean ?? true,
+    creator: {
+      id: (family.creator as Record<string, unknown>)?.id as number ?? 1,
+      username: (family.creator as Record<string, unknown>)?.username as string ?? '',
+      relation: toRelation((family.creator as Record<string, unknown>)?.relation),
+      isAdmin: (family.creator as Record<string, unknown>)?.isAdmin as boolean ?? true,
     },
     members: Array.isArray(family.members)
       ? (family.members as Record<string, unknown>[]).map((member, memberIndex) => ({
           id: (member.id as number) ?? memberIndex + 1,
-          email: (member.email as string) ?? '',
-          role: 'Member' as const,
+          username: (member.username as string) ?? '',
           relation: toRelation(member.relation),
           isAdmin: (member.isAdmin as boolean) ?? false,
         }))
