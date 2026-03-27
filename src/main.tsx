@@ -1,7 +1,7 @@
 import { Outlet, redirect, useLoaderData } from 'react-router-dom';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { UserContextProvider } from './contexts/user/user.context.tsx';
-import { FamilyContextProvider, CurrentFamily } from './contexts/family/family.context.tsx';
+import { FamilyContextProvider, CurrentFamily, useFamily } from './contexts/family/family.context.tsx';
 import { Option } from './helpers/option.ts';
 import '@fontsource-variable/geist';
 import './main.scss';
@@ -14,6 +14,7 @@ import { Toaster as UIProvider } from './components/toaster/Toaster.tsx';
 import { Toaster } from './components/ui/toaster.tsx';
 import { getUserInfo } from './services/user.service.ts';
 import { getFamilies } from './services/families.service.ts';
+import { useFetchFamilies } from './stores/families/families.queries.ts';
 
 export async function initialDataLoader() {
   const userInfo = await getUserInfo();
@@ -26,6 +27,25 @@ export async function initialDataLoader() {
 
   return { userInfo, families: simpleFamilies };
 }
+
+const Synchronizer = () => {
+  const { data } = useFetchFamilies();
+  const { setFamilies, setCurrentFamily, currentFamily } = useFamily();
+
+  useEffect(() => {
+    if (data) {
+      const simpleFamilies = data.map(f => ({ id: String(f.id), name: f.name }));
+      setFamilies(simpleFamilies);
+
+      // If there was no current family and we now have some, select the first one
+      if (!currentFamily && simpleFamilies.length > 0) {
+        setCurrentFamily(simpleFamilies[0]);
+      }
+    }
+  }, [data, setFamilies, setCurrentFamily, currentFamily]);
+
+  return null;
+};
 
 const Main = () => {
   const { userInfo, families } = useLoaderData() as { userInfo: Option<UserInfo>; families: CurrentFamily[] };
@@ -40,6 +60,7 @@ const Main = () => {
   return (
     <UserContextProvider initialUser={initialUser}>
       <FamilyContextProvider initialFamilies={families}>
+        <Synchronizer />
         <UIProvider>
           <Toaster />
           <div className="app-shell h-screen overflow-hidden">

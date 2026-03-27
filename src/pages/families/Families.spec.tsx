@@ -80,7 +80,7 @@ describe('Families', () => {
     fireEvent.click(screen.getByRole('button', { name: /créer une famille/i }));
 
     const dialog = await screen.findByRole('dialog');
-    const submitButton = within(dialog).getByRole('button', { name: /creer/i });
+    const submitButton = within(dialog).getByRole('button', { name: /créer/i });
 
     expect(submitButton).toBeDisabled();
   });
@@ -107,9 +107,9 @@ describe('Families', () => {
 
     const dialog = await screen.findByRole('dialog');
 
-    fireEvent.change(within(dialog).getByLabelText('Nom de la famille'), { target: { value: 'Famille Doe' } });
+    fireEvent.change(within(dialog).getByPlaceholderText('Nom de la famille'), { target: { value: 'Famille Doe' } });
 
-    const submitButton = within(dialog).getByRole('button', { name: /creer/i });
+    const submitButton = within(dialog).getByRole('button', { name: /créer/i });
     await waitFor(() => expect(submitButton).toBeEnabled());
 
     fireEvent.click(submitButton);

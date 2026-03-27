@@ -14,7 +14,9 @@ const FamiliesContent = ({ data }: { data: Family[] }) => {
   const { setFamilies } = useFamily();
 
   useEffect(() => {
-    setFamilies(data.map((f) => ({ id: String(f.id), name: f.name })));
+    if (data.length > 0) {
+      setFamilies(data.map((f) => ({ id: String(f.id), name: f.name })));
+    }
   }, [data, setFamilies]);
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [editingFamilyId, setEditingFamilyId] = useState<number | null>(null);
