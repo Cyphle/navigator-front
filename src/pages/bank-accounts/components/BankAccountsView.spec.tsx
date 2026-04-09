@@ -1,17 +1,17 @@
 import { render, screen, fireEvent } from '../../../../test-utils';
 import { BankAccountsView } from './BankAccountsView';
-import type { BankAccount } from '../../../stores/bank-accounts/bank-accounts.types';
+import type { BankAccountOverviewItem } from '../../../stores/bank-accounts/bank-accounts.types';
 
-const anAccount = (overrides: Partial<BankAccount> = {}): BankAccount => ({
+const anAccount = (overrides: Partial<BankAccountOverviewItem> = {}): BankAccountOverviewItem => ({
   id: overrides.id ?? 1,
   name: overrides.name ?? 'Compte courant',
-  startingAmount: overrides.startingAmount ?? 1000,
-  startDate: overrides.startDate ?? '2026-01-01',
   visibility: overrides.visibility ?? 'PERSONAL',
+  startingAmount: overrides.startingAmount ?? 1000,
+  actualAmount: overrides.actualAmount ?? 800,
+  remainingAmount: overrides.remainingAmount ?? 600,
+  totalCredits: overrides.totalCredits ?? 2500,
+  totalExpenses: overrides.totalExpenses ?? 67,
   budgets: overrides.budgets ?? [],
-  charges: overrides.charges ?? [],
-  credits: overrides.credits ?? [],
-  expenses: overrides.expenses ?? [],
 });
 
 describe('BankAccountsView', () => {

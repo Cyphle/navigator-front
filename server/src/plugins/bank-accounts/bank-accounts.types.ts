@@ -84,6 +84,25 @@ export interface BankAccountSummaryItem {
   endOfMonthForecast: number;
 }
 
+export interface BudgetOverviewItem {
+  id: number;
+  name: string;
+  initialAmount: number;
+  remainingAmount: number;
+}
+
+export interface BankAccountOverviewItem {
+  id: number;
+  name: string;
+  visibility: AccountVisibility;
+  startingAmount: number;
+  actualAmount: number;
+  remainingAmount: number;
+  totalCredits: number;
+  totalExpenses: number;
+  budgets: BudgetOverviewItem[];
+}
+
 export interface CreateBankAccountInput {
   name: string;
   startingAmount: number;

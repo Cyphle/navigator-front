@@ -23,9 +23,12 @@ export const useFetchBankAccountsSummary = () => {
 
 export const useFetchAllBankAccounts = () => {
   const { currentFamily } = useFamily();
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth() + 1;
   return useQuery({
-    queryKey: [QUERY_KEY, currentFamily?.id],
-    queryFn: () => bankAccountsService.getAllBankAccounts(currentFamily?.id ?? ''),
+    queryKey: [QUERY_KEY, currentFamily?.id, 'overview', year, month],
+    queryFn: () => bankAccountsService.getAllBankAccounts(currentFamily?.id ?? '', year, month),
     enabled: Boolean(currentFamily?.id),
   });
 };

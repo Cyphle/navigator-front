@@ -3,6 +3,7 @@ import type {
   BudgetMonthView,
   BankAccountMonthView,
   BankAccountSummaryItem,
+  BankAccountOverviewItem,
   CreateBankAccountInput,
   CreateBudgetInput,
   CreateBudgetExpenseInput,
@@ -201,6 +202,32 @@ export const getBankAccountsSummaryForMonth = (
       visibility: account.visibility,
       actualAmount: monthView.actualAmount,
       endOfMonthForecast: monthView.remainingAmount,
+    };
+  });
+};
+
+export const getBankAccountsOverview = (
+  familyId: number,
+  year: number,
+  month: number
+): BankAccountOverviewItem[] => {
+  return getAllBankAccounts(familyId).map((account) => {
+    const monthView = getBankAccountByIdForMonth(account.id, year, month)!;
+    return {
+      id: account.id,
+      name: account.name,
+      visibility: account.visibility,
+      startingAmount: account.startingAmount,
+      actualAmount: monthView.actualAmount,
+      remainingAmount: monthView.remainingAmount,
+      totalCredits: monthView.credits.reduce((sum, c) => sum + c.amount, 0),
+      totalExpenses: monthView.expenses.reduce((sum, e) => sum + e.amount, 0),
+      budgets: monthView.budgets.map((b) => ({
+        id: b.id,
+        name: b.name,
+        initialAmount: b.initialAmount,
+        remainingAmount: b.currentAmount,
+      })),
     };
   });
 };

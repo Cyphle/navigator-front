@@ -4,6 +4,8 @@ import type {
   BudgetMonthView,
   BankAccountMonthView,
   BankAccountSummaryItem,
+  BankAccountOverviewItem,
+  BudgetOverviewItem,
   Budget,
   BudgetExpense,
   Charge,
@@ -127,11 +129,40 @@ export const getBankAccountsSummary = (familyId: string): Promise<BankAccountSum
   });
 };
 
-export const getAllBankAccounts = (familyId: string): Promise<BankAccount[]> => {
-  return getOne(`families/${encodeURIComponent(familyId)}/bank-accounts`, (data: unknown) => {
-    if (!Array.isArray(data)) return [];
-    return (data as Record<string, unknown>[]).map(responseToBankAccount);
-  });
+const responseToBudgetOverviewItem = (data: Record<string, unknown>): BudgetOverviewItem => ({
+  id: (data.id as number) ?? 0,
+  name: (data.name as string) ?? '',
+  initialAmount: (data.initialAmount as number) ?? 0,
+  remainingAmount: (data.remainingAmount as number) ?? 0,
+});
+
+const responseToBankAccountOverviewItem = (data: Record<string, unknown>): BankAccountOverviewItem => ({
+  id: (data.id as number) ?? 0,
+  name: (data.name as string) ?? '',
+  visibility: (data.visibility as BankAccountOverviewItem['visibility']) ?? 'PERSONAL',
+  startingAmount: (data.startingAmount as number) ?? 0,
+  actualAmount: (data.actualAmount as number) ?? 0,
+  remainingAmount: (data.remainingAmount as number) ?? 0,
+  totalCredits: (data.totalCredits as number) ?? 0,
+  totalExpenses: (data.totalExpenses as number) ?? 0,
+  budgets: Array.isArray(data.budgets)
+    ? (data.budgets as Record<string, unknown>[]).map(responseToBudgetOverviewItem)
+    : [],
+});
+
+export const getAllBankAccounts = (
+  familyId: string,
+  year: number,
+  month: number
+): Promise<BankAccountOverviewItem[]> => {
+  const monthParam = `${year}-${String(month).padStart(2, '0')}`;
+  return getOne(
+    `families/${encodeURIComponent(familyId)}/bank-accounts/overviews?month=${monthParam}`,
+    (data: unknown) => {
+      if (!Array.isArray(data)) return [];
+      return (data as Record<string, unknown>[]).map(responseToBankAccountOverviewItem);
+    }
+  );
 };
 
 export const getBankAccountById = (

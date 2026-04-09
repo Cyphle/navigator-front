@@ -1,6 +1,6 @@
 import type { FastifyPluginAsync } from 'fastify';
 import {
-  getAllBankAccounts,
+  getBankAccountsOverview,
   getBankAccountByIdForMonth,
   getBankAccountsSummaryForMonth,
   createBankAccount,
@@ -28,12 +28,27 @@ export const bankAccountsController: FastifyPluginAsync = async (fastify) => {
     return reply.code(200).send(summary);
   });
 
-  // GET /:familyId/bank-accounts
-  fastify.get<{ Params: { familyId: string } }>('/:familyId/bank-accounts', async (request, reply) => {
-    const familyId = parseInt(request.params.familyId, 10);
-    const accounts = getAllBankAccounts(familyId);
-    return reply.code(200).send(accounts);
-  });
+  // GET /:familyId/bank-accounts/overviews?month=2026-03
+  fastify.get<{ Params: { familyId: string }; Querystring: { month?: string } }>(
+    '/:familyId/bank-accounts/overviews',
+    async (request, reply) => {
+      const familyId = parseInt(request.params.familyId, 10);
+      const now = new Date();
+      let year = now.getFullYear();
+      let month = now.getMonth() + 1;
+
+      if (request.query.month) {
+        const [y, m] = request.query.month.split('-').map(Number);
+        if (!isNaN(y) && !isNaN(m)) {
+          year = y;
+          month = m;
+        }
+      }
+
+      const accounts = getBankAccountsOverview(familyId, year, month);
+      return reply.code(200).send(accounts);
+    }
+  );
 
   // POST /:familyId/bank-accounts
   fastify.post<{ Params: { familyId: string }; Body: CreateBankAccountInput }>(

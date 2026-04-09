@@ -1,10 +1,10 @@
-import type { BankAccount } from '../../../stores/bank-accounts/bank-accounts.types';
+import type { BankAccountOverviewItem } from '../../../stores/bank-accounts/bank-accounts.types';
 
 const formatCurrency = (amount: number) =>
   new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' }).format(amount);
 
 interface BankAccountCardProps {
-  account: BankAccount;
+  account: BankAccountOverviewItem;
   onSelect: () => void;
 }
 
@@ -29,38 +29,83 @@ export const BankAccountCard = ({ account, onSelect }: BankAccountCardProps) => 
         aria-hidden="true"
       />
 
-      <h3
-        className="font-display text-[1.1rem] font-semibold mb-2 mt-1 truncate"
-        style={{ color: 'var(--stone)' }}
-      >
-        {account.name}
-      </h3>
+      <div className="flex items-start justify-between mt-1 mb-3">
+        <h3
+          className="font-display text-[1.1rem] font-semibold truncate"
+          style={{ color: 'var(--stone)' }}
+        >
+          {account.name}
+        </h3>
+        <span
+          className="inline-block text-xs font-bold px-2.5 py-1 rounded-full shrink-0 ml-2"
+          style={
+            account.visibility === 'SHARED'
+              ? { background: 'var(--ocean-pale)', color: 'var(--ocean)' }
+              : { background: 'var(--sage-pale)', color: 'var(--sage)' }
+          }
+        >
+          {account.visibility === 'SHARED' ? 'Partagé' : 'Personnel'}
+        </span>
+      </div>
 
-      <span
-        className="inline-block text-xs font-bold px-2.5 py-1 rounded-full mb-3"
-        style={
-          account.visibility === 'SHARED'
-            ? { background: 'var(--ocean-pale)', color: 'var(--ocean)' }
-            : { background: 'var(--sage-pale)', color: 'var(--sage)' }
-        }
-      >
-        {account.visibility === 'SHARED' ? 'Partagé' : 'Personnel'}
-      </span>
-
-      <div className="space-y-1 pt-3 border-t border-black/5">
+      {/* Key amounts */}
+      <div className="space-y-1 pt-3 border-t border-black/5 mb-4">
         <div className="flex items-center justify-between text-sm">
-          <span style={{ color: 'var(--mist)' }}>Montant de départ</span>
-          <span className="font-semibold" style={{ color: 'var(--stone)' }}>
-            {formatCurrency(account.startingAmount)}
+          <span style={{ color: 'var(--mist)' }}>Montant actuel</span>
+          <span
+            className="font-semibold"
+            style={{ color: account.actualAmount < 0 ? 'var(--coral)' : 'var(--stone)' }}
+          >
+            {formatCurrency(account.actualAmount)}
           </span>
         </div>
         <div className="flex items-center justify-between text-sm">
-          <span style={{ color: 'var(--mist)' }}>Depuis le</span>
-          <span className="font-medium" style={{ color: 'var(--stone)' }}>
-            {account.startDate}
+          <span style={{ color: 'var(--mist)' }}>Restant estimé</span>
+          <span
+            className="font-semibold"
+            style={{ color: account.remainingAmount < 0 ? 'var(--coral)' : 'var(--ocean)' }}
+          >
+            {formatCurrency(account.remainingAmount)}
+          </span>
+        </div>
+        <div className="flex items-center justify-between text-sm">
+          <span style={{ color: 'var(--mist)' }}>Crédits</span>
+          <span className="font-medium" style={{ color: 'var(--sage)' }}>
+            +{formatCurrency(account.totalCredits)}
+          </span>
+        </div>
+        <div className="flex items-center justify-between text-sm">
+          <span style={{ color: 'var(--mist)' }}>Dépenses libres</span>
+          <span className="font-medium" style={{ color: account.totalExpenses > 0 ? 'var(--coral)' : 'var(--mist)' }}>
+            -{formatCurrency(account.totalExpenses)}
           </span>
         </div>
       </div>
+
+      {/* Budgets */}
+      {account.budgets.length > 0 && (
+        <div className="pt-3 border-t border-black/5">
+          <p className="text-[10px] font-semibold uppercase tracking-wide mb-2" style={{ color: 'var(--mist)' }}>
+            Budgets
+          </p>
+          <ul className="space-y-1">
+            {account.budgets.map((budget) => (
+              <li key={budget.id} className="flex items-center justify-between text-xs">
+                <span style={{ color: 'var(--stone)' }}>{budget.name}</span>
+                <span
+                  style={{ color: budget.remainingAmount < 0 ? 'var(--coral)' : 'var(--ocean)' }}
+                  className="font-semibold"
+                >
+                  {formatCurrency(budget.remainingAmount)}
+                  <span className="font-normal ml-0.5" style={{ color: 'var(--mist)' }}>
+                    / {formatCurrency(budget.initialAmount)}
+                  </span>
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </article>
   );
 };

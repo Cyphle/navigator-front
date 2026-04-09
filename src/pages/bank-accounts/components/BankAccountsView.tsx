@@ -1,9 +1,9 @@
 import { Plus, Wallet } from 'lucide-react';
-import type { BankAccount } from '../../../stores/bank-accounts/bank-accounts.types';
+import type { BankAccountOverviewItem } from '../../../stores/bank-accounts/bank-accounts.types';
 import { BankAccountCard } from './BankAccountCard';
 
 interface BankAccountsViewProps {
-  accounts: BankAccount[];
+  accounts: BankAccountOverviewItem[];
   onSelect: (id: number) => void;
   onCreate: () => void;
 }
