@@ -1,38 +1,38 @@
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import {
-  useFetchAllTodoLists,
-  useFetchTodoListById,
-  useCreateTodoList,
-  useDeleteTodoList,
-  useAddItemToTodoList,
-  useUpdateItemInTodoList,
-  useDeleteItemFromTodoList,
-  useClearCompletedTodos,
-} from '../../stores/family-todos/family-todos.queries';
+  useFetchAllMagicLists,
+  useFetchMagicListById,
+  useCreateMagicList,
+  useDeleteMagicList,
+  useAddItemToMagicList,
+  useUpdateItemInMagicList,
+  useDeleteItemFromMagicList,
+  useClearCompletedMagicListItems,
+} from '../../stores/magic-lists/magic-lists.queries';
 import { useFetchFamilies } from '../../stores/families/families.queries';
-import { TodoListsView } from './components/TodoListsView';
-import { CreateTodoListForm } from './components/CreateTodoListForm';
-import { TodoListDetail } from './components/TodoListDetail';
-import type { CreateTodoListInput, CreateTodoItemInput, TodoStatus } from '../../stores/family-todos/family-todos.types';
+import { MagicListsView } from './components/MagicListsView';
+import { CreateMagicListForm } from './components/CreateMagicListForm';
+import { MagicListDetail } from './components/MagicListDetail';
+import type { CreateMagicListInput, CreateMagicItemInput, MagicItemStatus } from '../../stores/magic-lists/magic-lists.types';
 import { Loader2 } from 'lucide-react';
 
-export const FamilyTodos = () => {
+export const FamilyMagicLists = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedListId, setSelectedListId] = useState<number | null>(null);
   const { toast } = useToast();
 
-  const { data: lists, isPending, isError } = useFetchAllTodoLists();
+  const { data: magicLists, isPending, isError } = useFetchAllMagicLists();
   const { data: families } = useFetchFamilies();
-  const { data: selectedList } = useFetchTodoListById(selectedListId || 0);
-  const createMutation = useCreateTodoList();
-  const deleteMutation = useDeleteTodoList();
-  const addItemMutation = useAddItemToTodoList();
-  const updateItemMutation = useUpdateItemInTodoList();
-  const deleteItemMutation = useDeleteItemFromTodoList();
-  const clearCompletedMutation = useClearCompletedTodos();
+  const { data: selectedList } = useFetchMagicListById(selectedListId || 0);
+  const createMutation = useCreateMagicList();
+  const deleteMutation = useDeleteMagicList();
+  const addItemMutation = useAddItemToMagicList();
+  const updateItemMutation = useUpdateItemInMagicList();
+  const deleteItemMutation = useDeleteItemFromMagicList();
+  const clearCompletedMutation = useClearCompletedMagicListItems();
 
-  const handleCreateList = (input: CreateTodoListInput) => {
+  const handleCreateList = (input: CreateMagicListInput) => {
     createMutation.mutate(input, {
       onSuccess: () => {
         toast({ title: 'Liste créée avec succès' });
@@ -55,7 +55,7 @@ export const FamilyTodos = () => {
     });
   };
 
-  const handleAddItem = (input: CreateTodoItemInput) => {
+  const handleAddItem = (input: CreateMagicItemInput) => {
     if (!selectedListId) return;
     addItemMutation.mutate(
       { listId: selectedListId, input },
@@ -66,7 +66,7 @@ export const FamilyTodos = () => {
     );
   };
 
-  const handleUpdateItem = (itemId: number, status: TodoStatus) => {
+  const handleUpdateItem = (itemId: number, status: MagicItemStatus) => {
     if (!selectedListId) return;
     updateItemMutation.mutate(
       { listId: selectedListId, itemId, input: { status } },
@@ -122,7 +122,7 @@ export const FamilyTodos = () => {
 
   if (selectedListId && selectedList) {
     return (
-      <TodoListDetail
+      <MagicListDetail
         list={selectedList}
         onBack={() => setSelectedListId(null)}
         onAddItem={handleAddItem}
@@ -135,13 +135,13 @@ export const FamilyTodos = () => {
 
   return (
     <>
-      <TodoListsView
-        lists={lists || []}
+      <MagicListsView
+        lists={magicLists || []}
         onCreateNew={() => setIsFormOpen(true)}
         onSelectList={setSelectedListId}
         onDelete={handleDeleteList}
       />
-      <CreateTodoListForm
+      <CreateMagicListForm
         open={isFormOpen}
         onCancel={() => setIsFormOpen(false)}
         onSubmit={handleCreateList}

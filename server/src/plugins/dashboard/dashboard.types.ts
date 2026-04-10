@@ -10,7 +10,7 @@ export interface DashboardAgendaItem {
   attendees: string[];
 }
 
-export interface DashboardTodoItem {
+export interface DashboardMagicListItem {
   id: number;
   label: string;
   assignee: string;
@@ -53,7 +53,7 @@ export interface DashboardShopping {
 
 export interface Dashboard {
   agenda: DashboardAgendaItem[];
-  todos: DashboardTodoItem[];
+  todos: DashboardMagicListItem[];
   weeklyMenu: DashboardMeals;
   recipes: DashboardRecipe[];
   shopping: DashboardShopping;

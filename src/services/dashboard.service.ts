@@ -5,7 +5,7 @@ import {
   DashboardMealsDay,
   DashboardMealsEntry,
   DashboardRecipe,
-  DashboardTodoItem
+  DashboardMagicListItem
 } from '../stores/dashboard/dashboard.types.ts';
 
 export const getDashboard = (familyId: string): Promise<DashboardData> => {
@@ -15,7 +15,7 @@ export const getDashboard = (familyId: string): Promise<DashboardData> => {
 export const responseToDashboard = (data: any): DashboardData => {
   return {
     agenda: data.agenda.map((item: any) => toAgendaItem(item)),
-    todos: data.todos.map((item: any) => toTodoItem(item)),
+    todos: data.todos.map((item: any) => toMagicListItem(item)),
     weeklyMenu: {
       weekLabel: data.weeklyMenu.weekLabel,
       days: data.weeklyMenu.days.map((day: any) => toMenuDay(day))
@@ -37,7 +37,7 @@ const toAgendaItem = (item: any): DashboardAgendaItem => ({
   attendees: item.attendees
 });
 
-const toTodoItem = (item: any): DashboardTodoItem => ({
+const toMagicListItem = (item: any): DashboardMagicListItem => ({
   id: item.id,
   label: item.label,
   assignee: item.assignee,

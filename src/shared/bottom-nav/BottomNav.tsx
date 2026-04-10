@@ -36,8 +36,8 @@ const NAV_ITEMS = [
     ),
   },
   {
-    to: '/family-todos',
-    label: 'Todos',
+    to: '/magic-lists',
+    label: 'Magic Lists',
     dotColor: 'var(--sun)',
     end: false,
     icon: (

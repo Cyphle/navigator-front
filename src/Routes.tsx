@@ -9,7 +9,7 @@ import { Recipes } from './pages/recipes/Recipes.tsx';
 import { Profile } from './pages/profile/Profile.tsx';
 import { Meals } from './pages/meals/Meals.tsx';
 import { ShoppingLists } from './pages/shopping-lists/ShoppingLists.tsx';
-import { FamilyTodos } from './pages/family-todos/FamilyTodos.tsx';
+import { FamilyMagicLists } from './pages/magic-lists/FamilyMagicLists.tsx';
 import { Calendars } from './pages/calendars/Calendars.tsx';
 import { BankAccounts } from './pages/bank-accounts/BankAccounts.tsx';
 
@@ -78,9 +78,9 @@ export const ROUTES_PATHS: RouteDefinitionConfig[] = [
   },
   {
     id: 5,
-    name: 'Todos familiaux',
-    path: 'family-todos',
-    element: <FamilyTodos />,
+    name: 'Magic Lists',
+    path: 'magic-lists',
+    element: <FamilyMagicLists />,
     icon: (
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M7 12.5 10.5 16 17 9.5l-1.4-1.4-5.1 5.1L8.4 11.1 7 12.5Z" />

@@ -1,7 +1,7 @@
 import type { MealsList, MealsRecipe } from '../src/stores/meals/meals.types';
 import type { ShoppingList, ShoppingListItem } from '../src/stores/shopping-lists/shopping-lists.types';
 import type { Calendar, CalendarEvent } from '../src/stores/calendars/calendars.types';
-import type { TodoList, TodoItem } from '../src/stores/family-todos/family-todos.types';
+import type { MagicList, MagicItem } from '../src/stores/magic-lists/magic-lists.types';
 import type { Recipe } from '../src/stores/recipes/recipes.types';
 import type { Family, FamilyMember } from '../src/stores/families/families.types';
 import type {
@@ -9,7 +9,7 @@ import type {
   BudgetMonthView,
 } from '../src/stores/bank-accounts/bank-accounts.types';
 
-export const aTodoItem = (overrides: Partial<TodoItem> = {}): TodoItem => ({
+export const aMagicItem = (overrides: Partial<MagicItem> = {}): MagicItem => ({
   id: overrides.id ?? 1,
   title: overrides.title ?? 'Faire les courses',
   description: overrides.description,
@@ -19,10 +19,11 @@ export const aTodoItem = (overrides: Partial<TodoItem> = {}): TodoItem => ({
   updatedAt: overrides.updatedAt ?? '2026-03-01T10:00:00Z',
 });
 
-export const aTodoList = (overrides: Partial<TodoList> = {}): TodoList => ({
+export const aMagicList = (overrides: Partial<MagicList> = {}): MagicList => ({
   id: overrides.id ?? 1,
   name: overrides.name ?? 'Tâches du foyer',
   type: overrides.type ?? 'PERSONAL',
+  kind: overrides.kind ?? 'SIMPLE',
   familyId: overrides.familyId,
   items: overrides.items ?? [],
   createdAt: overrides.createdAt ?? '2026-03-01T10:00:00Z',

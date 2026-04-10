@@ -4,8 +4,8 @@ import { Home } from './Home.tsx';
 jest.mock('../../stores/calendars/calendars.queries.ts', () => ({
   useFetchCalendarSummary: jest.fn(() => ({ data: [], isPending: false, isError: false })),
 }));
-jest.mock('../../stores/family-todos/family-todos.queries.ts', () => ({
-  useFetchTodosSummary: jest.fn(() => ({ data: [], isPending: false, isError: false })),
+jest.mock('../../stores/magic-lists/magic-lists.queries.ts', () => ({
+  useFetchMagicListsSummary: jest.fn(() => ({ data: [], isPending: false, isError: false })),
 }));
 jest.mock('../../stores/recipes/recipes.queries.ts', () => ({
   useFetchRecipesSummary: jest.fn(() => ({ data: [], isPending: false, isError: false })),
@@ -30,9 +30,9 @@ describe('Home', () => {
     expect(screen.getByText('Agenda familial')).toBeInTheDocument();
   });
 
-  test('renders the todos section', () => {
+  test('renders the magic lists section', () => {
     renderWithRouter(<Home />);
-    expect(screen.getByText('Todos familiaux')).toBeInTheDocument();
+    expect(screen.getByText('Magic Lists')).toBeInTheDocument();
   });
 
   test('renders the bank accounts section', () => {

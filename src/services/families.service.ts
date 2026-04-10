@@ -32,14 +32,16 @@ export const responseToFamilies = (data: unknown): Family[] => {
     return [];
   }
 
-  return data.map((family: Record<string, unknown>, index: number) => ({
+  return data.map((family: Record<string, unknown>, index: number) => {
+    const rawCreator = ((family.owner ?? family.creator) as Record<string, unknown>) ?? {};
+    return {
     id: (family.id as number) ?? index + 1,
     name: (family.name as string) ?? 'Famille',
     creator: {
-      id: (family.creator as Record<string, unknown>)?.id as number ?? 1,
-      usernameOrEmail: ((family.creator as Record<string, unknown>)?.username as string) ?? ((family.creator as Record<string, unknown>)?.email as string) ?? '',
-      relation: toRelation((family.creator as Record<string, unknown>)?.relation),
-      isAdmin: (family.creator as Record<string, unknown>)?.isAdmin as boolean ?? true,
+      id: rawCreator.id as number ?? 1,
+      usernameOrEmail: (rawCreator.username as string) ?? (rawCreator.email as string) ?? '',
+      relation: toRelation(rawCreator.relation),
+      isAdmin: rawCreator.isAdmin as boolean ?? true,
     },
     members: Array.isArray(family.members)
       ? (family.members as Record<string, unknown>[]).map((member, memberIndex) => ({
@@ -50,5 +52,6 @@ export const responseToFamilies = (data: unknown): Family[] => {
         }))
       : [],
     status: family.status === 'INACTIVE' ? 'INACTIVE' : 'ACTIVE',
-  }));
+  };
+  });
 };

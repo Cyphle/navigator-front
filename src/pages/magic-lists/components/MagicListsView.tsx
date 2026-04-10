@@ -1,14 +1,14 @@
 import { Plus, Trash2, ClipboardList } from 'lucide-react';
-import type { TodoList } from '../../../stores/family-todos/family-todos.types';
+import type { MagicList } from '../../../stores/magic-lists/magic-lists.types';
 
-interface TodoListsViewProps {
-  lists: TodoList[];
+interface MagicListsViewProps {
+  lists: MagicList[];
   onCreateNew: () => void;
   onSelectList: (id: number) => void;
   onDelete: (id: number) => void;
 }
 
-export const TodoListsView = ({ lists, onCreateNew, onSelectList, onDelete }: TodoListsViewProps) => {
+export const MagicListsView = ({ lists, onCreateNew, onSelectList, onDelete }: MagicListsViewProps) => {
   return (
     <div className="p-4 md:p-6 min-h-full" style={{ background: 'var(--sand)' }}>
       {/* Header */}

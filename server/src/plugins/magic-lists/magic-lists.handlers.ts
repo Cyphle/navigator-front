@@ -1,18 +1,20 @@
 import type {
-  TodoList,
-  TodoItem,
-  CreateTodoListInput,
-  UpdateTodoListInput,
-  CreateTodoItemInput,
-  UpdateTodoItemInput,
-} from './family-todos.types';
+  MagicList,
+  MagicItem,
+  MagicListKind,
+  CreateMagicListInput,
+  UpdateMagicListInput,
+  CreateMagicItemInput,
+  UpdateMagicItemInput,
+} from './magic-lists.types';
 
 // Initialize with mock data
-let todoLists: TodoList[] = [
+let magicLists: MagicList[] = [
   {
     id: 1,
     name: 'Famille Martin',
     type: 'SHARED',
+    kind: 'TASK' as MagicListKind,
     familyId: 1,
     items: [
       {
@@ -48,6 +50,7 @@ let todoLists: TodoList[] = [
     id: 2,
     name: 'Famille Dupont',
     type: 'SHARED',
+    kind: 'SIMPLE' as MagicListKind,
     familyId: 2,
     items: [
       {
@@ -67,62 +70,63 @@ let todoLists: TodoList[] = [
 let nextListId = 3;
 let nextItemId = 5;
 
-export const getAllTodoLists = (): TodoList[] => {
-  return todoLists;
+export const getAllMagicLists = (): MagicList[] => {
+  return magicLists;
 };
 
-export const getTodoListById = (id: number): TodoList | undefined => {
-  return todoLists.find((list) => list.id === id);
+export const getMagicListById = (id: number): MagicList | undefined => {
+  return magicLists.find((list) => list.id === id);
 };
 
-export const createTodoList = (input: CreateTodoListInput): TodoList => {
+export const createMagicList = (input: CreateMagicListInput): MagicList => {
   const now = new Date().toISOString();
-  const newList: TodoList = {
+  const newList: MagicList = {
     id: nextListId++,
     name: input.name,
     type: input.type,
+    kind: input.kind,
     familyId: input.familyId,
     items: [],
     createdAt: now,
     updatedAt: now,
   };
-  todoLists.push(newList);
+  magicLists.push(newList);
   return newList;
 };
 
-export const updateTodoList = (id: number, input: UpdateTodoListInput): TodoList | undefined => {
-  const listIndex = todoLists.findIndex((list) => list.id === id);
+export const updateMagicList = (id: number, input: UpdateMagicListInput): MagicList | undefined => {
+  const listIndex = magicLists.findIndex((list) => list.id === id);
   if (listIndex === -1) {
     return undefined;
   }
 
-  const updatedList: TodoList = {
-    ...todoLists[listIndex],
+  const updatedList: MagicList = {
+    ...magicLists[listIndex],
     ...input,
     updatedAt: new Date().toISOString(),
   };
 
-  todoLists[listIndex] = updatedList;
+  magicLists[listIndex] = updatedList;
   return updatedList;
 };
 
-export const deleteTodoList = (id: number): boolean => {
-  const initialLength = todoLists.length;
-  todoLists = todoLists.filter((list) => list.id !== id);
-  return todoLists.length < initialLength;
+export const deleteMagicList = (id: number): boolean => {
+  const initialLength = magicLists.length;
+  magicLists = magicLists.filter((list) => list.id !== id);
+  return magicLists.length < initialLength;
 };
 
-export const addItemToTodoList = (
+export const addItemToMagicList = (
   listId: number,
-  input: CreateTodoItemInput
-): TodoList | undefined => {
-  const list = todoLists.find((l) => l.id === listId);
+  input: CreateMagicItemInput
+): MagicList | undefined => {
+  const list = magicLists.find((l) => l.id === listId);
   if (!list) {
     return undefined;
   }
 
   const now = new Date().toISOString();
-  const newItem: TodoItem = {
+  const newItem: MagicItem = {
     id: nextItemId++,
     title: input.title,
     description: input.description,
@@ -137,12 +141,12 @@ export const addItemToTodoList = (
   return list;
 };
 
-export const updateItemInTodoList = (
+export const updateItemInMagicList = (
   listId: number,
   itemId: number,
-  input: UpdateTodoItemInput
-): TodoList | undefined => {
-  const list = todoLists.find((l) => l.id === listId);
+  input: UpdateMagicItemInput
+): MagicList | undefined => {
+  const list = magicLists.find((l) => l.id === listId);
   if (!list) {
     return undefined;
   }
@@ -162,8 +166,8 @@ export const updateItemInTodoList = (
   return list;
 };
 
-export const deleteItemFromTodoList = (listId: number, itemId: number): TodoList | undefined => {
-  const list = todoLists.find((l) => l.id === listId);
+export const deleteItemFromMagicList = (listId: number, itemId: number): MagicList | undefined => {
+  const list = magicLists.find((l) => l.id === listId);
   if (!list) {
     return undefined;
   }
@@ -173,8 +177,8 @@ export const deleteItemFromTodoList = (listId: number, itemId: number): TodoList
   return list;
 };
 
-export const clearCompletedTodos = (listId: number): TodoList | undefined => {
-  const list = todoLists.find((l) => l.id === listId);
+export const clearCompletedMagicListItems = (listId: number): MagicList | undefined => {
+  const list = magicLists.find((l) => l.id === listId);
   if (!list) {
     return undefined;
   }

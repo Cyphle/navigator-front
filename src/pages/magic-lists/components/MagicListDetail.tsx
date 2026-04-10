@@ -3,29 +3,29 @@ import dayjs from 'dayjs';
 import { ArrowLeft, Plus, Trash2, Eraser } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import type {
-  TodoList,
-  TodoItem,
-  CreateTodoItemInput,
-  TodoStatus,
-} from '../../../stores/family-todos/family-todos.types';
+  MagicList,
+  MagicItem,
+  CreateMagicItemInput,
+  MagicItemStatus,
+} from '../../../stores/magic-lists/magic-lists.types';
 import { AddTaskDialog } from './AddTaskDialog';
 
-interface TodoListDetailProps {
-  list: TodoList;
+interface MagicListDetailProps {
+  list: MagicList;
   onBack: () => void;
-  onAddItem: (input: CreateTodoItemInput) => void;
-  onUpdateItem: (itemId: number, status: TodoStatus) => void;
+  onAddItem: (input: CreateMagicItemInput) => void;
+  onUpdateItem: (itemId: number, status: MagicItemStatus) => void;
   onDeleteItem: (itemId: number) => void;
   onClearCompleted: () => void;
 }
 
-const STATUS_LABELS: Record<TodoStatus, string> = {
+const STATUS_LABELS: Record<MagicItemStatus, string> = {
   TODO: 'À faire',
   IN_PROGRESS: 'En cours',
   DONE: 'Terminé',
 };
 
-const STATUS_STYLES: Record<TodoStatus, string> = {
+const STATUS_STYLES: Record<MagicItemStatus, string> = {
   TODO: 'bg-[var(--ocean-pale)] text-[var(--ocean)]',
   IN_PROGRESS: 'bg-[var(--sun-pale)] text-amber-700',
   DONE: 'bg-[var(--sage-pale)] text-[var(--sage)]',
@@ -36,8 +36,8 @@ const TaskItem = ({
   onUpdateItem,
   onDeleteItem,
 }: {
-  item: TodoItem;
-  onUpdateItem: (itemId: number, status: TodoStatus) => void;
+  item: MagicItem;
+  onUpdateItem: (itemId: number, status: MagicItemStatus) => void;
   onDeleteItem: (itemId: number) => void;
 }) => {
   const isLate =
@@ -52,14 +52,14 @@ const TaskItem = ({
     >
       <select
         value={item.status}
-        onChange={(e) => onUpdateItem(item.id, e.target.value as TodoStatus)}
+        onChange={(e) => onUpdateItem(item.id, e.target.value as MagicItemStatus)}
         className={cn(
           'border-none rounded-[var(--radius-sm)] px-2.5 py-1.5 text-xs font-semibold shrink-0 cursor-pointer focus:outline-none',
           STATUS_STYLES[item.status]
         )}
         onClick={(e) => e.stopPropagation()}
       >
-        {(Object.keys(STATUS_LABELS) as TodoStatus[]).map((s) => (
+        {(Object.keys(STATUS_LABELS) as MagicItemStatus[]).map((s) => (
           <option key={s} value={s}>{STATUS_LABELS[s]}</option>
         ))}
       </select>
@@ -123,14 +123,14 @@ const SectionHeader = ({
   </div>
 );
 
-export const TodoListDetail = ({
+export const MagicListDetail = ({
   list,
   onBack,
   onAddItem,
   onUpdateItem,
   onDeleteItem,
   onClearCompleted,
-}: TodoListDetailProps) => {
+}: MagicListDetailProps) => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
   const todoItems = list.items.filter((item) => item.status === 'TODO');

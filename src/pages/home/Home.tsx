@@ -2,11 +2,11 @@ import { useFamily } from '../../contexts/family/family.context.tsx';
 import { Calendar, CheckSquare, ShoppingCart, UtensilsCrossed } from 'lucide-react';
 import { StatCard, type StatCardData } from './components/StatCard.tsx';
 import { AgendaSection } from './components/AgendaSection.tsx';
-import { TodosSection } from './components/TodosSection.tsx';
+import { MagicListsSection } from './components/MagicListsSection.tsx';
 import { MealsSection } from './components/MealsSection.tsx';
 import NoFamilyOverlay from '@/pages/home/components/NoFamilyOverlay.tsx';
 import { useFetchCalendarSummary } from '@/stores/calendars/calendars.queries.ts';
-import { useFetchTodosSummary } from '@/stores/family-todos/family-todos.queries.ts';
+import { useFetchMagicListsSummary } from '@/stores/magic-lists/magic-lists.queries.ts';
 import { useFetchRecipesSummary } from '@/stores/recipes/recipes.queries.ts';
 import { useFetchShoppingListSummary } from '@/stores/shopping-lists/shopping-lists.queries.ts';
 import { useFetchMealsSummary } from '@/stores/meals/meals.queries.ts';
@@ -15,7 +15,7 @@ import { BankAccountsSection } from './components/BankAccountsSection.tsx';
 
 const buildStatCards = (
   agendaCount: number,
-  activeTodosCount: number,
+  activeMagicListItemsCount: number,
   favoriteRecipesCount: number,
   shoppingItems: number
 ): StatCardData[] => [
@@ -29,7 +29,7 @@ const buildStatCards = (
   },
   {
     title: 'Tâches en cours',
-    value: activeTodosCount,
+    value: activeMagicListItemsCount,
     subtitle: 'tâches actives',
     icon: <CheckSquare className="w-5 h-5" />,
     iconColor: 'var(--sage)',
@@ -55,14 +55,14 @@ const buildStatCards = (
 
 const HomeContent = () => {
   const calendarQuery = useFetchCalendarSummary();
-  const todosQuery = useFetchTodosSummary();
+  const magicListsQuery = useFetchMagicListsSummary();
   const recipesQuery = useFetchRecipesSummary();
   const shoppingQuery = useFetchShoppingListSummary();
   const mealsQuery = useFetchMealsSummary();
   const bankAccountsQuery = useFetchBankAccountsSummary();
 
   const agenda = calendarQuery.data ?? [];
-  const todos = todosQuery.data ?? [];
+  const magicListItems = magicListsQuery.data ?? [];
   const recipes = recipesQuery.data ?? [];
   const shopping = shoppingQuery.data ?? { items: 0 };
   const weeklyMenu = mealsQuery.data ?? { weekLabel: '', days: [] };
@@ -70,7 +70,7 @@ const HomeContent = () => {
 
   const statCards = buildStatCards(
     agenda.length,
-    todos.filter((todo) => !todo.completed).length,
+    magicListItems.filter((item) => !item.completed).length,
     recipes.filter((recipe) => recipe.favorite).length,
     shopping.items
   );
@@ -84,7 +84,7 @@ const HomeContent = () => {
       </div>
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 md:gap-6">
         <AgendaSection events={agenda} />
-        <TodosSection todos={todos} />
+        <MagicListsSection magicListItems={magicListItems} />
         <MealsSection weeklyMenu={weeklyMenu} recipes={recipes} />
       </div>
       <div className="mt-4 md:mt-6">

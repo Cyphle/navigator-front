@@ -1,14 +1,14 @@
 import { render, screen } from '../../../../test-utils';
-import { TodoListsView } from './TodoListsView';
+import { MagicListsView } from './MagicListsView';
 import { fireEvent } from '@testing-library/react';
-import { aTodoList, aTodoItem } from '../../../../test-utils/factories';
+import { aMagicList, aMagicItem } from '../../../../test-utils/factories';
 
-describe('TodoListsView', () => {
+describe('MagicListsView', () => {
   test('shows empty state when no lists', () => {
     const onCreateNew = jest.fn();
 
     render(
-      <TodoListsView lists={[]} onCreateNew={onCreateNew} onSelectList={jest.fn()} onDelete={jest.fn()} />
+      <MagicListsView lists={[]} onCreateNew={onCreateNew} onSelectList={jest.fn()} onDelete={jest.fn()} />
     );
 
     expect(screen.getByText('Aucune liste de todos')).toBeInTheDocument();
@@ -19,7 +19,7 @@ describe('TodoListsView', () => {
     const onCreateNew = jest.fn();
 
     render(
-      <TodoListsView lists={[]} onCreateNew={onCreateNew} onSelectList={jest.fn()} onDelete={jest.fn()} />
+      <MagicListsView lists={[]} onCreateNew={onCreateNew} onSelectList={jest.fn()} onDelete={jest.fn()} />
     );
 
     fireEvent.click(screen.getByRole('button', { name: /créer ma première liste/i }));
@@ -29,10 +29,10 @@ describe('TodoListsView', () => {
 
   test('header "Nouvelle liste" button calls onCreateNew', () => {
     const onCreateNew = jest.fn();
-    const lists = [aTodoList()];
+    const lists = [aMagicList()];
 
     render(
-      <TodoListsView lists={lists} onCreateNew={onCreateNew} onSelectList={jest.fn()} onDelete={jest.fn()} />
+      <MagicListsView lists={lists} onCreateNew={onCreateNew} onSelectList={jest.fn()} onDelete={jest.fn()} />
     );
 
     fireEvent.click(screen.getByRole('button', { name: /nouvelle liste/i }));
@@ -42,12 +42,12 @@ describe('TodoListsView', () => {
 
   test('renders list names and item counts', () => {
     const lists = [
-      aTodoList({ id: 1, name: 'Tâches ménagères', type: 'PERSONAL', items: [aTodoItem(), aTodoItem({ id: 2 })] }),
-      aTodoList({ id: 2, name: 'Courses', type: 'SHARED', items: [] }),
+      aMagicList({ id: 1, name: 'Tâches ménagères', type: 'PERSONAL', items: [aMagicItem(), aMagicItem({ id: 2 })] }),
+      aMagicList({ id: 2, name: 'Courses', type: 'SHARED', items: [] }),
     ];
 
     render(
-      <TodoListsView lists={lists} onCreateNew={jest.fn()} onSelectList={jest.fn()} onDelete={jest.fn()} />
+      <MagicListsView lists={lists} onCreateNew={jest.fn()} onSelectList={jest.fn()} onDelete={jest.fn()} />
     );
 
     expect(screen.getByText('Tâches ménagères')).toBeInTheDocument();
@@ -58,10 +58,10 @@ describe('TodoListsView', () => {
 
   test('clicking a list calls onSelectList with its id', () => {
     const onSelectList = jest.fn();
-    const lists = [aTodoList({ id: 42, name: 'Ma liste' })];
+    const lists = [aMagicList({ id: 42, name: 'Ma liste' })];
 
     render(
-      <TodoListsView lists={lists} onCreateNew={jest.fn()} onSelectList={onSelectList} onDelete={jest.fn()} />
+      <MagicListsView lists={lists} onCreateNew={jest.fn()} onSelectList={onSelectList} onDelete={jest.fn()} />
     );
 
     fireEvent.click(screen.getByText('Ma liste'));

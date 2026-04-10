@@ -1,12 +1,12 @@
 import { Button } from '@/components/ui/button';
 import { CheckSquare, Plus } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import type { DashboardTodoItem, ItemVisibility } from '../../../stores/dashboard/dashboard.types';
+import type { DashboardMagicListItem, ItemVisibility } from '../../../stores/dashboard/dashboard.types';
 
 const getVisibilityLabel = (visibility: ItemVisibility) =>
   visibility === 'PERSONAL' ? 'Personnel' : 'Famille';
 
-export const TodosSection = ({ todos }: { todos: DashboardTodoItem[] }) => (
+export const MagicListsSection = ({ magicListItems }: { magicListItems: DashboardMagicListItem[] }) => (
   <div
     className="bg-white rounded-[var(--radius-lg)] overflow-hidden"
     style={{ boxShadow: 'var(--shadow-soft)' }}
@@ -20,38 +20,38 @@ export const TodosSection = ({ todos }: { todos: DashboardTodoItem[] }) => (
           <CheckSquare className="w-4 h-4" />
         </div>
         <h2 className="font-display text-base font-semibold m-0" style={{ color: 'var(--stone)' }}>
-          Todos familiaux
+          Magic Lists
         </h2>
       </div>
     </div>
     <ul className="list-none p-0 m-0 divide-y divide-black/5">
-      {todos.map((todo) => (
-        <li key={todo.id} className="px-6 py-4 flex items-center gap-4 hover:bg-[var(--sand)] transition-colors">
+      {magicListItems.map((item) => (
+        <li key={item.id} className="px-6 py-4 flex items-center gap-4 hover:bg-[var(--sand)] transition-colors">
           <div
             className="w-8 h-8 rounded-full flex items-center justify-center text-[10px] font-bold text-white shrink-0"
             style={{ background: 'var(--sage-light)' }}
           >
-            {todo.assignee.charAt(0)}
+            {item.assignee.charAt(0)}
           </div>
           <div className="flex-1 min-w-0">
             <p
-              className={cn('text-sm font-medium m-0 truncate', todo.completed && 'line-through opacity-40')}
+              className={cn('text-sm font-medium m-0 truncate', item.completed && 'line-through opacity-40')}
               style={{ color: 'var(--stone)' }}
             >
-              {todo.label}
+              {item.label}
             </p>
             <span
               className={cn(
                 'inline-block text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded-full mt-1',
-                todo.visibility === 'FAMILY'
+                item.visibility === 'FAMILY'
                   ? 'bg-[var(--ocean-pale)] text-[var(--ocean)]'
                   : 'bg-[var(--sand)] text-[var(--mist)]'
               )}
             >
-              {getVisibilityLabel(todo.visibility)}
+              {getVisibilityLabel(item.visibility)}
             </span>
           </div>
-          {todo.completed && (
+          {item.completed && (
             <div
               className="w-5 h-5 rounded-full flex items-center justify-center shrink-0"
               style={{ background: 'var(--sage-pale)', color: 'var(--sage)' }}

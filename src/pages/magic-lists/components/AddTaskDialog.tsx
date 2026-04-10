@@ -9,9 +9,9 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import type { CreateTodoItemInput, TodoStatus } from '../../../stores/family-todos/family-todos.types';
+import type { CreateMagicItemInput, MagicItemStatus } from '../../../stores/magic-lists/magic-lists.types';
 
-const STATUS_LABELS: Record<TodoStatus, string> = {
+const STATUS_LABELS: Record<MagicItemStatus, string> = {
   TODO: 'À faire',
   IN_PROGRESS: 'En cours',
   DONE: 'Terminé',
@@ -21,13 +21,13 @@ interface AddItemFormValues {
   title: string;
   description: string;
   dueDate: string;
-  status: TodoStatus;
+  status: MagicItemStatus;
 }
 
 interface AddTaskDialogProps {
   open: boolean;
   onClose: () => void;
-  onSubmit: (input: CreateTodoItemInput) => void;
+  onSubmit: (input: CreateMagicItemInput) => void;
 }
 
 export const AddTaskDialog = ({ open, onClose, onSubmit }: AddTaskDialogProps) => {
@@ -37,7 +37,7 @@ export const AddTaskDialog = ({ open, onClose, onSubmit }: AddTaskDialogProps) =
   });
 
   const handleAddItem = (values: AddItemFormValues) => {
-    const input: CreateTodoItemInput = {
+    const input: CreateMagicItemInput = {
       title: values.title,
       description: values.description || undefined,
       dueDate: values.dueDate ? dayjs(values.dueDate).toISOString() : undefined,
@@ -132,7 +132,7 @@ export const AddTaskDialog = ({ open, onClose, onSubmit }: AddTaskDialogProps) =
                     className="w-full h-10 px-3 text-sm rounded-[var(--radius-sm)] border border-black/10 focus:outline-none"
                     style={{ background: 'var(--sand)', color: 'var(--stone)' }}
                   >
-                    {(Object.keys(STATUS_LABELS) as TodoStatus[]).map((s) => (
+                    {(Object.keys(STATUS_LABELS) as MagicItemStatus[]).map((s) => (
                       <option key={s} value={s}>{STATUS_LABELS[s]}</option>
                     ))}
                   </select>
