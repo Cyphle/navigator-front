@@ -18,8 +18,8 @@ import {
 import { cn } from '@/lib/utils';
 import type {
   CreateMagicListInput,
-  MagicListKind,
   MagicListType,
+  MagicListVisibility,
 } from '../../../stores/magic-lists/magic-lists.types';
 
 interface CreateMagicListFormProps {
@@ -32,18 +32,18 @@ interface CreateMagicListFormProps {
 
 interface FormValues {
   name: string;
+  visibility: MagicListVisibility;
   type: MagicListType;
-  kind: MagicListKind;
 }
 
-interface KindOption {
-  value: MagicListKind;
+interface TypeOption {
+  value: MagicListType;
   label: string;
   icon: string;
   tooltip: string;
 }
 
-const KIND_OPTIONS: KindOption[] = [
+const TYPE_OPTIONS: TypeOption[] = [
   {
     value: 'SIMPLE',
     label: 'Simple',
@@ -76,17 +76,16 @@ export const CreateMagicListForm = ({
 }: CreateMagicListFormProps) => {
   const { control, handleSubmit, reset, formState: { isValid } } = useForm<FormValues>({
     mode: 'onChange',
-    defaultValues: { name: '', type: 'PERSONAL', kind: 'SIMPLE' },
+    defaultValues: { name: '', visibility: 'PERSONAL', type: 'SIMPLE' },
   });
 
   const handleFormSubmit = (values: FormValues) => {
     onSubmit({
       name: values.name,
+      visibility: values.visibility,
       type: values.type,
-      kind: values.kind,
-      familyId: values.type === 'SHARED' ? familyId : undefined,
+      familyId: values.visibility === 'SHARED' ? familyId : undefined,
     });
-    reset();
   };
 
   const handleCancel = () => {
@@ -124,9 +123,9 @@ export const CreateMagicListForm = ({
             )}
           />
 
-          {/* Kind cards */}
+          {/* Type cards */}
           <Controller
-            name="kind"
+            name="type"
             control={control}
             render={({ field }) => (
               <div className="space-y-2">
@@ -135,7 +134,7 @@ export const CreateMagicListForm = ({
                 </Label>
                 <TooltipProvider delayDuration={200}>
                   <div className="grid grid-cols-3 gap-2">
-                    {KIND_OPTIONS.map((opt) => (
+                    {TYPE_OPTIONS.map((opt) => (
                       <Tooltip key={opt.value}>
                         <TooltipTrigger asChild>
                           <button
@@ -168,9 +167,9 @@ export const CreateMagicListForm = ({
             )}
           />
 
-          {/* Shared toggle */}
+          {/* Visibility toggle */}
           <Controller
-            name="type"
+            name="visibility"
             control={control}
             render={({ field }) => (
               <div className="flex items-center justify-between rounded-[var(--radius-sm)] px-4 py-3 border border-black/10" style={{ background: 'var(--sand)' }}>

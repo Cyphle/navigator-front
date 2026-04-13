@@ -23,7 +23,7 @@ describe('MagicListDetail', () => {
   });
 
   test('renders list name and type', () => {
-    const list = aMagicList({ name: 'Courses de la semaine', type: 'PERSONAL' });
+    const list = aMagicList({ name: 'Courses de la semaine', visibility: 'PERSONAL' });
 
     render(<MagicListDetail {...defaultProps} list={list} />);
 
@@ -121,7 +121,7 @@ describe('MagicListDetail', () => {
 
   test('shows checkboxes for TASK list items', () => {
     const list = aMagicList({
-      kind: 'TASK',
+      type: 'TASK',
       items: [aMagicItem({ id: 1, title: 'Acheter du lait', checked: false })],
     });
 
@@ -132,7 +132,7 @@ describe('MagicListDetail', () => {
 
   test('does not show checkboxes for SIMPLE list items', () => {
     const list = aMagicList({
-      kind: 'SIMPLE',
+      type: 'SIMPLE',
       items: [aMagicItem({ id: 1, title: 'Simple item' })],
     });
 

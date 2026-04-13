@@ -22,7 +22,7 @@ const TEST_FAMILY_ID = '1';
 const rawMagicList = {
   id: 1,
   name: 'Tâches du foyer',
-  type: 'PERSONAL',
+  visibility: 'PERSONAL',
   items: [
     { id: 10, title: 'Faire la vaisselle', status: 'TODO', createdAt: '2026-03-01T10:00:00Z', updatedAt: '2026-03-01T10:00:00Z' },
   ],
@@ -51,7 +51,7 @@ describe('magic-lists service', () => {
       Promise.resolve(mapper(rawMagicList))
     );
 
-    const input = { name: 'Nouvelle liste', type: 'PERSONAL' as const, kind: 'SIMPLE' as const };
+    const input = { name: 'Nouvelle liste', visibility: 'PERSONAL' as const, type: 'SIMPLE' as const };
     await createMagicList(TEST_FAMILY_ID, input);
 
     expect(post).toHaveBeenCalledWith('families/1/magic-lists', input, expect.any(Function));

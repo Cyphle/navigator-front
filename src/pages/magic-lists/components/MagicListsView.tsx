@@ -60,7 +60,7 @@ export const MagicListsView = ({ lists, onCreateNew, onSelectList, onDelete }: M
               <div
                 className="absolute top-0 left-0 right-0 h-1"
                 style={{
-                  background: list.type === 'SHARED'
+                  background: list.visibility === 'SHARED'
                     ? 'linear-gradient(to right, var(--ocean), var(--ocean-light))'
                     : 'linear-gradient(to right, var(--sage), var(--sage-light))',
                 }}
@@ -77,12 +77,12 @@ export const MagicListsView = ({ lists, onCreateNew, onSelectList, onDelete }: M
               <span
                 className="inline-block text-xs font-bold px-2.5 py-1 rounded-full mb-3"
                 style={
-                  list.type === 'SHARED'
+                  list.visibility === 'SHARED'
                     ? { background: 'var(--ocean-pale)', color: 'var(--ocean)' }
                     : { background: 'var(--sage-pale)', color: 'var(--sage)' }
                 }
               >
-                {list.type === 'SHARED' ? 'Partagée' : 'Personnelle'}
+                {list.visibility === 'SHARED' ? 'Partagée' : 'Personnelle'}
               </span>
 
               <p className="text-sm pt-3 border-t border-black/5 m-0" style={{ color: 'var(--mist)' }}>

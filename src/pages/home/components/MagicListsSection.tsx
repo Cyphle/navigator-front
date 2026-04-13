@@ -1,7 +1,7 @@
 import { CheckSquare } from 'lucide-react';
 import type { MagicListSummaryItem } from '../../../stores/magic-lists/magic-lists.types';
 
-const KIND_LABELS: Record<MagicListSummaryItem['kind'], string> = {
+const TYPE_LABELS: Record<MagicListSummaryItem['type'], string> = {
   SIMPLE: 'Simple',
   TASK: 'Tâches',
   TEMPLATE: 'Template',
@@ -31,18 +31,18 @@ export const MagicListsSection = ({ magicListItems }: { magicListItems: MagicLis
               {list.name}
             </p>
             <span className="text-[10px] font-semibold uppercase tracking-wide" style={{ color: 'var(--mist)' }}>
-              {KIND_LABELS[list.kind]} · {list.itemCount} élément{list.itemCount !== 1 ? 's' : ''}
+              {TYPE_LABELS[list.type]} · {list.itemCount} élément{list.itemCount !== 1 ? 's' : ''}
             </span>
           </div>
           <span
             className="text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded-full"
             style={
-              list.type === 'SHARED'
+              list.visibility === 'SHARED'
                 ? { background: 'var(--ocean-pale)', color: 'var(--ocean)' }
                 : { background: 'var(--sage-pale)', color: 'var(--sage)' }
             }
           >
-            {list.type === 'SHARED' ? 'Partagée' : 'Perso'}
+            {list.visibility === 'SHARED' ? 'Partagée' : 'Perso'}
           </span>
         </li>
       ))}

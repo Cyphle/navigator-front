@@ -64,12 +64,12 @@ describe('magic-lists queries', () => {
     jest.mocked(magicListsService.createMagicList).mockResolvedValue(mockList);
 
     const { result } = renderMutateHook(() => useCreateMagicList());
-    result.current.mutate({ name: 'Nouvelle liste', type: 'PERSONAL', kind: 'SIMPLE' });
+    result.current.mutate({ name: 'Nouvelle liste', visibility: 'PERSONAL', type: 'SIMPLE' });
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
     expect(magicListsService.createMagicList).toHaveBeenCalledWith(
       TEST_FAMILY_ID,
-      { name: 'Nouvelle liste', type: 'PERSONAL', kind: 'SIMPLE' }
+      { name: 'Nouvelle liste', visibility: 'PERSONAL', type: 'SIMPLE' }
     );
   });
 

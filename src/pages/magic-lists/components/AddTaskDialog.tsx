@@ -13,7 +13,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { ChevronDown, ChevronRight } from 'lucide-react';
-import type { CreateMagicItemInput, MagicItemStatus, MagicListKind } from '../../../stores/magic-lists/magic-lists.types';
+import type { CreateMagicItemInput, MagicItemStatus, MagicListType } from '../../../stores/magic-lists/magic-lists.types';
 
 const STATUS_OPTIONS: { value: MagicItemStatus; label: string }[] = [
   { value: 'TODO', label: 'À faire' },
@@ -31,12 +31,12 @@ interface AddItemFormValues {
 
 interface AddTaskDialogProps {
   open: boolean;
-  listKind: MagicListKind;
+  listType: MagicListType;
   onClose: () => void;
   onSubmit: (input: CreateMagicItemInput) => void;
 }
 
-export const AddTaskDialog = ({ open, listKind, onClose, onSubmit }: AddTaskDialogProps) => {
+export const AddTaskDialog = ({ open, listType, onClose, onSubmit }: AddTaskDialogProps) => {
   const [showAdditional, setShowAdditional] = useState(false);
 
   const { control, handleSubmit, reset, formState: { isValid } } = useForm<AddItemFormValues>({
@@ -48,7 +48,7 @@ export const AddTaskDialog = ({ open, listKind, onClose, onSubmit }: AddTaskDial
     const input: CreateMagicItemInput = {
       title: values.title,
       content: values.content || undefined,
-      checked: listKind === 'TASK' ? values.checked : undefined,
+      checked: listType === 'TASK' ? values.checked : undefined,
       dueDate: values.dueDate ? dayjs(values.dueDate).toISOString() : undefined,
       status: values.status || undefined,
     };
@@ -114,7 +114,7 @@ export const AddTaskDialog = ({ open, listKind, onClose, onSubmit }: AddTaskDial
           />
 
           {/* Checkbox — TASK lists only */}
-          {listKind === 'TASK' && (
+          {listType === 'TASK' && (
             <Controller
               name="checked"
               control={control}

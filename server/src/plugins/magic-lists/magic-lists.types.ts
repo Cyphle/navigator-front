@@ -1,6 +1,6 @@
 export type MagicItemStatus = 'TODO' | 'IN_PROGRESS' | 'DONE';
-export type MagicListType = 'SHARED' | 'PERSONAL';
-export type MagicListKind = 'SIMPLE' | 'TASK' | 'TEMPLATE';
+export type MagicListVisibility = 'SHARED' | 'PERSONAL';
+export type MagicListType = 'SIMPLE' | 'TASK' | 'TEMPLATE';
 
 export interface MagicItem {
   id: number;
@@ -16,8 +16,8 @@ export interface MagicItem {
 export interface MagicList {
   id: number;
   name: string;
+  visibility: MagicListVisibility;
   type: MagicListType;
-  kind: MagicListKind;
   familyId?: number;
   items: MagicItem[];
   createdAt: string;
@@ -27,8 +27,8 @@ export interface MagicList {
 export interface MagicListSummaryItem {
   id: number;
   name: string;
+  visibility: MagicListVisibility;
   type: MagicListType;
-  kind: MagicListKind;
   familyId?: number;
   itemCount: number;
   createdAt: string;
@@ -37,8 +37,8 @@ export interface MagicListSummaryItem {
 
 export interface CreateMagicListInput {
   name: string;
+  visibility: MagicListVisibility;
   type: MagicListType;
-  kind: MagicListKind;
   familyId?: number;
   excludedMemberIds?: number[];
 }

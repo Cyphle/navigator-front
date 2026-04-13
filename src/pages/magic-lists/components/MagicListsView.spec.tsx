@@ -42,8 +42,8 @@ describe('MagicListsView', () => {
 
   test('renders list names and item counts', () => {
     const lists = [
-      aMagicListSummary({ id: 1, name: 'Tâches ménagères', type: 'PERSONAL', itemCount: 2 }),
-      aMagicListSummary({ id: 2, name: 'Courses', type: 'SHARED', itemCount: 0 }),
+      aMagicListSummary({ id: 1, name: 'Tâches ménagères', visibility: 'PERSONAL', itemCount: 2 }),
+      aMagicListSummary({ id: 2, name: 'Courses', visibility: 'SHARED', itemCount: 0 }),
     ];
 
     render(

@@ -73,8 +73,8 @@ describe('FamilyMagicLists', () => {
 
   test('renders list of magic lists', () => {
     const overviews = [
-      aMagicListSummary({ id: 1, name: 'Tâches ménagères', type: 'PERSONAL', itemCount: 1 }),
-      aMagicListSummary({ id: 2, name: 'Courses familiales', type: 'SHARED', itemCount: 0 }),
+      aMagicListSummary({ id: 1, name: 'Tâches ménagères', visibility: 'PERSONAL', itemCount: 1 }),
+      aMagicListSummary({ id: 2, name: 'Courses familiales', visibility: 'SHARED', itemCount: 0 }),
     ];
     (useFetchMagicListsSummary as jest.Mock).mockReturnValue({ data: overviews, isPending: false, isError: false });
 

@@ -6,7 +6,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import type {
   MagicList,
   MagicItem,
-  MagicListKind,
+  MagicListType,
   CreateMagicItemInput,
   UpdateMagicItemInput,
   MagicItemStatus,
@@ -36,12 +36,12 @@ const STATUS_STYLES: Record<MagicItemStatus, string> = {
 
 const TaskItem = ({
   item,
-  listKind,
+  listType,
   onUpdateItem,
   onDeleteItem,
 }: {
   item: MagicItem;
-  listKind: MagicListKind;
+  listType: MagicListType;
   onUpdateItem: (itemId: number, input: UpdateMagicItemInput) => void;
   onDeleteItem: (itemId: number) => void;
 }) => {
@@ -56,7 +56,7 @@ const TaskItem = ({
       className="bg-white rounded-[var(--radius-md)] p-4 mb-2.5 flex items-start gap-3.5"
       style={{ boxShadow: 'var(--shadow-soft)' }}
     >
-      {listKind === 'TASK' && (
+      {listType === 'TASK' && (
         <Checkbox
           checked={item.checked ?? false}
           onCheckedChange={(v) => onUpdateItem(item.id, { checked: Boolean(v) })}
@@ -177,12 +177,12 @@ export const MagicListDetail = ({
           <span
             className="inline-block text-xs font-bold px-2.5 py-1 rounded-full mt-1"
             style={
-              list.type === 'SHARED'
+              list.visibility === 'SHARED'
                 ? { background: 'var(--ocean-pale)', color: 'var(--ocean)' }
                 : { background: 'var(--sage-pale)', color: 'var(--sage)' }
             }
           >
-            {list.type === 'SHARED' ? 'Partagée' : 'Personnelle'}
+            {list.visibility === 'SHARED' ? 'Partagée' : 'Personnelle'}
           </span>
         </div>
         <button
@@ -220,7 +220,7 @@ export const MagicListDetail = ({
             <section>
               <SectionHeader title="À faire" count={activeItems.length} />
               {activeItems.map((item) => (
-                <TaskItem key={item.id} item={item} listKind={list.kind} onUpdateItem={onUpdateItem} onDeleteItem={onDeleteItem} />
+                <TaskItem key={item.id} item={item} listType={list.type} onUpdateItem={onUpdateItem} onDeleteItem={onDeleteItem} />
               ))}
             </section>
           )}
@@ -229,7 +229,7 @@ export const MagicListDetail = ({
             <section>
               <SectionHeader title="En cours" count={inProgressItems.length} />
               {inProgressItems.map((item) => (
-                <TaskItem key={item.id} item={item} listKind={list.kind} onUpdateItem={onUpdateItem} onDeleteItem={onDeleteItem} />
+                <TaskItem key={item.id} item={item} listType={list.type} onUpdateItem={onUpdateItem} onDeleteItem={onDeleteItem} />
               ))}
             </section>
           )}
@@ -251,7 +251,7 @@ export const MagicListDetail = ({
                 }
               />
               {doneItems.map((item) => (
-                <TaskItem key={item.id} item={item} listKind={list.kind} onUpdateItem={onUpdateItem} onDeleteItem={onDeleteItem} />
+                <TaskItem key={item.id} item={item} listType={list.type} onUpdateItem={onUpdateItem} onDeleteItem={onDeleteItem} />
               ))}
             </section>
           )}
@@ -259,14 +259,14 @@ export const MagicListDetail = ({
       ) : (
         <div className="space-y-0">
           {activeItems.map((item) => (
-            <TaskItem key={item.id} item={item} listKind={list.kind} onUpdateItem={onUpdateItem} onDeleteItem={onDeleteItem} />
+            <TaskItem key={item.id} item={item} listType={list.type} onUpdateItem={onUpdateItem} onDeleteItem={onDeleteItem} />
           ))}
         </div>
       )}
 
       <AddTaskDialog
         open={isAddModalOpen}
-        listKind={list.kind}
+        listType={list.type}
         onClose={() => setIsAddModalOpen(false)}
         onSubmit={onAddItem}
       />

@@ -59,8 +59,8 @@ export const getMagicListsSummary = (familyId: string): Promise<MagicListSummary
 const responseToMagicListSummaryItem = (data: Record<string, unknown>): MagicListSummaryItem => ({
   id: (data.id as number) ?? 0,
   name: (data.name as string) ?? '',
-  type: (data.type as MagicListSummaryItem['type']) ?? 'PERSONAL',
-  kind: (data.kind as MagicListSummaryItem['kind']) ?? 'SIMPLE',
+  visibility: (data.visibility as MagicListSummaryItem['visibility']) ?? 'PERSONAL',
+  type: (data.type as MagicListSummaryItem['type']) ?? 'SIMPLE',
   familyId: data.familyId as number | undefined,
   itemCount: (data.itemCount as number) ?? 0,
   createdAt: (data.createdAt as string) ?? '',
@@ -70,8 +70,8 @@ const responseToMagicListSummaryItem = (data: Record<string, unknown>): MagicLis
 const responseToMagicList = (data: any): MagicList => ({
   id: data?.id ?? 0,
   name: data?.name ?? '',
-  type: data?.type ?? 'PERSONAL',
-  kind: data?.kind ?? 'SIMPLE',
+  visibility: data?.visibility ?? 'PERSONAL',
+  type: data?.type ?? 'SIMPLE',
   familyId: data?.familyId,
   items: Array.isArray(data?.items)
     ? data.items.map((item: any) => ({

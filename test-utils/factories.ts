@@ -23,8 +23,8 @@ export const aMagicItem = (overrides: Partial<MagicItem> = {}): MagicItem => ({
 export const aMagicList = (overrides: Partial<MagicList> = {}): MagicList => ({
   id: overrides.id ?? 1,
   name: overrides.name ?? 'Tâches du foyer',
-  type: overrides.type ?? 'PERSONAL',
-  kind: overrides.kind ?? 'SIMPLE',
+  visibility: overrides.visibility ?? 'PERSONAL',
+  type: overrides.type ?? 'SIMPLE',
   familyId: overrides.familyId,
   items: overrides.items ?? [],
   createdAt: overrides.createdAt ?? '2026-03-01T10:00:00Z',
@@ -34,8 +34,8 @@ export const aMagicList = (overrides: Partial<MagicList> = {}): MagicList => ({
 export const aMagicListSummary = (overrides: Partial<MagicListSummaryItem> = {}): MagicListSummaryItem => ({
   id: overrides.id ?? 1,
   name: overrides.name ?? 'Tâches du foyer',
-  type: overrides.type ?? 'PERSONAL',
-  kind: overrides.kind ?? 'SIMPLE',
+  visibility: overrides.visibility ?? 'PERSONAL',
+  type: overrides.type ?? 'SIMPLE',
   familyId: overrides.familyId,
   itemCount: overrides.itemCount ?? 0,
   createdAt: overrides.createdAt ?? '2026-03-01T10:00:00Z',

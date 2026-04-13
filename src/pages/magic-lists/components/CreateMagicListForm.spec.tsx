@@ -31,7 +31,7 @@ describe('CreateMagicListForm', () => {
     await waitFor(() => expect(screen.getByRole('button', { name: /créer/i })).toBeEnabled());
   });
 
-  test('submits with SIMPLE kind and PERSONAL type by default', async () => {
+  test('submits with SIMPLE type and PERSONAL visibility by default', async () => {
     const onSubmit = jest.fn();
 
     render(
@@ -48,14 +48,14 @@ describe('CreateMagicListForm', () => {
     await waitFor(() =>
       expect(onSubmit).toHaveBeenCalledWith({
         name: 'Mes courses',
-        kind: 'SIMPLE',
-        type: 'PERSONAL',
+        type: 'SIMPLE',
+        visibility: 'PERSONAL',
         familyId: undefined,
       })
     );
   });
 
-  test('submits with TASK kind when selected', async () => {
+  test('submits with TASK type when selected', async () => {
     const onSubmit = jest.fn();
 
     render(
@@ -73,14 +73,14 @@ describe('CreateMagicListForm', () => {
     await waitFor(() =>
       expect(onSubmit).toHaveBeenCalledWith({
         name: 'Courses du weekend',
-        kind: 'TASK',
-        type: 'PERSONAL',
+        type: 'TASK',
+        visibility: 'PERSONAL',
         familyId: undefined,
       })
     );
   });
 
-  test('submits with TEMPLATE kind when selected', async () => {
+  test('submits with TEMPLATE type when selected', async () => {
     const onSubmit = jest.fn();
 
     render(
@@ -98,8 +98,8 @@ describe('CreateMagicListForm', () => {
     await waitFor(() =>
       expect(onSubmit).toHaveBeenCalledWith({
         name: 'Avant les vacances',
-        kind: 'TEMPLATE',
-        type: 'PERSONAL',
+        type: 'TEMPLATE',
+        visibility: 'PERSONAL',
         familyId: undefined,
       })
     );
@@ -117,7 +117,7 @@ describe('CreateMagicListForm', () => {
     expect(onCancel).toHaveBeenCalledTimes(1);
   });
 
-  test('toggles to SHARED type when switch is clicked', async () => {
+  test('toggles to SHARED visibility when switch is clicked', async () => {
     render(
       <CreateMagicListForm open onCancel={jest.fn()} onSubmit={jest.fn()} familyId={1} />
     );
@@ -129,7 +129,7 @@ describe('CreateMagicListForm', () => {
     await waitFor(() => expect(screen.getByText('Visible par les membres de la famille')).toBeInTheDocument());
   });
 
-  test('submits with SHARED type and familyId when switch is on', async () => {
+  test('submits with SHARED visibility and familyId when switch is on', async () => {
     const onSubmit = jest.fn();
 
     render(
@@ -147,8 +147,8 @@ describe('CreateMagicListForm', () => {
     await waitFor(() =>
       expect(onSubmit).toHaveBeenCalledWith({
         name: 'Liste partagée',
-        kind: 'SIMPLE',
-        type: 'SHARED',
+        type: 'SIMPLE',
+        visibility: 'SHARED',
         familyId: 42,
       })
     );

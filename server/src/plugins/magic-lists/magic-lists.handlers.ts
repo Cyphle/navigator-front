@@ -13,8 +13,8 @@ let magicLists: MagicList[] = [
   {
     id: 1,
     name: 'Famille Martin',
-    type: 'SHARED',
-    kind: 'TASK',
+    visibility: 'SHARED',
+    type: 'TASK',
     familyId: 1,
     items: [
       {
@@ -52,8 +52,8 @@ let magicLists: MagicList[] = [
   {
     id: 2,
     name: 'Famille Dupont',
-    type: 'SHARED',
-    kind: 'SIMPLE',
+    visibility: 'SHARED',
+    type: 'SIMPLE',
     familyId: 2,
     items: [
       {
@@ -77,8 +77,8 @@ export const getMagicListsSummary = (): MagicListSummaryItem[] => {
   return magicLists.map((list) => ({
     id: list.id,
     name: list.name,
+    visibility: list.visibility,
     type: list.type,
-    kind: list.kind,
     familyId: list.familyId,
     itemCount: list.items.length,
     createdAt: list.createdAt,
@@ -95,8 +95,8 @@ export const createMagicList = (input: CreateMagicListInput): MagicList => {
   const newList: MagicList = {
     id: nextListId++,
     name: input.name,
+    visibility: input.visibility,
     type: input.type,
-    kind: input.kind,
     familyId: input.familyId,
     items: [],
     createdAt: now,
