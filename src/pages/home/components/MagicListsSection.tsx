@@ -38,7 +38,7 @@ export const MagicListsSection = ({ magicListItems }: { magicListItems: MagicLis
             className="text-[10px] font-semibold uppercase tracking-wide px-2 py-0.5 rounded-full"
             style={
               list.visibility === 'SHARED'
-                ? { background: 'var(--ocean-pale)', color: 'var(--ocean)' }
+                ? { background: 'var(--coral-pale)', color: 'var(--coral)' }
                 : { background: 'var(--sage-pale)', color: 'var(--sage)' }
             }
           >

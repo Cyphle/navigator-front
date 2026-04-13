@@ -178,7 +178,7 @@ export const MagicListDetail = ({
             className="inline-block text-xs font-bold px-2.5 py-1 rounded-full mt-1"
             style={
               list.visibility === 'SHARED'
-                ? { background: 'var(--ocean-pale)', color: 'var(--ocean)' }
+                ? { background: 'var(--coral-pale)', color: 'var(--coral)' }
                 : { background: 'var(--sage-pale)', color: 'var(--sage)' }
             }
           >

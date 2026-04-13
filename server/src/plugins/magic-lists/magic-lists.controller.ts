@@ -19,8 +19,9 @@ import type {
 
 export const magicListsController: FastifyPluginAsync = async (fastify) => {
   // Get magic lists summary (registered FIRST to avoid conflict with /:familyId/magic-lists/:id)
-  fastify.get<{ Params: { familyId: string } }>('/:familyId/magic-lists/summary', async (_request, reply) => {
-    const summary = getMagicListsSummary();
+  fastify.get<{ Params: { familyId: string } }>('/:familyId/magic-lists/summary', async (request, reply) => {
+    const familyId = parseInt(request.params.familyId, 10);
+    const summary = getMagicListsSummary(familyId);
     return reply.code(200).send(summary);
   });
 
@@ -38,7 +39,8 @@ export const magicListsController: FastifyPluginAsync = async (fastify) => {
 
   // Create a new magic list
   fastify.post<{ Params: { familyId: string }; Body: CreateMagicListInput }>('/:familyId/magic-lists', async (request, reply) => {
-    const newList = createMagicList(request.body);
+    const familyId = parseInt(request.params.familyId, 10);
+    const newList = createMagicList(familyId, request.body);
     return reply.code(201).send(newList);
   });
 

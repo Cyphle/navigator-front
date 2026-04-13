@@ -51,10 +51,10 @@ let magicLists: MagicList[] = [
   },
   {
     id: 2,
-    name: 'Famille Dupont',
-    visibility: 'SHARED',
+    name: 'Ma liste perso',
+    visibility: 'PERSONAL',
     type: 'SIMPLE',
-    familyId: 2,
+    familyId: 1,
     items: [
       {
         id: 4,
@@ -73,31 +73,33 @@ let magicLists: MagicList[] = [
 let nextListId = 3;
 let nextItemId = 5;
 
-export const getMagicListsSummary = (): MagicListSummaryItem[] => {
-  return magicLists.map((list) => ({
-    id: list.id,
-    name: list.name,
-    visibility: list.visibility,
-    type: list.type,
-    familyId: list.familyId,
-    itemCount: list.items.length,
-    createdAt: list.createdAt,
-    updatedAt: list.updatedAt,
-  }));
+export const getMagicListsSummary = (familyId: number): MagicListSummaryItem[] => {
+  return magicLists
+    .filter((list) => list.familyId === familyId)
+    .map((list) => ({
+      id: list.id,
+      name: list.name,
+      visibility: list.visibility,
+      type: list.type,
+      familyId: list.familyId,
+      itemCount: list.items.length,
+      createdAt: list.createdAt,
+      updatedAt: list.updatedAt,
+    }));
 };
 
 export const getMagicListById = (id: number): MagicList | undefined => {
   return magicLists.find((list) => list.id === id);
 };
 
-export const createMagicList = (input: CreateMagicListInput): MagicList => {
+export const createMagicList = (familyId: number, input: CreateMagicListInput): MagicList => {
   const now = new Date().toISOString();
   const newList: MagicList = {
     id: nextListId++,
     name: input.name,
     visibility: input.visibility,
     type: input.type,
-    familyId: input.familyId,
+    familyId,
     items: [],
     createdAt: now,
     updatedAt: now,
