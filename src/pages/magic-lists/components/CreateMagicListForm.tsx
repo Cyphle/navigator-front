@@ -1,5 +1,4 @@
-import { useState } from 'react';
-import { Controller, useForm, useWatch } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import {
   Dialog,
   DialogContent,
@@ -9,7 +8,7 @@ import {
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Checkbox } from '@/components/ui/checkbox';
+import { Switch } from '@/components/ui/switch';
 import {
   Tooltip,
   TooltipContent,
@@ -22,22 +21,19 @@ import type {
   MagicListKind,
   MagicListType,
 } from '../../../stores/magic-lists/magic-lists.types';
-import type { Family, FamilyMember } from '../../../stores/families/families.types';
 
 interface CreateMagicListFormProps {
   open: boolean;
   onCancel: () => void;
   onSubmit: (input: CreateMagicListInput) => void;
   isLoading?: boolean;
-  families: Family[];
+  familyId?: number;
 }
 
 interface FormValues {
   name: string;
   type: MagicListType;
   kind: MagicListKind;
-  familyId?: number;
-  excludedMemberIds: number[];
 }
 
 interface KindOption {
@@ -71,51 +67,31 @@ const KIND_OPTIONS: KindOption[] = [
   },
 ];
 
-const getAllFamilyMembers = (family: Family): FamilyMember[] => [
-  family.creator,
-  ...family.members,
-];
-
 export const CreateMagicListForm = ({
   open,
   onCancel,
   onSubmit,
   isLoading,
-  families,
+  familyId,
 }: CreateMagicListFormProps) => {
-  const { control, handleSubmit, reset, setValue, formState: { isValid } } = useForm<FormValues>({
+  const { control, handleSubmit, reset, formState: { isValid } } = useForm<FormValues>({
     mode: 'onChange',
-    defaultValues: { name: '', type: 'PERSONAL', kind: 'SIMPLE', excludedMemberIds: [] },
+    defaultValues: { name: '', type: 'PERSONAL', kind: 'SIMPLE' },
   });
-  const [listType, setListType] = useState<MagicListType>('PERSONAL');
-
-  const selectedFamilyId = useWatch({ control, name: 'familyId' });
-  const selectedFamily = families.find((f) => f.id === selectedFamilyId);
-  const familyMembers = selectedFamily ? getAllFamilyMembers(selectedFamily) : [];
 
   const handleFormSubmit = (values: FormValues) => {
     onSubmit({
       name: values.name,
       type: values.type,
       kind: values.kind,
-      familyId: values.type === 'SHARED' ? values.familyId : undefined,
-      excludedMemberIds: values.type === 'SHARED' && values.excludedMemberIds.length > 0
-        ? values.excludedMemberIds
-        : undefined,
+      familyId: values.type === 'SHARED' ? familyId : undefined,
     });
     reset();
-    setListType('PERSONAL');
   };
 
   const handleCancel = () => {
     reset();
-    setListType('PERSONAL');
     onCancel();
-  };
-
-  const handleFamilyChange = (familyId: number) => {
-    setValue('familyId', familyId, { shouldValidate: true });
-    setValue('excludedMemberIds', []);
   };
 
   return (
@@ -192,130 +168,28 @@ export const CreateMagicListForm = ({
             )}
           />
 
-          {/* Scope radio buttons */}
+          {/* Shared toggle */}
           <Controller
             name="type"
             control={control}
             render={({ field }) => (
-              <div className="space-y-2">
-                <Label className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--mist)' }}>
-                  Visibilité
-                </Label>
-                <div className="grid grid-cols-2 gap-3">
-                  {(['PERSONAL', 'SHARED'] as MagicListType[]).map((t) => (
-                    <button
-                      key={t}
-                      type="button"
-                      className={cn(
-                        'px-4 py-2.5 rounded-[var(--radius-sm)] border text-sm font-semibold transition-all',
-                        field.value === t
-                          ? 'text-white border-transparent'
-                          : 'border-black/10 hover:border-[var(--ocean-light)]'
-                      )}
-                      style={
-                        field.value === t
-                          ? { background: 'linear-gradient(135deg, var(--ocean) 0%, var(--ocean-light) 100%)', color: 'white' }
-                          : { color: 'var(--stone)' }
-                      }
-                      onClick={() => {
-                        field.onChange(t);
-                        setListType(t);
-                        if (t === 'PERSONAL') {
-                          setValue('familyId', undefined);
-                          setValue('excludedMemberIds', []);
-                        }
-                      }}
-                    >
-                      {t === 'PERSONAL' ? 'Personnelle' : 'Partagée'}
-                    </button>
-                  ))}
+              <div className="flex items-center justify-between rounded-[var(--radius-sm)] px-4 py-3 border border-black/10" style={{ background: 'var(--sand)' }}>
+                <div>
+                  <p className="text-sm font-semibold" style={{ color: 'var(--stone)' }}>
+                    Partager avec la famille
+                  </p>
+                  <p className="text-xs" style={{ color: 'var(--mist)' }}>
+                    {field.value === 'SHARED' ? 'Visible par les membres de la famille' : 'Uniquement visible par vous'}
+                  </p>
                 </div>
+                <Switch
+                  checked={field.value === 'SHARED'}
+                  onCheckedChange={(checked) => field.onChange(checked ? 'SHARED' : 'PERSONAL')}
+                  aria-label="Partager avec la famille"
+                />
               </div>
             )}
           />
-
-          {/* Family selector (SHARED only) */}
-          {listType === 'SHARED' && families.length > 0 && (
-            <Controller
-              name="familyId"
-              control={control}
-              rules={{ required: listType === 'SHARED' }}
-              render={({ field }) => (
-                <div className="space-y-1.5">
-                  <Label className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--mist)' }}>
-                    Famille *
-                  </Label>
-                  <select
-                    value={field.value ?? ''}
-                    onChange={(e) => handleFamilyChange(Number(e.target.value))}
-                    className="w-full h-10 px-3 text-sm rounded-[var(--radius-sm)] border border-black/10 focus:outline-none"
-                    style={{ background: 'var(--sand)', color: 'var(--stone)' }}
-                  >
-                    <option value="">Sélectionner une famille</option>
-                    {families.map((f) => (
-                      <option key={f.id} value={f.id}>{f.name}</option>
-                    ))}
-                  </select>
-                </div>
-              )}
-            />
-          )}
-
-          {/* Member exclusion (when family is selected) */}
-          {listType === 'SHARED' && selectedFamily && familyMembers.length > 0 && (
-            <Controller
-              name="excludedMemberIds"
-              control={control}
-              render={({ field }) => (
-                <div className="space-y-2">
-                  <Label className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--mist)' }}>
-                    Exclure des membres
-                  </Label>
-                  <div className="rounded-[var(--radius-sm)] border border-black/10 divide-y divide-black/5" style={{ background: 'var(--sand)' }}>
-                    {familyMembers.map((member) => {
-                      const isExcluded = field.value.includes(member.id);
-                      return (
-                        <label
-                          key={member.id}
-                          className="flex items-center gap-3 px-3 py-2.5 cursor-pointer hover:bg-black/5 transition-colors"
-                        >
-                          <Checkbox
-                            checked={isExcluded}
-                            onCheckedChange={(checked) => {
-                              if (checked) {
-                                field.onChange([...field.value, member.id]);
-                              } else {
-                                field.onChange(field.value.filter((id) => id !== member.id));
-                              }
-                            }}
-                          />
-                          <span className="text-sm flex-1" style={{ color: 'var(--stone)' }}>
-                            {member.usernameOrEmail}
-                          </span>
-                          {isExcluded && (
-                            <span className="text-xs px-1.5 py-0.5 rounded font-medium" style={{ background: '#fee2e2', color: '#b91c1c' }}>
-                              exclu.e
-                            </span>
-                          )}
-                        </label>
-                      );
-                    })}
-                  </div>
-                  {field.value.length > 0 && (
-                    <p className="text-xs" style={{ color: '#b91c1c' }}>
-                      {field.value.length} membre{field.value.length > 1 ? 's' : ''} exclu.e{field.value.length > 1 ? 's' : ''}
-                    </p>
-                  )}
-                </div>
-              )}
-            />
-          )}
-
-          {listType === 'SHARED' && families.length === 0 && (
-            <p className="text-sm rounded-[var(--radius-sm)] px-4 py-3" style={{ background: 'var(--sun-pale)', color: 'var(--stone)' }}>
-              Vous n'avez aucune famille. Créez-en une dans la section Familles.
-            </p>
-          )}
 
           <DialogFooter className="pt-2">
             <button

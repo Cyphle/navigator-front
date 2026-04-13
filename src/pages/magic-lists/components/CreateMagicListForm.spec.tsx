@@ -1,24 +1,11 @@
 import { render, screen } from '../../../../test-utils';
 import { CreateMagicListForm } from './CreateMagicListForm';
 import { fireEvent, waitFor } from '@testing-library/react';
-import type { Family } from '../../../stores/families/families.types';
-
-const aFamily = (overrides: Partial<Family> = {}): Family => ({
-  id: 1,
-  name: 'Famille Martin',
-  creator: { id: 10, usernameOrEmail: 'alice', relation: 'PARENT', isAdmin: true },
-  members: [
-    { id: 11, usernameOrEmail: 'bob', relation: 'PARENT', isAdmin: false },
-    { id: 12, usernameOrEmail: 'charlie', relation: 'CHILD', isAdmin: false },
-  ],
-  status: 'ACTIVE',
-  ...overrides,
-});
 
 describe('CreateMagicListForm', () => {
   test('does not render when closed', () => {
     render(
-      <CreateMagicListForm open={false} onCancel={jest.fn()} onSubmit={jest.fn()} families={[]} />
+      <CreateMagicListForm open={false} onCancel={jest.fn()} onSubmit={jest.fn()} />
     );
 
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
@@ -26,7 +13,7 @@ describe('CreateMagicListForm', () => {
 
   test('submit button is disabled when name is empty', () => {
     render(
-      <CreateMagicListForm open onCancel={jest.fn()} onSubmit={jest.fn()} families={[]} />
+      <CreateMagicListForm open onCancel={jest.fn()} onSubmit={jest.fn()} />
     );
 
     expect(screen.getByRole('button', { name: /créer/i })).toBeDisabled();
@@ -34,7 +21,7 @@ describe('CreateMagicListForm', () => {
 
   test('submit button is enabled when name is filled', async () => {
     render(
-      <CreateMagicListForm open onCancel={jest.fn()} onSubmit={jest.fn()} families={[]} />
+      <CreateMagicListForm open onCancel={jest.fn()} onSubmit={jest.fn()} />
     );
 
     fireEvent.change(screen.getByPlaceholderText(/liste de courses/i), {
@@ -48,7 +35,7 @@ describe('CreateMagicListForm', () => {
     const onSubmit = jest.fn();
 
     render(
-      <CreateMagicListForm open onCancel={jest.fn()} onSubmit={onSubmit} families={[]} />
+      <CreateMagicListForm open onCancel={jest.fn()} onSubmit={onSubmit} />
     );
 
     fireEvent.change(screen.getByPlaceholderText(/liste de courses/i), {
@@ -64,7 +51,6 @@ describe('CreateMagicListForm', () => {
         kind: 'SIMPLE',
         type: 'PERSONAL',
         familyId: undefined,
-        excludedMemberIds: undefined,
       })
     );
   });
@@ -73,7 +59,7 @@ describe('CreateMagicListForm', () => {
     const onSubmit = jest.fn();
 
     render(
-      <CreateMagicListForm open onCancel={jest.fn()} onSubmit={onSubmit} families={[]} />
+      <CreateMagicListForm open onCancel={jest.fn()} onSubmit={onSubmit} />
     );
 
     fireEvent.change(screen.getByPlaceholderText(/liste de courses/i), {
@@ -90,7 +76,6 @@ describe('CreateMagicListForm', () => {
         kind: 'TASK',
         type: 'PERSONAL',
         familyId: undefined,
-        excludedMemberIds: undefined,
       })
     );
   });
@@ -99,7 +84,7 @@ describe('CreateMagicListForm', () => {
     const onSubmit = jest.fn();
 
     render(
-      <CreateMagicListForm open onCancel={jest.fn()} onSubmit={onSubmit} families={[]} />
+      <CreateMagicListForm open onCancel={jest.fn()} onSubmit={onSubmit} />
     );
 
     fireEvent.change(screen.getByPlaceholderText(/liste de courses/i), {
@@ -116,7 +101,6 @@ describe('CreateMagicListForm', () => {
         kind: 'TEMPLATE',
         type: 'PERSONAL',
         familyId: undefined,
-        excludedMemberIds: undefined,
       })
     );
   });
@@ -125,7 +109,7 @@ describe('CreateMagicListForm', () => {
     const onCancel = jest.fn();
 
     render(
-      <CreateMagicListForm open onCancel={onCancel} onSubmit={jest.fn()} families={[]} />
+      <CreateMagicListForm open onCancel={onCancel} onSubmit={jest.fn()} />
     );
 
     fireEvent.click(screen.getByRole('button', { name: /annuler/i }));
@@ -133,61 +117,29 @@ describe('CreateMagicListForm', () => {
     expect(onCancel).toHaveBeenCalledTimes(1);
   });
 
-  test('shows family selector when SHARED type is selected and families exist', async () => {
+  test('toggles to SHARED type when switch is clicked', async () => {
     render(
-      <CreateMagicListForm open onCancel={jest.fn()} onSubmit={jest.fn()} families={[aFamily()]} />
+      <CreateMagicListForm open onCancel={jest.fn()} onSubmit={jest.fn()} familyId={1} />
     );
 
-    fireEvent.click(screen.getByRole('button', { name: /partagée/i }));
+    expect(screen.getByText('Uniquement visible par vous')).toBeInTheDocument();
 
-    await waitFor(() => expect(screen.getByText('Sélectionner une famille')).toBeInTheDocument());
+    fireEvent.click(screen.getByRole('switch', { name: /partager avec la famille/i }));
+
+    await waitFor(() => expect(screen.getByText('Visible par les membres de la famille')).toBeInTheDocument());
   });
 
-  test('shows warning when SHARED is selected and no families exist', async () => {
-    render(
-      <CreateMagicListForm open onCancel={jest.fn()} onSubmit={jest.fn()} families={[]} />
-    );
-
-    fireEvent.click(screen.getByRole('button', { name: /partagée/i }));
-
-    await waitFor(() => expect(screen.getByText(/vous n'avez aucune famille/i)).toBeInTheDocument());
-  });
-
-  test('shows family members after selecting a family', async () => {
-    render(
-      <CreateMagicListForm open onCancel={jest.fn()} onSubmit={jest.fn()} families={[aFamily()]} />
-    );
-
-    fireEvent.click(screen.getByRole('button', { name: /partagée/i }));
-    await waitFor(() => expect(screen.getByText('Sélectionner une famille')).toBeInTheDocument());
-
-    fireEvent.change(screen.getByRole('combobox'), { target: { value: '1' } });
-
-    await waitFor(() => {
-      expect(screen.getByText('alice')).toBeInTheDocument();
-      expect(screen.getByText('bob')).toBeInTheDocument();
-      expect(screen.getByText('charlie')).toBeInTheDocument();
-    });
-  });
-
-  test('excludes selected members from the payload', async () => {
+  test('submits with SHARED type and familyId when switch is on', async () => {
     const onSubmit = jest.fn();
-    const family = aFamily();
 
     render(
-      <CreateMagicListForm open onCancel={jest.fn()} onSubmit={onSubmit} families={[family]} />
+      <CreateMagicListForm open onCancel={jest.fn()} onSubmit={onSubmit} familyId={42} />
     );
 
     fireEvent.change(screen.getByPlaceholderText(/liste de courses/i), {
       target: { value: 'Liste partagée' },
     });
-    fireEvent.click(screen.getByRole('button', { name: /partagée/i }));
-    await waitFor(() => expect(screen.getByText('Sélectionner une famille')).toBeInTheDocument());
-
-    fireEvent.change(screen.getByRole('combobox'), { target: { value: '1' } });
-    await waitFor(() => expect(screen.getByText('bob')).toBeInTheDocument());
-
-    fireEvent.click(screen.getAllByRole('checkbox')[1]); // bob (index 1 : alice=0, bob=1, charlie=2)
+    fireEvent.click(screen.getByRole('switch', { name: /partager avec la famille/i }));
 
     await waitFor(() => expect(screen.getByRole('button', { name: /créer/i })).toBeEnabled());
     fireEvent.click(screen.getByRole('button', { name: /créer/i }));
@@ -197,39 +149,7 @@ describe('CreateMagicListForm', () => {
         name: 'Liste partagée',
         kind: 'SIMPLE',
         type: 'SHARED',
-        familyId: 1,
-        excludedMemberIds: [11],
-      })
-    );
-  });
-
-  test('sends no excludedMemberIds when no member is excluded', async () => {
-    const onSubmit = jest.fn();
-    const family = aFamily();
-
-    render(
-      <CreateMagicListForm open onCancel={jest.fn()} onSubmit={onSubmit} families={[family]} />
-    );
-
-    fireEvent.change(screen.getByPlaceholderText(/liste de courses/i), {
-      target: { value: 'Liste partagée' },
-    });
-    fireEvent.click(screen.getByRole('button', { name: /partagée/i }));
-    await waitFor(() => expect(screen.getByText('Sélectionner une famille')).toBeInTheDocument());
-
-    fireEvent.change(screen.getByRole('combobox'), { target: { value: '1' } });
-    await waitFor(() => expect(screen.getByText('alice')).toBeInTheDocument());
-
-    await waitFor(() => expect(screen.getByRole('button', { name: /créer/i })).toBeEnabled());
-    fireEvent.click(screen.getByRole('button', { name: /créer/i }));
-
-    await waitFor(() =>
-      expect(onSubmit).toHaveBeenCalledWith({
-        name: 'Liste partagée',
-        kind: 'SIMPLE',
-        type: 'SHARED',
-        familyId: 1,
-        excludedMemberIds: undefined,
+        familyId: 42,
       })
     );
   });

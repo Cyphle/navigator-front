@@ -1,7 +1,7 @@
 import type { MealsList, MealsRecipe } from '../src/stores/meals/meals.types';
 import type { ShoppingList, ShoppingListItem } from '../src/stores/shopping-lists/shopping-lists.types';
 import type { Calendar, CalendarEvent } from '../src/stores/calendars/calendars.types';
-import type { MagicList, MagicItem } from '../src/stores/magic-lists/magic-lists.types';
+import type { MagicList, MagicItem, MagicListSummaryItem } from '../src/stores/magic-lists/magic-lists.types';
 import type { Recipe } from '../src/stores/recipes/recipes.types';
 import type { Family, FamilyMember } from '../src/stores/families/families.types';
 import type {
@@ -12,9 +12,10 @@ import type {
 export const aMagicItem = (overrides: Partial<MagicItem> = {}): MagicItem => ({
   id: overrides.id ?? 1,
   title: overrides.title ?? 'Faire les courses',
-  description: overrides.description,
+  content: overrides.content,
+  checked: overrides.checked,
   dueDate: overrides.dueDate,
-  status: overrides.status ?? 'TODO',
+  status: overrides.status,
   createdAt: overrides.createdAt ?? '2026-03-01T10:00:00Z',
   updatedAt: overrides.updatedAt ?? '2026-03-01T10:00:00Z',
 });
@@ -26,6 +27,17 @@ export const aMagicList = (overrides: Partial<MagicList> = {}): MagicList => ({
   kind: overrides.kind ?? 'SIMPLE',
   familyId: overrides.familyId,
   items: overrides.items ?? [],
+  createdAt: overrides.createdAt ?? '2026-03-01T10:00:00Z',
+  updatedAt: overrides.updatedAt ?? '2026-03-01T10:00:00Z',
+});
+
+export const aMagicListSummary = (overrides: Partial<MagicListSummaryItem> = {}): MagicListSummaryItem => ({
+  id: overrides.id ?? 1,
+  name: overrides.name ?? 'Tâches du foyer',
+  type: overrides.type ?? 'PERSONAL',
+  kind: overrides.kind ?? 'SIMPLE',
+  familyId: overrides.familyId,
+  itemCount: overrides.itemCount ?? 0,
   createdAt: overrides.createdAt ?? '2026-03-01T10:00:00Z',
   updatedAt: overrides.updatedAt ?? '2026-03-01T10:00:00Z',
 });

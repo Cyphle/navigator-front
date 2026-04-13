@@ -19,14 +19,6 @@ export const useFetchMagicListsSummary = () => {
   });
 };
 
-export const useFetchAllMagicLists = () => {
-  const { currentFamily } = useFamily();
-  return useQuery({
-    queryKey: [QUERY_KEY, currentFamily?.id],
-    queryFn: () => magicListsService.getAllMagicLists(currentFamily?.id ?? ''),
-    enabled: Boolean(currentFamily?.id),
-  });
-};
 
 export const useFetchMagicListById = (id: number) => {
   const { currentFamily } = useFamily();

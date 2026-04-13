@@ -1,7 +1,7 @@
 import { render, screen } from '../../../../test-utils';
 import { MagicListsView } from './MagicListsView';
 import { fireEvent } from '@testing-library/react';
-import { aMagicList, aMagicItem } from '../../../../test-utils/factories';
+import { aMagicListSummary } from '../../../../test-utils/factories';
 
 describe('MagicListsView', () => {
   test('shows empty state when no lists', () => {
@@ -29,7 +29,7 @@ describe('MagicListsView', () => {
 
   test('header "Nouvelle liste" button calls onCreateNew', () => {
     const onCreateNew = jest.fn();
-    const lists = [aMagicList()];
+    const lists = [aMagicListSummary()];
 
     render(
       <MagicListsView lists={lists} onCreateNew={onCreateNew} onSelectList={jest.fn()} onDelete={jest.fn()} />
@@ -42,8 +42,8 @@ describe('MagicListsView', () => {
 
   test('renders list names and item counts', () => {
     const lists = [
-      aMagicList({ id: 1, name: 'Tâches ménagères', type: 'PERSONAL', items: [aMagicItem(), aMagicItem({ id: 2 })] }),
-      aMagicList({ id: 2, name: 'Courses', type: 'SHARED', items: [] }),
+      aMagicListSummary({ id: 1, name: 'Tâches ménagères', type: 'PERSONAL', itemCount: 2 }),
+      aMagicListSummary({ id: 2, name: 'Courses', type: 'SHARED', itemCount: 0 }),
     ];
 
     render(
@@ -52,13 +52,13 @@ describe('MagicListsView', () => {
 
     expect(screen.getByText('Tâches ménagères')).toBeInTheDocument();
     expect(screen.getByText('Courses')).toBeInTheDocument();
-    expect(screen.getByText(/2 tâches/)).toBeInTheDocument();
-    expect(screen.getByText(/0 tâche/)).toBeInTheDocument();
+    expect(screen.getByText(/2 éléments/)).toBeInTheDocument();
+    expect(screen.getByText(/0 élément/)).toBeInTheDocument();
   });
 
   test('clicking a list calls onSelectList with its id', () => {
     const onSelectList = jest.fn();
-    const lists = [aMagicList({ id: 42, name: 'Ma liste' })];
+    const lists = [aMagicListSummary({ id: 42, name: 'Ma liste' })];
 
     render(
       <MagicListsView lists={lists} onCreateNew={jest.fn()} onSelectList={onSelectList} onDelete={jest.fn()} />

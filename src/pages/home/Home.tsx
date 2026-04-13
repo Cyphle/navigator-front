@@ -70,7 +70,7 @@ const HomeContent = () => {
 
   const statCards = buildStatCards(
     agenda.length,
-    magicListItems.filter((item) => !item.completed).length,
+    magicListItems.reduce((sum, list) => sum + list.itemCount, 0),
     recipes.filter((recipe) => recipe.favorite).length,
     shopping.items
   );

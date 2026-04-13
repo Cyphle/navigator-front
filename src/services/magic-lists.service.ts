@@ -1,19 +1,12 @@
 import type {
   MagicList,
+  MagicListSummaryItem,
   CreateMagicListInput,
   UpdateMagicListInput,
   CreateMagicItemInput,
   UpdateMagicItemInput,
 } from '../stores/magic-lists/magic-lists.types';
-import type { DashboardMagicListItem } from '../stores/dashboard/dashboard.types.ts';
 import { getOne, post, put, deleteOne } from '../helpers/http';
-
-export const getAllMagicLists = (familyId: string): Promise<MagicList[]> => {
-  return getOne(`families/${encodeURIComponent(familyId)}/magic-lists`, (data: any) => {
-    if (!Array.isArray(data)) return [];
-    return data.map(responseToMagicList);
-  });
-};
 
 export const getMagicListById = (familyId: string, id: number): Promise<MagicList> => {
   return getOne(`families/${encodeURIComponent(familyId)}/magic-lists/${id}`, responseToMagicList);
@@ -56,18 +49,23 @@ export const clearCompletedMagicListItems = (familyId: string, listId: number): 
   return deleteOne(`families/${encodeURIComponent(familyId)}/magic-lists/${listId}/items/completed`, responseToMagicList);
 };
 
-export const getMagicListsSummary = (familyId: string): Promise<DashboardMagicListItem[]> => {
-  return getOne(`families/${encodeURIComponent(familyId)}/magic-lists/summary`, (data: any) => {
+export const getMagicListsSummary = (familyId: string): Promise<MagicListSummaryItem[]> => {
+  return getOne(`families/${encodeURIComponent(familyId)}/magic-lists/summary`, (data: unknown) => {
     if (!Array.isArray(data)) return [];
-    return data.map((item: any): DashboardMagicListItem => ({
-      id: item.id,
-      label: item.label,
-      assignee: item.assignee,
-      completed: item.completed,
-      visibility: item.visibility,
-    }));
+    return (data as Record<string, unknown>[]).map(responseToMagicListSummaryItem);
   });
 };
+
+const responseToMagicListSummaryItem = (data: Record<string, unknown>): MagicListSummaryItem => ({
+  id: (data.id as number) ?? 0,
+  name: (data.name as string) ?? '',
+  type: (data.type as MagicListSummaryItem['type']) ?? 'PERSONAL',
+  kind: (data.kind as MagicListSummaryItem['kind']) ?? 'SIMPLE',
+  familyId: data.familyId as number | undefined,
+  itemCount: (data.itemCount as number) ?? 0,
+  createdAt: (data.createdAt as string) ?? '',
+  updatedAt: (data.updatedAt as string) ?? '',
+});
 
 const responseToMagicList = (data: any): MagicList => ({
   id: data?.id ?? 0,
@@ -79,9 +77,10 @@ const responseToMagicList = (data: any): MagicList => ({
     ? data.items.map((item: any) => ({
         id: item?.id ?? 0,
         title: item?.title ?? '',
-        description: item?.description,
+        content: item?.content,
+        checked: item?.checked ?? false,
         dueDate: item?.dueDate,
-        status: item?.status ?? 'TODO',
+        status: item?.status,
         createdAt: item?.createdAt ?? '',
         updatedAt: item?.updatedAt ?? '',
       }))

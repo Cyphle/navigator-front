@@ -2,10 +2,13 @@ import { useState } from 'react';
 import dayjs from 'dayjs';
 import { ArrowLeft, Plus, Trash2, Eraser } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Checkbox } from '@/components/ui/checkbox';
 import type {
   MagicList,
   MagicItem,
+  MagicListKind,
   CreateMagicItemInput,
+  UpdateMagicItemInput,
   MagicItemStatus,
 } from '../../../stores/magic-lists/magic-lists.types';
 import { AddTaskDialog } from './AddTaskDialog';
@@ -14,7 +17,7 @@ interface MagicListDetailProps {
   list: MagicList;
   onBack: () => void;
   onAddItem: (input: CreateMagicItemInput) => void;
-  onUpdateItem: (itemId: number, status: MagicItemStatus) => void;
+  onUpdateItem: (itemId: number, input: UpdateMagicItemInput) => void;
   onDeleteItem: (itemId: number) => void;
   onClearCompleted: () => void;
 }
@@ -33,16 +36,19 @@ const STATUS_STYLES: Record<MagicItemStatus, string> = {
 
 const TaskItem = ({
   item,
+  listKind,
   onUpdateItem,
   onDeleteItem,
 }: {
   item: MagicItem;
-  onUpdateItem: (itemId: number, status: MagicItemStatus) => void;
+  listKind: MagicListKind;
+  onUpdateItem: (itemId: number, input: UpdateMagicItemInput) => void;
   onDeleteItem: (itemId: number) => void;
 }) => {
+  const isCompleted = item.checked || item.status === 'DONE';
   const isLate =
     item.dueDate &&
-    item.status !== 'DONE' &&
+    !isCompleted &&
     dayjs(item.dueDate).isBefore(dayjs(), 'day');
 
   return (
@@ -50,30 +56,40 @@ const TaskItem = ({
       className="bg-white rounded-[var(--radius-md)] p-4 mb-2.5 flex items-start gap-3.5"
       style={{ boxShadow: 'var(--shadow-soft)' }}
     >
-      <select
-        value={item.status}
-        onChange={(e) => onUpdateItem(item.id, e.target.value as MagicItemStatus)}
-        className={cn(
-          'border-none rounded-[var(--radius-sm)] px-2.5 py-1.5 text-xs font-semibold shrink-0 cursor-pointer focus:outline-none',
-          STATUS_STYLES[item.status]
-        )}
-        onClick={(e) => e.stopPropagation()}
-      >
-        {(Object.keys(STATUS_LABELS) as MagicItemStatus[]).map((s) => (
-          <option key={s} value={s}>{STATUS_LABELS[s]}</option>
-        ))}
-      </select>
+      {listKind === 'TASK' && (
+        <Checkbox
+          checked={item.checked ?? false}
+          onCheckedChange={(v) => onUpdateItem(item.id, { checked: Boolean(v) })}
+          className="mt-0.5 shrink-0"
+        />
+      )}
+
+      {item.status && (
+        <select
+          value={item.status}
+          onChange={(e) => onUpdateItem(item.id, { status: e.target.value as MagicItemStatus })}
+          className={cn(
+            'border-none rounded-[var(--radius-sm)] px-2.5 py-1.5 text-xs font-semibold shrink-0 cursor-pointer focus:outline-none',
+            STATUS_STYLES[item.status]
+          )}
+          onClick={(e) => e.stopPropagation()}
+        >
+          {(Object.keys(STATUS_LABELS) as MagicItemStatus[]).map((s) => (
+            <option key={s} value={s}>{STATUS_LABELS[s]}</option>
+          ))}
+        </select>
+      )}
 
       <div className="flex-1 min-w-0">
         <p
-          className={cn('font-semibold text-sm m-0', item.status === 'DONE' && 'line-through opacity-50')}
+          className={cn('font-semibold text-sm m-0', isCompleted && 'line-through opacity-50')}
           style={{ color: 'var(--stone)' }}
         >
           {item.title}
         </p>
-        {item.description && (
+        {item.content && (
           <p className="text-xs mt-0.5 m-0" style={{ color: 'var(--mist)' }}>
-            {item.description}
+            {item.content}
           </p>
         )}
         {item.dueDate && (
@@ -133,9 +149,11 @@ export const MagicListDetail = ({
 }: MagicListDetailProps) => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
-  const todoItems = list.items.filter((item) => item.status === 'TODO');
-  const inProgressItems = list.items.filter((item) => item.status === 'IN_PROGRESS');
-  const doneItems = list.items.filter((item) => item.status === 'DONE');
+  const doneItems = list.items.filter((item) => item.checked || item.status === 'DONE');
+  const inProgressItems = list.items.filter((item) => !item.checked && item.status === 'IN_PROGRESS');
+  const activeItems = list.items.filter((item) => !item.checked && item.status !== 'DONE' && item.status !== 'IN_PROGRESS');
+
+  const hasGroups = inProgressItems.length > 0 || doneItems.length > 0;
 
   return (
     <div className="p-4 md:p-6 min-h-full" style={{ background: 'var(--sand)' }}>
@@ -176,7 +194,7 @@ export const MagicListDetail = ({
           onClick={() => setIsAddModalOpen(true)}
         >
           <Plus className="w-4 h-4" />
-          Ajouter une tâche
+          Ajouter un élément
         </button>
       </div>
 
@@ -186,23 +204,23 @@ export const MagicListDetail = ({
           style={{ background: 'white', boxShadow: 'var(--shadow-soft)' }}
         >
           <p className="text-sm font-medium" style={{ color: 'var(--mist)' }}>
-            Aucune tâche pour le moment
+            Aucun élément pour le moment
           </p>
           <button
             className="text-sm font-semibold px-4 py-2 rounded-[var(--radius-sm)] border transition-colors hover:bg-[var(--ocean-pale)]"
             style={{ borderColor: 'var(--ocean)', color: 'var(--ocean)' }}
             onClick={() => setIsAddModalOpen(true)}
           >
-            Ajouter la première tâche
+            Ajouter le premier élément
           </button>
         </div>
-      ) : (
+      ) : hasGroups ? (
         <div className="space-y-6">
-          {todoItems.length > 0 && (
+          {activeItems.length > 0 && (
             <section>
-              <SectionHeader title="À faire" count={todoItems.length} />
-              {todoItems.map((item) => (
-                <TaskItem key={item.id} item={item} onUpdateItem={onUpdateItem} onDeleteItem={onDeleteItem} />
+              <SectionHeader title="À faire" count={activeItems.length} />
+              {activeItems.map((item) => (
+                <TaskItem key={item.id} item={item} listKind={list.kind} onUpdateItem={onUpdateItem} onDeleteItem={onDeleteItem} />
               ))}
             </section>
           )}
@@ -211,7 +229,7 @@ export const MagicListDetail = ({
             <section>
               <SectionHeader title="En cours" count={inProgressItems.length} />
               {inProgressItems.map((item) => (
-                <TaskItem key={item.id} item={item} onUpdateItem={onUpdateItem} onDeleteItem={onDeleteItem} />
+                <TaskItem key={item.id} item={item} listKind={list.kind} onUpdateItem={onUpdateItem} onDeleteItem={onDeleteItem} />
               ))}
             </section>
           )}
@@ -233,15 +251,22 @@ export const MagicListDetail = ({
                 }
               />
               {doneItems.map((item) => (
-                <TaskItem key={item.id} item={item} onUpdateItem={onUpdateItem} onDeleteItem={onDeleteItem} />
+                <TaskItem key={item.id} item={item} listKind={list.kind} onUpdateItem={onUpdateItem} onDeleteItem={onDeleteItem} />
               ))}
             </section>
           )}
+        </div>
+      ) : (
+        <div className="space-y-0">
+          {activeItems.map((item) => (
+            <TaskItem key={item.id} item={item} listKind={list.kind} onUpdateItem={onUpdateItem} onDeleteItem={onDeleteItem} />
+          ))}
         </div>
       )}
 
       <AddTaskDialog
         open={isAddModalOpen}
+        listKind={list.kind}
         onClose={() => setIsAddModalOpen(false)}
         onSubmit={onAddItem}
       />

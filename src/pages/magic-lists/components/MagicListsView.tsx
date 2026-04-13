@@ -1,8 +1,8 @@
 import { Plus, Trash2, ClipboardList } from 'lucide-react';
-import type { MagicList } from '../../../stores/magic-lists/magic-lists.types';
+import type { MagicListSummaryItem } from '../../../stores/magic-lists/magic-lists.types';
 
 interface MagicListsViewProps {
-  lists: MagicList[];
+  lists: MagicListSummaryItem[];
   onCreateNew: () => void;
   onSelectList: (id: number) => void;
   onDelete: (id: number) => void;
@@ -86,7 +86,7 @@ export const MagicListsView = ({ lists, onCreateNew, onSelectList, onDelete }: M
               </span>
 
               <p className="text-sm pt-3 border-t border-black/5 m-0" style={{ color: 'var(--mist)' }}>
-                {list.items.length} tâche{list.items.length !== 1 ? 's' : ''}
+                {list.itemCount} élément{list.itemCount !== 1 ? 's' : ''}
               </p>
 
               {/* Delete button */}

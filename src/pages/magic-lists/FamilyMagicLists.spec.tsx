@@ -1,7 +1,7 @@
 import { render, screen } from '../../../test-utils';
 import { FamilyMagicLists } from './FamilyMagicLists';
 import {
-  useFetchAllMagicLists,
+  useFetchMagicListsSummary,
   useFetchMagicListById,
   useCreateMagicList,
   useDeleteMagicList,
@@ -12,10 +12,10 @@ import {
 } from '../../stores/magic-lists/magic-lists.queries';
 import { useFetchFamilies } from '../../stores/families/families.queries';
 import { fireEvent } from '@testing-library/react';
-import { aMagicList, aMagicItem } from '../../../test-utils/factories';
+import { aMagicListSummary } from '../../../test-utils/factories';
 
 jest.mock('../../stores/magic-lists/magic-lists.queries', () => ({
-  useFetchAllMagicLists: jest.fn(),
+  useFetchMagicListsSummary: jest.fn(),
   useFetchMagicListById: jest.fn(),
   useCreateMagicList: jest.fn(),
   useDeleteMagicList: jest.fn(),
@@ -47,7 +47,7 @@ describe('FamilyMagicLists', () => {
   afterEach(() => jest.clearAllMocks());
 
   test('shows loading state', () => {
-    (useFetchAllMagicLists as jest.Mock).mockReturnValue({ isPending: true, isError: false });
+    (useFetchMagicListsSummary as jest.Mock).mockReturnValue({ isPending: true, isError: false });
 
     render(<FamilyMagicLists />);
 
@@ -55,7 +55,7 @@ describe('FamilyMagicLists', () => {
   });
 
   test('shows error state', () => {
-    (useFetchAllMagicLists as jest.Mock).mockReturnValue({ isPending: false, isError: true });
+    (useFetchMagicListsSummary as jest.Mock).mockReturnValue({ isPending: false, isError: true });
 
     render(<FamilyMagicLists />);
 
@@ -63,7 +63,7 @@ describe('FamilyMagicLists', () => {
   });
 
   test('shows empty state when no lists', () => {
-    (useFetchAllMagicLists as jest.Mock).mockReturnValue({ data: [], isPending: false, isError: false });
+    (useFetchMagicListsSummary as jest.Mock).mockReturnValue({ data: [], isPending: false, isError: false });
 
     render(<FamilyMagicLists />);
 
@@ -72,11 +72,11 @@ describe('FamilyMagicLists', () => {
   });
 
   test('renders list of magic lists', () => {
-    const lists = [
-      aMagicList({ id: 1, name: 'Tâches ménagères', type: 'PERSONAL', items: [aMagicItem()] }),
-      aMagicList({ id: 2, name: 'Courses familiales', type: 'SHARED' }),
+    const overviews = [
+      aMagicListSummary({ id: 1, name: 'Tâches ménagères', type: 'PERSONAL', itemCount: 1 }),
+      aMagicListSummary({ id: 2, name: 'Courses familiales', type: 'SHARED', itemCount: 0 }),
     ];
-    (useFetchAllMagicLists as jest.Mock).mockReturnValue({ data: lists, isPending: false, isError: false });
+    (useFetchMagicListsSummary as jest.Mock).mockReturnValue({ data: overviews, isPending: false, isError: false });
 
     render(<FamilyMagicLists />);
 
@@ -85,7 +85,7 @@ describe('FamilyMagicLists', () => {
   });
 
   test('opens create form when "Nouvelle liste" is clicked', () => {
-    (useFetchAllMagicLists as jest.Mock).mockReturnValue({ data: [aMagicList()], isPending: false, isError: false });
+    (useFetchMagicListsSummary as jest.Mock).mockReturnValue({ data: [aMagicListSummary()], isPending: false, isError: false });
 
     render(<FamilyMagicLists />);
 
@@ -95,7 +95,7 @@ describe('FamilyMagicLists', () => {
   });
 
   test('opens create form from empty state CTA', () => {
-    (useFetchAllMagicLists as jest.Mock).mockReturnValue({ data: [], isPending: false, isError: false });
+    (useFetchMagicListsSummary as jest.Mock).mockReturnValue({ data: [], isPending: false, isError: false });
 
     render(<FamilyMagicLists />);
 

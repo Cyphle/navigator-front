@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import dayjs from 'dayjs';
 import {
@@ -8,48 +9,58 @@ import {
   DialogFooter,
 } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import type { CreateMagicItemInput, MagicItemStatus } from '../../../stores/magic-lists/magic-lists.types';
+import { Checkbox } from '@/components/ui/checkbox';
+import { ChevronDown, ChevronRight } from 'lucide-react';
+import type { CreateMagicItemInput, MagicItemStatus, MagicListKind } from '../../../stores/magic-lists/magic-lists.types';
 
-const STATUS_LABELS: Record<MagicItemStatus, string> = {
-  TODO: 'À faire',
-  IN_PROGRESS: 'En cours',
-  DONE: 'Terminé',
-};
+const STATUS_OPTIONS: { value: MagicItemStatus; label: string }[] = [
+  { value: 'TODO', label: 'À faire' },
+  { value: 'IN_PROGRESS', label: 'En cours' },
+  { value: 'DONE', label: 'Terminé' },
+];
 
 interface AddItemFormValues {
   title: string;
-  description: string;
+  content: string;
+  checked: boolean;
   dueDate: string;
-  status: MagicItemStatus;
+  status: MagicItemStatus | '';
 }
 
 interface AddTaskDialogProps {
   open: boolean;
+  listKind: MagicListKind;
   onClose: () => void;
   onSubmit: (input: CreateMagicItemInput) => void;
 }
 
-export const AddTaskDialog = ({ open, onClose, onSubmit }: AddTaskDialogProps) => {
+export const AddTaskDialog = ({ open, listKind, onClose, onSubmit }: AddTaskDialogProps) => {
+  const [showAdditional, setShowAdditional] = useState(false);
+
   const { control, handleSubmit, reset, formState: { isValid } } = useForm<AddItemFormValues>({
     mode: 'onChange',
-    defaultValues: { title: '', description: '', dueDate: '', status: 'TODO' },
+    defaultValues: { title: '', content: '', checked: false, dueDate: '', status: '' },
   });
 
   const handleAddItem = (values: AddItemFormValues) => {
     const input: CreateMagicItemInput = {
       title: values.title,
-      description: values.description || undefined,
+      content: values.content || undefined,
+      checked: listKind === 'TASK' ? values.checked : undefined,
       dueDate: values.dueDate ? dayjs(values.dueDate).toISOString() : undefined,
-      status: values.status,
+      status: values.status || undefined,
     };
     onSubmit(input);
     reset();
+    setShowAdditional(false);
     onClose();
   };
 
   const handleClose = () => {
     reset();
+    setShowAdditional(false);
     onClose();
   };
 
@@ -58,11 +69,12 @@ export const AddTaskDialog = ({ open, onClose, onSubmit }: AddTaskDialogProps) =
       <DialogContent className="rounded-[var(--radius-md)] border-none" style={{ boxShadow: 'var(--shadow-card)' }}>
         <DialogHeader>
           <DialogTitle className="font-display text-xl font-bold" style={{ color: 'var(--stone)' }}>
-            Ajouter une tâche
+            Ajouter un élément
           </DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit(handleAddItem)} className="space-y-4 pt-2">
+          {/* Title */}
           <Controller
             name="title"
             control={control}
@@ -74,7 +86,7 @@ export const AddTaskDialog = ({ open, onClose, onSubmit }: AddTaskDialogProps) =
                 </Label>
                 <Input
                   {...field}
-                  placeholder="Ex : Faire les courses"
+                  placeholder="Ex : Acheter du lait"
                   className="rounded-[var(--radius-sm)] border-black/10 focus-visible:ring-0"
                   style={{ background: 'var(--sand)' }}
                 />
@@ -82,63 +94,101 @@ export const AddTaskDialog = ({ open, onClose, onSubmit }: AddTaskDialogProps) =
             )}
           />
 
+          {/* Content */}
           <Controller
-            name="description"
+            name="content"
             control={control}
             render={({ field }) => (
               <div className="space-y-1.5">
                 <Label className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--mist)' }}>
-                  Description
+                  Contenu
                 </Label>
-                <Input
+                <Textarea
                   {...field}
-                  placeholder="Détails de la tâche..."
-                  className="rounded-[var(--radius-sm)] border-black/10 focus-visible:ring-0"
+                  placeholder="Détails, notes..."
+                  className="rounded-[var(--radius-sm)] border-black/10 focus-visible:ring-0 resize-none min-h-[72px]"
                   style={{ background: 'var(--sand)' }}
                 />
               </div>
             )}
           />
 
-          <div className="grid grid-cols-2 gap-4">
+          {/* Checkbox — TASK lists only */}
+          {listKind === 'TASK' && (
             <Controller
-              name="dueDate"
+              name="checked"
               control={control}
               render={({ field }) => (
-                <div className="space-y-1.5">
-                  <Label className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--mist)' }}>
-                    Échéance
-                  </Label>
-                  <Input
-                    {...field}
-                    type="date"
-                    className="rounded-[var(--radius-sm)] border-black/10 focus-visible:ring-0"
-                    style={{ background: 'var(--sand)' }}
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <Checkbox
+                    checked={field.value}
+                    onCheckedChange={(v) => field.onChange(Boolean(v))}
                   />
-                </div>
+                  <span className="text-sm font-medium" style={{ color: 'var(--stone)' }}>
+                    Déjà réalisé
+                  </span>
+                </label>
               )}
             />
+          )}
 
-            <Controller
-              name="status"
-              control={control}
-              render={({ field }) => (
-                <div className="space-y-1.5">
-                  <Label className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--mist)' }}>
-                    Statut
-                  </Label>
-                  <select
-                    {...field}
-                    className="w-full h-10 px-3 text-sm rounded-[var(--radius-sm)] border border-black/10 focus:outline-none"
-                    style={{ background: 'var(--sand)', color: 'var(--stone)' }}
-                  >
-                    {(Object.keys(STATUS_LABELS) as MagicItemStatus[]).map((s) => (
-                      <option key={s} value={s}>{STATUS_LABELS[s]}</option>
-                    ))}
-                  </select>
-                </div>
-              )}
-            />
+          {/* Collapsible additional fields */}
+          <div className="rounded-[var(--radius-sm)] border border-black/8 overflow-hidden">
+            <button
+              type="button"
+              className="w-full flex items-center gap-2 px-3 py-2.5 text-left text-xs font-semibold uppercase tracking-wide transition-colors hover:bg-black/5"
+              style={{ color: 'var(--mist)' }}
+              onClick={() => setShowAdditional((v) => !v)}
+            >
+              {showAdditional ? <ChevronDown className="w-3.5 h-3.5" /> : <ChevronRight className="w-3.5 h-3.5" />}
+              Champs additionnels
+            </button>
+
+            {showAdditional && (
+              <div className="px-3 pb-3 pt-1 space-y-3 border-t border-black/8" style={{ background: 'var(--sand)' }}>
+                {/* Due date */}
+                <Controller
+                  name="dueDate"
+                  control={control}
+                  render={({ field }) => (
+                    <div className="space-y-1.5">
+                      <Label className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--mist)' }}>
+                        Échéance
+                      </Label>
+                      <Input
+                        {...field}
+                        type="date"
+                        className="rounded-[var(--radius-sm)] border-black/10 focus-visible:ring-0"
+                        style={{ background: 'white' }}
+                      />
+                    </div>
+                  )}
+                />
+
+                {/* Status */}
+                <Controller
+                  name="status"
+                  control={control}
+                  render={({ field }) => (
+                    <div className="space-y-1.5">
+                      <Label className="text-xs font-semibold uppercase tracking-wide" style={{ color: 'var(--mist)' }}>
+                        Statut
+                      </Label>
+                      <select
+                        {...field}
+                        className="w-full h-10 px-3 text-sm rounded-[var(--radius-sm)] border border-black/10 focus:outline-none"
+                        style={{ background: 'white', color: 'var(--stone)' }}
+                      >
+                        <option value="">Aucun</option>
+                        {STATUS_OPTIONS.map((opt) => (
+                          <option key={opt.value} value={opt.value}>{opt.label}</option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
+                />
+              </div>
+            )}
           </div>
 
           <DialogFooter className="pt-2">

@@ -1,6 +1,6 @@
 import type { FastifyPluginAsync } from 'fastify';
 import {
-  getAllMagicLists,
+  getMagicListsSummary,
   getMagicListById,
   createMagicList,
   updateMagicList,
@@ -18,26 +18,10 @@ import type {
 } from './magic-lists.types';
 
 export const magicListsController: FastifyPluginAsync = async (fastify) => {
-  // Get magic lists summary for a family (registered FIRST to avoid conflict with /:familyId/magic-lists/:id)
-  fastify.get<{ Params: { familyId: string } }>('/:familyId/magic-lists/summary', async (request, reply) => {
-    const familyId = parseInt(request.params.familyId, 10);
-    const familyLists = getAllMagicLists().filter((list) => list.familyId === familyId);
-    const summary = familyLists.flatMap((list) =>
-      list.items.map((item) => ({
-        id: item.id,
-        label: item.title,
-        assignee: list.name,
-        completed: item.status === 'DONE',
-        visibility: list.type === 'SHARED' ? 'FAMILY' : 'PERSONAL',
-      }))
-    );
+  // Get magic lists summary (registered FIRST to avoid conflict with /:familyId/magic-lists/:id)
+  fastify.get<{ Params: { familyId: string } }>('/:familyId/magic-lists/summary', async (_request, reply) => {
+    const summary = getMagicListsSummary();
     return reply.code(200).send(summary);
-  });
-
-  // Get all magic lists
-  fastify.get<{ Params: { familyId: string } }>('/:familyId/magic-lists', async (_request, reply) => {
-    const lists = getAllMagicLists();
-    return reply.code(200).send(lists);
   });
 
   // Get a specific magic list

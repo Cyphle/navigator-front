@@ -1,9 +1,9 @@
 import { waitFor } from '@testing-library/react';
 import { renderQueryHook, renderMutateHook, TEST_FAMILY_ID } from '../../../test-utils/render';
-import { aMagicList, aMagicItem } from '../../../test-utils/factories';
+import { aMagicList, aMagicItem, aMagicListSummary } from '../../../test-utils/factories';
 import * as magicListsService from '../../services/magic-lists.service';
 import {
-  useFetchAllMagicLists,
+  useFetchMagicListsSummary,
   useFetchMagicListById,
   useCreateMagicList,
   useDeleteMagicList,
@@ -14,7 +14,7 @@ import {
 } from './magic-lists.queries';
 
 jest.mock('../../services/magic-lists.service', () => ({
-  getAllMagicLists: jest.fn(),
+  getMagicListsSummary: jest.fn(),
   getMagicListById: jest.fn(),
   createMagicList: jest.fn(),
   updateMagicList: jest.fn(),
@@ -30,15 +30,15 @@ describe('magic-lists queries', () => {
     jest.clearAllMocks();
   });
 
-  test('useFetchAllMagicLists fetches lists for current family', async () => {
-    const mockLists = [aMagicList({ id: 1 }), aMagicList({ id: 2 })];
-    jest.mocked(magicListsService.getAllMagicLists).mockResolvedValue(mockLists);
+  test('useFetchMagicListsSummary fetches summary for current family', async () => {
+    const mockOverviews = [aMagicListSummary({ id: 1 }), aMagicListSummary({ id: 2 })];
+    jest.mocked(magicListsService.getMagicListsSummary).mockResolvedValue(mockOverviews);
 
-    const { result } = renderQueryHook(() => useFetchAllMagicLists());
+    const { result } = renderQueryHook(() => useFetchMagicListsSummary());
 
-    expect(magicListsService.getAllMagicLists).toHaveBeenCalledWith(TEST_FAMILY_ID);
+    expect(magicListsService.getMagicListsSummary).toHaveBeenCalledWith(TEST_FAMILY_ID);
     await waitFor(() => expect(result.current.isSuccess).toBe(true));
-    expect(result.current.data).toEqual(mockLists);
+    expect(result.current.data).toEqual(mockOverviews);
   });
 
   test('useFetchMagicListById fetches a specific list', async () => {

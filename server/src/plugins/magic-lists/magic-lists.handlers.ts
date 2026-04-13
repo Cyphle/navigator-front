@@ -1,7 +1,7 @@
 import type {
   MagicList,
   MagicItem,
-  MagicListKind,
+  MagicListSummaryItem,
   CreateMagicListInput,
   UpdateMagicListInput,
   CreateMagicItemInput,
@@ -14,13 +14,14 @@ let magicLists: MagicList[] = [
     id: 1,
     name: 'Famille Martin',
     type: 'SHARED',
-    kind: 'TASK' as MagicListKind,
+    kind: 'TASK',
     familyId: 1,
     items: [
       {
         id: 1,
         title: 'Réparer la fuite dans la salle de bain',
-        description: 'Appeler le plombier',
+        content: 'Appeler le plombier',
+        checked: false,
         dueDate: new Date('2026-03-01').toISOString(),
         status: 'TODO',
         createdAt: new Date('2026-02-20').toISOString(),
@@ -29,7 +30,8 @@ let magicLists: MagicList[] = [
       {
         id: 2,
         title: 'Organiser l\'anniversaire de Emma',
-        description: 'Réserver le restaurant et préparer les invitations',
+        content: 'Réserver le restaurant et préparer les invitations',
+        checked: false,
         dueDate: new Date('2026-03-15').toISOString(),
         status: 'IN_PROGRESS',
         createdAt: new Date('2026-02-18').toISOString(),
@@ -38,6 +40,7 @@ let magicLists: MagicList[] = [
       {
         id: 3,
         title: 'Nettoyer le garage',
+        checked: true,
         status: 'DONE',
         createdAt: new Date('2026-02-15').toISOString(),
         updatedAt: new Date('2026-02-21').toISOString(),
@@ -50,13 +53,13 @@ let magicLists: MagicList[] = [
     id: 2,
     name: 'Famille Dupont',
     type: 'SHARED',
-    kind: 'SIMPLE' as MagicListKind,
+    kind: 'SIMPLE',
     familyId: 2,
     items: [
       {
         id: 4,
         title: 'Préparer les vacances d\'été',
-        description: 'Réserver l\'hôtel et les billets d\'avion',
+        content: 'Réserver l\'hôtel et les billets d\'avion',
         dueDate: new Date('2026-04-01').toISOString(),
         status: 'TODO',
         createdAt: new Date('2026-02-20').toISOString(),
@@ -70,8 +73,17 @@ let magicLists: MagicList[] = [
 let nextListId = 3;
 let nextItemId = 5;
 
-export const getAllMagicLists = (): MagicList[] => {
-  return magicLists;
+export const getMagicListsSummary = (): MagicListSummaryItem[] => {
+  return magicLists.map((list) => ({
+    id: list.id,
+    name: list.name,
+    type: list.type,
+    kind: list.kind,
+    familyId: list.familyId,
+    itemCount: list.items.length,
+    createdAt: list.createdAt,
+    updatedAt: list.updatedAt,
+  }));
 };
 
 export const getMagicListById = (id: number): MagicList | undefined => {
@@ -129,9 +141,10 @@ export const addItemToMagicList = (
   const newItem: MagicItem = {
     id: nextItemId++,
     title: input.title,
-    description: input.description,
+    content: input.content,
+    checked: input.checked ?? false,
     dueDate: input.dueDate,
-    status: input.status || 'TODO',
+    status: input.status,
     createdAt: now,
     updatedAt: now,
   };

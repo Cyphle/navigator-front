@@ -1,6 +1,5 @@
 import { getOne, post, put, deleteOne } from '../helpers/http';
 import {
-  getAllMagicLists,
   getMagicListById,
   createMagicList,
   updateMagicList,
@@ -34,19 +33,6 @@ const rawMagicList = {
 describe('magic-lists service', () => {
   afterEach(() => {
     jest.clearAllMocks();
-  });
-
-  test('getAllMagicLists calls correct endpoint and maps response', async () => {
-    (getOne as jest.Mock).mockImplementation((_path: string, mapper: (data: any) => any) =>
-      Promise.resolve(mapper([rawMagicList]))
-    );
-
-    const result = await getAllMagicLists(TEST_FAMILY_ID);
-
-    expect(getOne).toHaveBeenCalledWith('families/1/magic-lists', expect.any(Function));
-    expect(result).toHaveLength(1);
-    expect(result[0].name).toBe('Tâches du foyer');
-    expect(result[0].items[0].title).toBe('Faire la vaisselle');
   });
 
   test('getMagicListById calls correct endpoint', async () => {
@@ -130,15 +116,4 @@ describe('magic-lists service', () => {
     expect(deleteOne).toHaveBeenCalledWith('families/1/magic-lists/1/items/completed', expect.any(Function));
   });
 
-  test('responseToMagicList handles missing fields gracefully', async () => {
-    (getOne as jest.Mock).mockImplementation((_path: string, mapper: (data: any) => any) =>
-      Promise.resolve(mapper([{}]))
-    );
-
-    const result = await getAllMagicLists(TEST_FAMILY_ID);
-
-    expect(result[0].id).toBe(0);
-    expect(result[0].name).toBe('');
-    expect(result[0].items).toEqual([]);
-  });
 });

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import {
-  useFetchAllMagicLists,
+  useFetchMagicListsSummary,
   useFetchMagicListById,
   useCreateMagicList,
   useDeleteMagicList,
@@ -10,11 +10,11 @@ import {
   useDeleteItemFromMagicList,
   useClearCompletedMagicListItems,
 } from '../../stores/magic-lists/magic-lists.queries';
-import { useFetchFamilies } from '../../stores/families/families.queries';
+import { useFamily } from '../../contexts/family/family.context';
 import { MagicListsView } from './components/MagicListsView';
 import { CreateMagicListForm } from './components/CreateMagicListForm';
 import { MagicListDetail } from './components/MagicListDetail';
-import type { CreateMagicListInput, CreateMagicItemInput, MagicItemStatus } from '../../stores/magic-lists/magic-lists.types';
+import type { CreateMagicListInput, CreateMagicItemInput, UpdateMagicItemInput } from '../../stores/magic-lists/magic-lists.types';
 import { Loader2 } from 'lucide-react';
 
 export const FamilyMagicLists = () => {
@@ -22,8 +22,8 @@ export const FamilyMagicLists = () => {
   const [selectedListId, setSelectedListId] = useState<number | null>(null);
   const { toast } = useToast();
 
-  const { data: magicLists, isPending, isError } = useFetchAllMagicLists();
-  const { data: families } = useFetchFamilies();
+  const { data: magicLists, isPending, isError } = useFetchMagicListsSummary();
+  const { currentFamily } = useFamily();
   const { data: selectedList } = useFetchMagicListById(selectedListId || 0);
   const createMutation = useCreateMagicList();
   const deleteMutation = useDeleteMagicList();
@@ -66,10 +66,10 @@ export const FamilyMagicLists = () => {
     );
   };
 
-  const handleUpdateItem = (itemId: number, status: MagicItemStatus) => {
+  const handleUpdateItem = (itemId: number, input: UpdateMagicItemInput) => {
     if (!selectedListId) return;
     updateItemMutation.mutate(
-      { listId: selectedListId, itemId, input: { status } },
+      { listId: selectedListId, itemId, input },
       {
         onSuccess: () => toast({ title: 'Tâche mise à jour' }),
         onError: () => toast({ title: 'Erreur lors de la mise à jour', variant: 'destructive' }),
@@ -146,7 +146,7 @@ export const FamilyMagicLists = () => {
         onCancel={() => setIsFormOpen(false)}
         onSubmit={handleCreateList}
         isLoading={createMutation.isPending}
-        families={families || []}
+        familyId={currentFamily?.id ? Number(currentFamily.id) : undefined}
       />
     </>
   );

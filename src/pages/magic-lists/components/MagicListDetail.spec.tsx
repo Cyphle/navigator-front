@@ -46,10 +46,10 @@ describe('MagicListDetail', () => {
 
     render(<MagicListDetail {...defaultProps} list={list} />);
 
-    expect(screen.getByText('Aucune tâche pour le moment')).toBeInTheDocument();
+    expect(screen.getByText('Aucun élément pour le moment')).toBeInTheDocument();
   });
 
-  test('renders items grouped by status sections', () => {
+  test('renders items grouped by status when status is set', () => {
     const list = aMagicList({
       items: [
         aMagicItem({ id: 1, title: 'Faire les courses', status: 'TODO' }),
@@ -63,10 +63,22 @@ describe('MagicListDetail', () => {
     expect(screen.getByText('Faire les courses')).toBeInTheDocument();
     expect(screen.getByText('Laver la voiture')).toBeInTheDocument();
     expect(screen.getByText('Payer les factures')).toBeInTheDocument();
-    // Status labels appear in both the section headers and item status selects
     expect(screen.getAllByText('À faire').length).toBeGreaterThanOrEqual(1);
     expect(screen.getAllByText('En cours').length).toBeGreaterThanOrEqual(1);
     expect(screen.getAllByText('Terminé').length).toBeGreaterThanOrEqual(1);
+  });
+
+  test('renders items without grouping when no status is set', () => {
+    const list = aMagicList({
+      items: [
+        aMagicItem({ id: 1, title: 'Item sans statut' }),
+      ],
+    });
+
+    render(<MagicListDetail {...defaultProps} list={list} />);
+
+    expect(screen.getByText('Item sans statut')).toBeInTheDocument();
+    expect(screen.queryByText('À faire')).not.toBeInTheDocument();
   });
 
   test('calls onDeleteItem when delete button is clicked', () => {
@@ -96,14 +108,36 @@ describe('MagicListDetail', () => {
     expect(onClearCompleted).toHaveBeenCalled();
   });
 
-  test('opens add task dialog when "Ajouter une tâche" button is clicked', () => {
+  test('opens add item dialog when add button is clicked', () => {
     const list = aMagicList({ items: [] });
 
     render(<MagicListDetail {...defaultProps} list={list} />);
 
-    fireEvent.click(screen.getByText('Ajouter une tâche'));
+    fireEvent.click(screen.getByText('Ajouter un élément'));
 
-    expect(screen.getByText('Ajouter une tâche', { selector: '[class*="font-display"]' })).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('Ex : Faire les courses')).toBeInTheDocument();
+    expect(screen.getByText('Ajouter un élément', { selector: '[class*="font-display"]' })).toBeInTheDocument();
+    expect(screen.getByPlaceholderText('Ex : Acheter du lait')).toBeInTheDocument();
+  });
+
+  test('shows checkboxes for TASK list items', () => {
+    const list = aMagicList({
+      kind: 'TASK',
+      items: [aMagicItem({ id: 1, title: 'Acheter du lait', checked: false })],
+    });
+
+    render(<MagicListDetail {...defaultProps} list={list} />);
+
+    expect(screen.getByRole('checkbox')).toBeInTheDocument();
+  });
+
+  test('does not show checkboxes for SIMPLE list items', () => {
+    const list = aMagicList({
+      kind: 'SIMPLE',
+      items: [aMagicItem({ id: 1, title: 'Simple item' })],
+    });
+
+    render(<MagicListDetail {...defaultProps} list={list} />);
+
+    expect(screen.queryByRole('checkbox')).not.toBeInTheDocument();
   });
 });
