@@ -14,7 +14,7 @@ import { useFamily } from '../../contexts/family/family.context';
 import { MagicListsView } from './components/MagicListsView';
 import { CreateMagicListForm } from './components/CreateMagicListForm';
 import { MagicListDetail } from './components/MagicListDetail';
-import type { CreateMagicListInput, CreateMagicItemInput, UpdateMagicItemInput } from '../../stores/magic-lists/magic-lists.types';
+import type { CreateMagicListInput, AddItemToMagicListInput, UpdateItemOfMagicListInput } from '../../stores/magic-lists/magic-lists.types';
 import { Loader2 } from 'lucide-react';
 
 export const FamilyMagicLists = () => {
@@ -55,7 +55,7 @@ export const FamilyMagicLists = () => {
     });
   };
 
-  const handleAddItem = (input: CreateMagicItemInput) => {
+  const handleAddItem = (input: AddItemToMagicListInput) => {
     if (!selectedListId) return;
     addItemMutation.mutate(
       { listId: selectedListId, input },
@@ -66,7 +66,7 @@ export const FamilyMagicLists = () => {
     );
   };
 
-  const handleUpdateItem = (itemId: number, input: UpdateMagicItemInput) => {
+  const handleUpdateItem = (itemId: number, input: UpdateItemOfMagicListInput) => {
     if (!selectedListId) return;
     updateItemMutation.mutate(
       { listId: selectedListId, itemId, input },

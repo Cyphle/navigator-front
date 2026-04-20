@@ -3,8 +3,8 @@ import type {
   MagicListSummaryItem,
   CreateMagicListInput,
   UpdateMagicListInput,
-  CreateMagicItemInput,
-  UpdateMagicItemInput,
+  AddItemToMagicListInput,
+  UpdateItemOfMagicListInput,
 } from '../stores/magic-lists/magic-lists.types';
 import { getOne, post, put, deleteOne } from '../helpers/http';
 
@@ -27,7 +27,7 @@ export const deleteMagicList = (familyId: string, id: number): Promise<void> => 
 export const addItemToMagicList = (
   familyId: string,
   listId: number,
-  input: CreateMagicItemInput
+  input: AddItemToMagicListInput
 ): Promise<MagicList> => {
   return post(`families/${encodeURIComponent(familyId)}/magic-lists/${listId}/items`, input, responseToMagicList);
 };
@@ -36,7 +36,7 @@ export const updateItemInMagicList = (
   familyId: string,
   listId: number,
   itemId: number,
-  input: UpdateMagicItemInput
+  input: UpdateItemOfMagicListInput
 ): Promise<MagicList> => {
   return put(`families/${encodeURIComponent(familyId)}/magic-lists/${listId}/items/${itemId}`, input, responseToMagicList);
 };

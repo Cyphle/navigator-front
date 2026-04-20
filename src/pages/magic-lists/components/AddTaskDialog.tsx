@@ -13,7 +13,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Checkbox } from '@/components/ui/checkbox';
 import { ChevronDown, ChevronRight } from 'lucide-react';
-import type { CreateMagicItemInput, MagicItemStatus, MagicListType } from '../../../stores/magic-lists/magic-lists.types';
+import type { AddItemToMagicListInput, MagicItemStatus, MagicListType } from '../../../stores/magic-lists/magic-lists.types';
 
 const STATUS_OPTIONS: { value: MagicItemStatus; label: string }[] = [
   { value: 'TODO', label: 'À faire' },
@@ -33,7 +33,7 @@ interface AddTaskDialogProps {
   open: boolean;
   listType: MagicListType;
   onClose: () => void;
-  onSubmit: (input: CreateMagicItemInput) => void;
+  onSubmit: (input: AddItemToMagicListInput) => void;
 }
 
 export const AddTaskDialog = ({ open, listType, onClose, onSubmit }: AddTaskDialogProps) => {
@@ -45,7 +45,7 @@ export const AddTaskDialog = ({ open, listType, onClose, onSubmit }: AddTaskDial
   });
 
   const handleAddItem = (values: AddItemFormValues) => {
-    const input: CreateMagicItemInput = {
+    const input: AddItemToMagicListInput = {
       title: values.title,
       content: values.content || undefined,
       checked: listType === 'TASK' ? values.checked : undefined,

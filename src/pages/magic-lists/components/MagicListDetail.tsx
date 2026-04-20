@@ -7,8 +7,8 @@ import type {
   MagicList,
   MagicItem,
   MagicListType,
-  CreateMagicItemInput,
-  UpdateMagicItemInput,
+  AddItemToMagicListInput,
+  UpdateItemOfMagicListInput,
   MagicItemStatus,
 } from '../../../stores/magic-lists/magic-lists.types';
 import { AddTaskDialog } from './AddTaskDialog';
@@ -16,8 +16,8 @@ import { AddTaskDialog } from './AddTaskDialog';
 interface MagicListDetailProps {
   list: MagicList;
   onBack: () => void;
-  onAddItem: (input: CreateMagicItemInput) => void;
-  onUpdateItem: (itemId: number, input: UpdateMagicItemInput) => void;
+  onAddItem: (input: AddItemToMagicListInput) => void;
+  onUpdateItem: (itemId: number, input: UpdateItemOfMagicListInput) => void;
   onDeleteItem: (itemId: number) => void;
   onClearCompleted: () => void;
 }
@@ -42,7 +42,7 @@ const TaskItem = ({
 }: {
   item: MagicItem;
   listType: MagicListType;
-  onUpdateItem: (itemId: number, input: UpdateMagicItemInput) => void;
+  onUpdateItem: (itemId: number, input: UpdateItemOfMagicListInput) => void;
   onDeleteItem: (itemId: number) => void;
 }) => {
   const isCompleted = item.checked || item.status === 'DONE';

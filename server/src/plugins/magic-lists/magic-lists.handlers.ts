@@ -4,8 +4,8 @@ import type {
   MagicListSummaryItem,
   CreateMagicListInput,
   UpdateMagicListInput,
-  CreateMagicItemInput,
-  UpdateMagicItemInput,
+  AddItemToMagicListInput,
+  UpdateItemOfMagicListInput,
 } from './magic-lists.types';
 
 // Initialize with mock data
@@ -132,7 +132,7 @@ export const deleteMagicList = (id: number): boolean => {
 
 export const addItemToMagicList = (
   listId: number,
-  input: CreateMagicItemInput
+  input: AddItemToMagicListInput
 ): MagicList | undefined => {
   const list = magicLists.find((l) => l.id === listId);
   if (!list) {
@@ -159,7 +159,7 @@ export const addItemToMagicList = (
 export const updateItemInMagicList = (
   listId: number,
   itemId: number,
-  input: UpdateMagicItemInput
+  input: UpdateItemOfMagicListInput
 ): MagicList | undefined => {
   const list = magicLists.find((l) => l.id === listId);
   if (!list) {

@@ -47,7 +47,7 @@ export interface UpdateMagicListInput {
   name?: string;
 }
 
-export interface CreateMagicItemInput {
+export interface AddItemToMagicListInput {
   title: string;
   content?: string;
   checked?: boolean;
@@ -55,7 +55,7 @@ export interface CreateMagicItemInput {
   status?: MagicItemStatus;
 }
 
-export interface UpdateMagicItemInput {
+export interface UpdateItemOfMagicListInput {
   title?: string;
   content?: string;
   checked?: boolean;

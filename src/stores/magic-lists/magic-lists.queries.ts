@@ -2,8 +2,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import type {
   CreateMagicListInput,
   UpdateMagicListInput,
-  CreateMagicItemInput,
-  UpdateMagicItemInput,
+  AddItemToMagicListInput,
+  UpdateItemOfMagicListInput,
 } from './magic-lists.types';
 import * as magicListsService from '../../services/magic-lists.service';
 import { useFamily } from '../../contexts/family/family.context.tsx';
@@ -72,7 +72,7 @@ export const useAddItemToMagicList = () => {
   const { currentFamily } = useFamily();
 
   return useMutation({
-    mutationFn: ({ listId, input }: { listId: number; input: CreateMagicItemInput }) =>
+    mutationFn: ({ listId, input }: { listId: number; input: AddItemToMagicListInput }) =>
       magicListsService.addItemToMagicList(currentFamily?.id ?? '', listId, input),
     onSuccess: (data) => {
       queryClient.setQueryData([QUERY_KEY, currentFamily?.id, data.id], data);
@@ -86,7 +86,7 @@ export const useUpdateItemInMagicList = () => {
   const { currentFamily } = useFamily();
 
   return useMutation({
-    mutationFn: ({ listId, itemId, input }: { listId: number; itemId: number; input: UpdateMagicItemInput }) =>
+    mutationFn: ({ listId, itemId, input }: { listId: number; itemId: number; input: UpdateItemOfMagicListInput }) =>
       magicListsService.updateItemInMagicList(currentFamily?.id ?? '', listId, itemId, input),
     onSuccess: (data) => {
       queryClient.setQueryData([QUERY_KEY, currentFamily?.id, data.id], data);

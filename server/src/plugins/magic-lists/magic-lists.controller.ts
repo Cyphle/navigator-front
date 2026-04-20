@@ -13,8 +13,8 @@ import {
 import type {
   CreateMagicListInput,
   UpdateMagicListInput,
-  CreateMagicItemInput,
-  UpdateMagicItemInput,
+  AddItemToMagicListInput,
+  UpdateItemOfMagicListInput,
 } from './magic-lists.types';
 
 export const magicListsController: FastifyPluginAsync = async (fastify) => {
@@ -87,7 +87,7 @@ export const magicListsController: FastifyPluginAsync = async (fastify) => {
   );
 
   // Add an item to a magic list
-  fastify.post<{ Params: { familyId: string; id: string }; Body: CreateMagicItemInput }>(
+  fastify.post<{ Params: { familyId: string; id: string }; Body: AddItemToMagicListInput }>(
     '/:familyId/magic-lists/:id/items',
     async (request, reply) => {
       const id = parseInt(request.params.id, 10);
@@ -102,7 +102,7 @@ export const magicListsController: FastifyPluginAsync = async (fastify) => {
   );
 
   // Update an item in a magic list
-  fastify.put<{ Params: { familyId: string; id: string; itemId: string }; Body: UpdateMagicItemInput }>(
+  fastify.put<{ Params: { familyId: string; id: string; itemId: string }; Body: UpdateItemOfMagicListInput }>(
     '/:familyId/magic-lists/:id/items/:itemId',
     async (request, reply) => {
       const id = parseInt(request.params.id, 10);
