@@ -11,8 +11,7 @@ describe('Dashboard service', () => {
       agenda: [],
       todos: [],
       weeklyMenu: { weekLabel: 'Jul 9', days: [] },
-      recipes: [],
-      shopping: { items: 0 }
+      recipes: []
     });
 
     const response = await getDashboard('1');
@@ -22,8 +21,7 @@ describe('Dashboard service', () => {
       agenda: [],
       todos: [],
       weeklyMenu: { weekLabel: 'Jul 9', days: [] },
-      recipes: [],
-      shopping: { items: 0 }
+      recipes: []
     });
   });
 
@@ -77,8 +75,7 @@ describe('Dashboard service', () => {
           selectedForWeek: true,
           visibility: 'FAMILY'
         }
-      ],
-      shopping: { items: 8 }
+      ]
     };
 
     expect(responseToDashboard(response)).toEqual(response);

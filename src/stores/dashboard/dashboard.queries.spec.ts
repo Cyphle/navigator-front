@@ -13,8 +13,7 @@ describe('dashboard queries', () => {
       agenda: [],
       todos: [],
       weeklyMenu: { weekLabel: 'Jul 9', days: [] },
-      recipes: [],
-      shopping: { items: 0 }
+      recipes: []
     });
 
     const { result } = renderQueryHook(() => useFetchDashboard());

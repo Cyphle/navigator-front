@@ -78,7 +78,6 @@ const responseToMealsList = (data: any): MealsList => ({
         assignedDays: Array.isArray(r?.assignedDays) ? r.assignedDays : undefined,
       }))
     : [],
-  isActiveShoppingList: Boolean(data?.isActiveShoppingList),
   createdAt: data?.createdAt ?? '',
   updatedAt: data?.updatedAt ?? '',
 });

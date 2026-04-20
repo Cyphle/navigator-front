@@ -10,9 +10,6 @@ jest.mock('../../stores/magic-lists/magic-lists.queries.ts', () => ({
 jest.mock('../../stores/recipes/recipes.queries.ts', () => ({
   useFetchRecipesSummary: jest.fn(() => ({ data: [], isPending: false, isError: false })),
 }));
-jest.mock('../../stores/shopping-lists/shopping-lists.queries.ts', () => ({
-  useFetchShoppingListSummary: jest.fn(() => ({ data: { items: 0 }, isPending: false, isError: false })),
-}));
 jest.mock('../../stores/meals/meals.queries.ts', () => ({
   useFetchMealsSummary: jest.fn(() => ({
     data: { weekLabel: '', days: [] },
@@ -43,6 +40,6 @@ describe('Home', () => {
   test('renders stat cards', () => {
     renderWithRouter(<Home />);
     expect(screen.getByText('événements à venir')).toBeInTheDocument();
-    expect(screen.getByText('articles à acheter')).toBeInTheDocument();
+    expect(screen.getByText('recettes favorites')).toBeInTheDocument();
   });
 });

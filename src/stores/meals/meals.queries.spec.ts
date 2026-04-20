@@ -73,8 +73,8 @@ describe('planned-menus queries', () => {
   });
 
   test('should update planned menu list', async () => {
-    const input = { isActiveShoppingList: true };
-    const mockUpdated = aMealsList({ id: 1, isActiveShoppingList: true });
+    const input = { name: 'Menu renommé' };
+    const mockUpdated = aMealsList({ id: 1, name: 'Menu renommé' });
     jest.mocked(mealsService.updateMealsList).mockResolvedValue(mockUpdated);
 
     const { result } = renderMutateHook(() => useUpdateMealsList());

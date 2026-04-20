@@ -4,7 +4,6 @@ import {
   useFetchAllMealsLists,
   useFetchMealsListById,
   useCreateMealsList,
-  useUpdateMealsList,
   useDeleteMealsList,
   useAddRecipeToMealsList,
   useRemoveRecipeFromMealsList,
@@ -23,7 +22,6 @@ export const Meals = () => {
   const { data: lists, isPending, isError } = useFetchAllMealsLists();
   const { data: selectedList } = useFetchMealsListById(selectedListId || 0);
   const createMutation = useCreateMealsList();
-  const updateMutation = useUpdateMealsList();
   const deleteMutation = useDeleteMealsList();
   const addRecipeMutation = useAddRecipeToMealsList();
   const removeRecipeMutation = useRemoveRecipeFromMealsList();
@@ -49,20 +47,6 @@ export const Meals = () => {
         toast({ title: 'Erreur lors de la suppression', variant: 'destructive' });
       },
     });
-  };
-
-  const handleToggleShoppingList = (id: number, isActive: boolean) => {
-    updateMutation.mutate(
-      { id, input: { isActiveShoppingList: isActive } },
-      {
-        onSuccess: () => {
-          toast({ title: isActive ? 'Liste de courses activée' : 'Liste de courses désactivée' });
-        },
-        onError: () => {
-          toast({ title: 'Erreur lors de la mise à jour', variant: 'destructive' });
-        },
-      }
-    );
   };
 
   const handleAddRecipe = (recipeId: number, recipeName: string, assignedDays?: string[]) => {
@@ -158,7 +142,6 @@ export const Meals = () => {
         onCreateNew={() => setIsFormOpen(true)}
         onSelectList={setSelectedListId}
         onDelete={handleDeleteList}
-        onToggleShoppingList={handleToggleShoppingList}
       />
 
       <MealsListForm

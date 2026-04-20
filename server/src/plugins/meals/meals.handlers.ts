@@ -19,7 +19,6 @@ export const createMealsList = (input: CreateMealsListInput): MealsList => {
     startDate: input.startDate,
     endDate: input.endDate,
     recipes: [],
-    isActiveShoppingList: false,
     createdAt: now,
     updatedAt: now,
   };

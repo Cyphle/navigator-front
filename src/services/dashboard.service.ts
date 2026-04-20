@@ -20,10 +20,7 @@ export const responseToDashboard = (data: any): DashboardData => {
       weekLabel: data.weeklyMenu.weekLabel,
       days: data.weeklyMenu.days.map((day: any) => toMenuDay(day))
     },
-    recipes: data.recipes.map((recipe: any) => toRecipe(recipe)),
-    shopping: {
-      items: data.shopping.items
-    }
+    recipes: data.recipes.map((recipe: any) => toRecipe(recipe))
   };
 }
 

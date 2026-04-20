@@ -11,7 +11,6 @@ describe.skip('MealsListsView', () => {
         onCreateNew={jest.fn()}
         onSelectList={jest.fn()}
         onDelete={jest.fn()}
-        onToggleShoppingList={jest.fn()}
       />
     );
 
@@ -28,7 +27,6 @@ describe.skip('MealsListsView', () => {
         onCreateNew={onCreateNew}
         onSelectList={jest.fn()}
         onDelete={jest.fn()}
-        onToggleShoppingList={jest.fn()}
       />
     );
 
@@ -46,7 +44,6 @@ describe.skip('MealsListsView', () => {
         onCreateNew={jest.fn()}
         onSelectList={jest.fn()}
         onDelete={jest.fn()}
-        onToggleShoppingList={jest.fn()}
       />
     );
 
@@ -64,7 +61,6 @@ describe.skip('MealsListsView', () => {
         onCreateNew={onCreateNew}
         onSelectList={jest.fn()}
         onDelete={jest.fn()}
-        onToggleShoppingList={jest.fn()}
       />
     );
 
@@ -81,7 +77,6 @@ describe.skip('MealsListsView', () => {
         startDate: '2026-03-01',
         endDate: '2026-03-07',
         recipes: [aMealsRecipe(), aMealsRecipe({ recipeId: 2 })],
-        isActiveShoppingList: false,
       }),
     ];
 
@@ -91,7 +86,6 @@ describe.skip('MealsListsView', () => {
         onCreateNew={jest.fn()}
         onSelectList={jest.fn()}
         onDelete={jest.fn()}
-        onToggleShoppingList={jest.fn()}
       />
     );
 
@@ -111,7 +105,6 @@ describe.skip('MealsListsView', () => {
         onCreateNew={jest.fn()}
         onSelectList={onSelectList}
         onDelete={jest.fn()}
-        onToggleShoppingList={jest.fn()}
       />
     );
 
@@ -134,7 +127,6 @@ describe.skip('MealsListsView', () => {
         onCreateNew={jest.fn()}
         onSelectList={jest.fn()}
         onDelete={onDelete}
-        onToggleShoppingList={jest.fn()}
       />
     );
 
@@ -142,43 +134,6 @@ describe.skip('MealsListsView', () => {
     fireEvent.click(deleteButton);
 
     expect(onDelete).toHaveBeenCalledWith(1);
-  });
-
-  test('calls onToggleShoppingList when shopping button clicked', () => {
-    const onToggleShoppingList = jest.fn();
-    const lists = [aMealsList({ id: 1, isActiveShoppingList: false })];
-
-    render(
-      <MealsListsView
-        lists={lists}
-        onCreateNew={jest.fn()}
-        onSelectList={jest.fn()}
-        onDelete={jest.fn()}
-        onToggleShoppingList={onToggleShoppingList}
-      />
-    );
-
-    const activateButton = screen.getByRole('button', { name: /activer/i });
-    fireEvent.click(activateButton);
-
-    expect(onToggleShoppingList).toHaveBeenCalledWith(1, true);
-  });
-
-  test('shows active shopping list badge when enabled', () => {
-    const lists = [aMealsList({ id: 1, isActiveShoppingList: true })];
-
-    render(
-      <MealsListsView
-        lists={lists}
-        onCreateNew={jest.fn()}
-        onSelectList={jest.fn()}
-        onDelete={jest.fn()}
-        onToggleShoppingList={jest.fn()}
-      />
-    );
-
-    expect(screen.getByText('Liste de courses active')).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /liste active/i })).toBeInTheDocument();
   });
 
   test('stops event propagation when action buttons clicked', () => {
@@ -192,14 +147,12 @@ describe.skip('MealsListsView', () => {
         onCreateNew={jest.fn()}
         onSelectList={onSelectList}
         onDelete={onDelete}
-        onToggleShoppingList={jest.fn()}
       />
     );
 
     const deleteButton = screen.getByRole('button', { name: /supprimer/i });
     fireEvent.click(deleteButton);
 
-    // onSelectList should not be called when clicking delete
     expect(onDelete).toHaveBeenCalledWith(1);
     expect(onSelectList).not.toHaveBeenCalled();
   });
@@ -217,7 +170,6 @@ describe.skip('MealsListsView', () => {
         onCreateNew={jest.fn()}
         onSelectList={jest.fn()}
         onDelete={jest.fn()}
-        onToggleShoppingList={jest.fn()}
       />
     );
 

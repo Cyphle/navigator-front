@@ -8,7 +8,6 @@ import { Families } from './pages/families/Families.tsx';
 import { Recipes } from './pages/recipes/Recipes.tsx';
 import { Profile } from './pages/profile/Profile.tsx';
 import { Meals } from './pages/meals/Meals.tsx';
-import { ShoppingLists } from './pages/shopping-lists/ShoppingLists.tsx';
 import { FamilyMagicLists } from './pages/magic-lists/FamilyMagicLists.tsx';
 import { Calendars } from './pages/calendars/Calendars.tsx';
 import { BankAccounts } from './pages/bank-accounts/BankAccounts.tsx';
@@ -109,20 +108,6 @@ export const ROUTES_PATHS: RouteDefinitionConfig[] = [
     icon: (
       <svg viewBox="0 0 24 24" aria-hidden="true">
         <path d="M4 6h16v2H4V6Zm0 5h16v2H4v-2Zm0 5h10v2H4v-2Z" />
-      </svg>
-    ),
-    isAuth: true
-  },
-  {
-    id: 8,
-    name: 'Liste de courses',
-    path: 'shopping-lists',
-    element: <ShoppingLists />,
-    icon: (
-      <svg viewBox="0 0 24 24" aria-hidden="true">
-        <path d="M7 6h15l-1.6 9.5a2 2 0 0 1-2 1.7H9.4a2 2 0 0 1-2-1.6L5.4 5H2V3h4l1 3Z" />
-        <circle cx="9.5" cy="20" r="1.5" />
-        <circle cx="17.5" cy="20" r="1.5" />
       </svg>
     ),
     isAuth: true

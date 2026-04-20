@@ -47,14 +47,9 @@ export interface DashboardRecipe {
   visibility: ItemVisibility;
 }
 
-export interface DashboardShopping {
-  items: number;
-}
-
 export interface DashboardData {
   agenda: DashboardAgendaItem[];
   todos: DashboardMagicListItem[];
   weeklyMenu: DashboardMeals;
   recipes: DashboardRecipe[];
-  shopping: DashboardShopping;
 }

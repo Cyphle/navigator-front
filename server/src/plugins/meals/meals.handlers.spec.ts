@@ -63,7 +63,6 @@ describe('planned-menus handlers', () => {
     expect(created.startDate).toBe('2026-03-01');
     expect(created.endDate).toBe('2026-03-07');
     expect(created.recipes).toEqual([]);
-    expect(created.isActiveShoppingList).toBe(false);
     expect(created.createdAt).toBeDefined();
     expect(created.updatedAt).toBeDefined();
   });
@@ -77,12 +76,10 @@ describe('planned-menus handlers', () => {
 
     const updated = updateMealsList(created.id, {
       name: 'Updated Name',
-      isActiveShoppingList: true,
     });
 
     expect(updated).toBeDefined();
     expect(updated?.name).toBe('Updated Name');
-    expect(updated?.isActiveShoppingList).toBe(true);
     expect(updated?.startDate).toBe('2026-03-01');
   });
 

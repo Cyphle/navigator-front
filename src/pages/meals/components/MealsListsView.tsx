@@ -1,4 +1,4 @@
-import { Plus, Trash2, Utensils, Calendar as CalendarIcon, ShoppingCart } from 'lucide-react';
+import { Plus, Trash2, Utensils, Calendar as CalendarIcon } from 'lucide-react';
 import dayjs from 'dayjs';
 import type { MealsList } from '../../../stores/meals/meals.types';
 
@@ -7,7 +7,6 @@ interface MealsListsViewProps {
   onCreateNew: () => void;
   onSelectList: (id: number) => void;
   onDelete: (id: number) => void;
-  onToggleShoppingList: (id: number, isActive: boolean) => void;
 }
 
 export const MealsListsView = ({
@@ -15,7 +14,6 @@ export const MealsListsView = ({
   onCreateNew,
   onSelectList,
   onDelete,
-  onToggleShoppingList,
 }: MealsListsViewProps) => {
   return (
     <div className="p-4 md:p-6 min-h-full" style={{ background: 'var(--sand)' }}>
@@ -79,7 +77,6 @@ export const MealsListsView = ({
                 />
 
                 <div className="p-5 pt-6">
-                  {/* Title + active badge */}
                   <div className="flex items-start justify-between mb-3">
                     <div className="flex-1 min-w-0">
                       <h3
@@ -88,14 +85,6 @@ export const MealsListsView = ({
                       >
                         {list.name}
                       </h3>
-                      {list.isActiveShoppingList && (
-                        <span
-                          className="inline-block mt-1 px-2 py-0.5 rounded-full text-[10px] font-semibold uppercase tracking-wide"
-                          style={{ background: 'var(--sun-pale)', color: 'var(--sun)' }}
-                        >
-                          Liste de courses active
-                        </span>
-                      )}
                     </div>
                     <button
                       className="ml-2 p-1.5 rounded-[var(--radius-sm)] opacity-0 group-hover:opacity-100 transition-all hover:bg-red-50"
@@ -118,7 +107,6 @@ export const MealsListsView = ({
                     </span>
                   </div>
 
-                  {/* Stats row */}
                   <div className="flex items-center gap-2 pt-3 border-t border-black/5">
                     <span
                       className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
@@ -132,24 +120,6 @@ export const MealsListsView = ({
                     >
                       {list.recipes.length} recette{list.recipes.length !== 1 ? 's' : ''}
                     </span>
-
-                    {/* Shopping list toggle */}
-                    <button
-                      className="ml-auto flex items-center gap-1.5 text-[10px] font-semibold px-2.5 py-1 rounded-full border transition-all opacity-0 group-hover:opacity-100 hover:-translate-y-px"
-                      style={
-                        list.isActiveShoppingList
-                          ? { background: 'var(--sage-pale)', borderColor: 'var(--sage)', color: 'var(--sage)' }
-                          : { borderColor: 'rgba(0,0,0,0.1)', color: 'var(--mist)' }
-                      }
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onToggleShoppingList(list.id, !list.isActiveShoppingList);
-                      }}
-                      aria-label={list.isActiveShoppingList ? 'Désactiver la liste de courses' : 'Activer la liste de courses'}
-                    >
-                      <ShoppingCart className="w-3 h-3" />
-                      {list.isActiveShoppingList ? 'Active' : 'Activer'}
-                    </button>
                   </div>
                 </div>
               </article>

@@ -10,7 +10,6 @@ export interface MealsList {
   startDate: string; // ISO date string
   endDate: string; // ISO date string
   recipes: MealsRecipe[];
-  isActiveShoppingList: boolean;
   createdAt: string;
   updatedAt: string;
 }
@@ -26,5 +25,4 @@ export interface UpdateMealsListInput {
   startDate?: string;
   endDate?: string;
   recipes?: MealsRecipe[];
-  isActiveShoppingList?: boolean;
 }

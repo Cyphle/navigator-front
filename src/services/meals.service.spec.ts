@@ -31,7 +31,6 @@ describe('Planned menus service', () => {
         startDate: '2026-03-01',
         endDate: '2026-03-07',
         recipes: [],
-        isActiveShoppingList: false,
         createdAt: '2026-02-25T10:00:00Z',
         updatedAt: '2026-02-25T10:00:00Z',
       },
@@ -55,7 +54,6 @@ describe('Planned menus service', () => {
       startDate: '2026-03-01',
       endDate: '2026-03-07',
       recipes: [{ recipeId: 2, recipeName: 'Salade', assignedDays: ['2026-03-01'] }],
-      isActiveShoppingList: true,
       createdAt: '2026-02-25T10:00:00Z',
       updatedAt: '2026-02-25T10:00:00Z',
     };
@@ -83,7 +81,6 @@ describe('Planned menus service', () => {
       id: 2,
       ...input,
       recipes: [],
-      isActiveShoppingList: false,
       createdAt: '2026-02-25T10:00:00Z',
       updatedAt: '2026-02-25T10:00:00Z',
     };
@@ -101,16 +98,15 @@ describe('Planned menus service', () => {
 
   test('should update planned menu list', async () => {
     const input = {
-      isActiveShoppingList: true,
+      name: 'Menu renommé',
     };
 
     const apiResponse = {
       id: 1,
-      name: 'Menu semaine 1',
+      name: 'Menu renommé',
       startDate: '2026-03-01',
       endDate: '2026-03-07',
       recipes: [],
-      isActiveShoppingList: true,
       createdAt: '2026-02-25T10:00:00Z',
       updatedAt: '2026-02-25T11:00:00Z',
     };
@@ -122,7 +118,7 @@ describe('Planned menus service', () => {
     const response = await updateMealsList(TEST_FAMILY_ID, 1, input);
 
     expect(put).toHaveBeenCalledWith('families/1/meals/1', input, expect.any(Function));
-    expect(response.isActiveShoppingList).toBe(true);
+    expect(response.name).toBe('Menu renommé');
   });
 
   test('should delete planned menu list', async () => {
@@ -140,7 +136,6 @@ describe('Planned menus service', () => {
       startDate: '2026-03-01',
       endDate: '2026-03-07',
       recipes: [{ recipeId: 5, recipeName: 'Tarte', assignedDays: ['2026-03-02'] }],
-      isActiveShoppingList: false,
       createdAt: '2026-02-25T10:00:00Z',
       updatedAt: '2026-02-25T11:00:00Z',
     };
@@ -167,7 +162,6 @@ describe('Planned menus service', () => {
       startDate: '2026-03-01',
       endDate: '2026-03-07',
       recipes: [],
-      isActiveShoppingList: false,
       createdAt: '2026-02-25T10:00:00Z',
       updatedAt: '2026-02-25T11:00:00Z',
     };
@@ -207,6 +201,5 @@ describe('Planned menus service', () => {
     const response = await getMealsListById(TEST_FAMILY_ID, 1);
 
     expect(response.recipes).toEqual([]);
-    expect(response.isActiveShoppingList).toBe(false);
   });
 });
